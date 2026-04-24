@@ -4,12 +4,11 @@ prestagri is a tool designed to simplify the administrative procedures related t
 
 It was first created for the need of the french Ministere de l'Agriculture.
 
-See our [documentation](https://multi-coop.github.io/prestagri/tutorial/1_first_run/) to configure your own Prest'Agent.
+See our [documentation](https://betagouv.github.io/prestagri/) to configure your own Prest'Agent.
 
 ## Install 
 
-[First run tutorial](
-https://multi-coop.github.io/prestagri/tutorial/1_first_run/)
+[First run tutorial](https://betagouv.github.io/prestagri/tutorial/1_first_run/)
 
 
 ## Credits
