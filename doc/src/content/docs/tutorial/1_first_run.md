@@ -1,7 +1,7 @@
 ---
 title: First Run
-description: Tutorial to run Prest'Agri locally
+description: Tutorial to run prestagri locally
 ---
 
-Dans ce tutoriel, nous allons lancer Prest'Agri localement pour la première fois.
+Dans ce tutoriel, nous allons lancer prestagri localement pour la première fois.
 
