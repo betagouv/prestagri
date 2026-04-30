@@ -1,0 +1,26 @@
+[project]
+name = "prestagri-backend"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Erica Delagnier"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard] (>=0.136.1,<0.137.0)"
+]
+
+[dependency-groups]
+dev = [
+    "pytest (>=9.0.3,<10.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+package-mode=false

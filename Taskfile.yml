@@ -5,13 +5,15 @@ tasks:
     cmds:
       - task --list
   setup:
-    desc: install all the required dependencies
+    desc: install all the required dependencies for prestagri
     cmds:
-      - poetry install
+      - cd backend && poetry install
       - cd doc && npm install
   serve:
+    desc: serve
+    dir: backend
     cmds:
-      - poetry run python src/pony_express/templates/exemple.py
+      - poetry run fastapi dev
   doc:
     desc: run the doc locally
     cmds:
