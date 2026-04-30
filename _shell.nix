@@ -9,7 +9,7 @@ buildInputs = [
     nodejs_24 #for the doc
 ];
 shellHook = ''
-        export VARIABLE_NAME="variable value"
+        export SENTRY_DSN="variable value"
     '';
 
 }
