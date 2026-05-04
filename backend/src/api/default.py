@@ -9,11 +9,11 @@ def read_root():
     return {"Quelle belle journee pour les abeilles"}
 
 
-@router.get("/items/{item_id}")
-def read_item(item_id: int, q: str | None = None):
-    return {"item_id": item_id, "q": q}
+@router.get("/aide_scolarite/eligibilite")
+def read_aide_scolaire_eligibilite(nb_enfants: int, region: str):
+    return True
 
-@router.get("/sentry-debug")
+@router.get("/error-simulator")
 async def trigger_error():
     logger.info('This will be sent to Sentry')
     division_by_zero = 1 / 0
