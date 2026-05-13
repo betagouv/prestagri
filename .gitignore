@@ -2,3 +2,7 @@
 shell.nix
 
 doc/dist/
+
+catala/_target/
+
+catala/_build/

@@ -1,0 +1,30 @@
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - task --list
+  setup:
+    desc: install all the required dependencies
+    cmds:
+      - opam init -c 4.14.2 --shell-setup
+      - eval $(opam env)
+      - opam update && opam install catala.1.1.0
+      - opam upgrade catala
+      - opam install catala-lsp.1.1.0
+      - opam install catala-format.1.1.0
+  build:
+    desc: build targets
+    cmds: 
+      - clerk build
+  serve:
+    desc: run tutoriel test
+    cmds:
+      - clerk run tutorial.catala_fr --scope=Test
+  type_check:
+    desc: run type checking
+    cmds: 
+      - clerk typecheck tutorial.catala_fr
+
+
+

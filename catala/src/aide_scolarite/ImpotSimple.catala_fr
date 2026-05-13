@@ -1,0 +1,10 @@
+> Module ImpotSimple
+
+```catala
+déclaration champ d'application CalculImpotRevenu:
+  entrée revenu contenu argent
+  résultat impot_revenu contenu argent
+
+champ d'application CalculImpotRevenu:
+  définition impot_revenu égal à revenu * 10%
+```

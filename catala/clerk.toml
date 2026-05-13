@@ -1,0 +1,13 @@
+[project]
+include_dirs = [ "src/commun",              # Quels répertoires inclure lors de la recherche de modules Catala et de dépendances.
+                 "src/aide_scolarite"] 
+build_dir    = "_build"    # Définit où sortir les fichiers compilés générés.
+target_dir   = "_target"   # Définit où sortir les fichiers finaux des cibles.
+
+# Chaque section [[target]] décrit une cible de construction pour le projet
+
+[[target]]
+name     = "aide_scolarite"
+modules  = [ "ImpotSimple"]
+tests    = [ "tests/test_aide_scolarite.catala_fr" ]
+backends = [ "ocaml", "c", "python" ]
