@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from utils import logger
+from catala.aides import impot_revenu
 
 router = APIRouter()
 
@@ -9,9 +10,9 @@ def read_root():
     return {"Quelle belle journee pour les abeilles"}
 
 
-@router.get("/aide_scolarite/eligibilite")
-def read_aide_scolaire_eligibilite(nb_enfants: int, region: str):
-    return True
+@router.get("/aide_scolarite/montant")
+def read_aide_scolaire_eligibilite():
+    return impot_revenu(1000)
 
 @router.get("/error-simulator")
 async def trigger_error():
