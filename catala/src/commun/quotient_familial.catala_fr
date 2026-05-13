@@ -1,0 +1,67 @@
+> Module Quotient_familial
+> Usage de Personne
+
+## Méthode de calcul du QUOTIENT FAMILIAL (QF) 
+
+Note de  service p.8
+
+Applicable à tous les agents et pour toutes les prestations, HORS prestations interministérielles des agents MASA affectés en DDI
+QF = Revenu fiscal de référence / (12 x nombre de personnes vivant au foyer (a))
+
+```catala
+déclaration champ d'application CalculQuotientFamilial:
+  entrée membres_du_foyer contenu liste de Personne
+  interne nombre_unités contenu décimal
+  résultat quotient_familial contenu argent
+
+champ d'application CalculQuotientFamilial:
+  définition nombre_unités égal à 
+    soit nombre_personnes_vivants_au_foyer égal à 
+      Entier.somme de transforme chaque personne parmi membres_du_foyer en (1 + personne.nombre_enfants) 
+    dans
+  décimal de nombre_personnes_vivants_au_foyer
+  définition quotient_familial égal à
+    soit revenu_fiscal_reference égal à 
+      Argent.somme de transforme chaque personne parmi membres_du_foyer en personne.revenu_fiscal_reference 
+    dans
+  argent de (décimal de revenu_fiscal_reference / (décimal de 12 * nombre_unités))
+```
+
+(a) = cas particuliers à adapter selon le foyer :
+- Pour les parents isolés et les familles monoparentales, il convient d’ajouter 1 unité supplémentaire au nombre de
+personnes vivant au foyer. Il est possible d'être considéré comme "parent isolé" pour un enfant en garde partagée. Pour cela,
+il faut que l'agent supporte seul la charge de l'enfant pendant les périodes où l'enfant réside au domicile de l'agent ET que
+l'agent ne soit pas en couple (famille recomposée) : remariage, PACS, concubinage… Cette situation peut être aussi vérifiée
+sur la déclaration de revenus avec la case « T » (parent isolé). En effet, l'impôt sur les revenus de l'année du divorce,
+séparation ou rupture d'un PACS est calculé d'après la situation familiale de l'agent au 31 décembre de cette année
+d'imposition (ex : situation au 31/12/2024 pour l'imposition des revenus perçus en 2024 à déclarer en 2025).
+
+
+
+# Cas N°1 :
+- Un agent en couple
+- Nombre d'enfant(s) = 3 ;
+- Nombre personnes vivant au foyer = 2+ 3 = 5 (l'agent, son conjoint et ses 3 enfants)
+- Revenu Fiscal de Référence (RFR) du foyer = 32 600 €
+- QF = 32 600 / (12 x 5) = 543,33 €
+
+```catala
+#[test]
+déclaration champ d'application TestQuotientFamilial1:
+  résultat calcul contenu CalculQuotientFamilial
+
+champ d'application TestQuotientFamilial1:
+  définition calcul égal à
+    résultat de CalculQuotientFamilial avec {
+      -- membres_du_foyer: [
+          Personne {
+            -- revenu_fiscal_reference: 12 000 €
+            -- nombre_enfants: 0
+          } ;
+          Personne {
+            -- revenu_fiscal_reference: 20 600 €
+            -- nombre_enfants: 3
+          } ]
+    }
+  assertion (calcul.quotient_familial = 543,33 €)
+```
