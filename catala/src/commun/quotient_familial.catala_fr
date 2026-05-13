@@ -1,5 +1,6 @@
 > Module Quotient_familial
 > Usage de Personne
+> Usage de Famille
 
 ## Méthode de calcul du QUOTIENT FAMILIAL (QF) 
 
@@ -10,21 +11,18 @@ QF = Revenu fiscal de référence / (12 x nombre de personnes vivant au foyer (a
 
 ```catala
 déclaration champ d'application CalculQuotientFamilial:
-  entrée membres_du_foyer contenu liste de Personne
+  entrée famille contenu Famille
+  interne nombre_personnes_vivants_au_foyer contenu entier
+  interne revenu_fiscal_reference contenu argent
   interne nombre_unités contenu décimal
   résultat quotient_familial contenu argent
 
 champ d'application CalculQuotientFamilial:
-  définition nombre_unités égal à 
-    soit nombre_personnes_vivants_au_foyer égal à 
-      Entier.somme de transforme chaque personne parmi membres_du_foyer en (1 + personne.nombre_enfants) 
-    dans
-  décimal de nombre_personnes_vivants_au_foyer
-  définition quotient_familial égal à
-    soit revenu_fiscal_reference égal à 
-      Argent.somme de transforme chaque personne parmi membres_du_foyer en personne.revenu_fiscal_reference 
-    dans
-  argent de (décimal de revenu_fiscal_reference / (décimal de 12 * nombre_unités))
+  définition nombre_personnes_vivants_au_foyer égal à Entier.somme de transforme chaque personne parmi famille.membres_du_foyer en (1 + personne.nombre_enfants)
+  étiquette nombre_unités_défaut définition nombre_unités égal à décimal de nombre_personnes_vivants_au_foyer
+  définition revenu_fiscal_reference état métropole égal à
+    Argent.somme de transforme chaque personne parmi famille.membres_du_foyer en personne.revenu_fiscal_reference 
+  définition quotient_familial égal à argent de (décimal de revenu_fiscal_reference / (décimal de 12 * nombre_unités))
 ```
 
 (a) = cas particuliers à adapter selon le foyer :
@@ -36,7 +34,59 @@ sur la déclaration de revenus avec la case « T » (parent isolé). En effet, l
 séparation ou rupture d'un PACS est calculé d'après la situation familiale de l'agent au 31 décembre de cette année
 d'imposition (ex : situation au 31/12/2024 pour l'imposition des revenus perçus en 2024 à déclarer en 2025).
 
+```catala
+# TODO Question s'il y a plusieurs adultes dans le foyer, est ce un parent isole ? 
+champ d'application CalculQuotientFamilial:
+  étiquette parent_isolé exception défaut
+  définition nombre_unités
+  sous condition famille.parent_isolé
+  conséquence égal à décimal de (nombre_personnes_vivants_au_foyer + 1)
+```
 
+- L’agent demandeur, l’enfant ou la personne à charge porteur de handicap, titulaire d’une carte d’invalidité et/ou
+bénéficiant d’une prestation sociale liée au handicap, (en complément de ce qui est déjà attribué par l’administration
+fiscale) bénéficie (sur présentation de justificatif-s) d’une demi-unité supplémentaire (soit +0,5).
+
+```catala
+champ d'application CalculQuotientFamilial:
+  étiquette handicap exception parent_isolé
+  définition nombre_unités
+  sous condition famille.personne_ou_enfant_porteur_handicap
+  conséquence égal à décimal de (nombre_personnes_vivants_au_foyer + 0.5)
+```
+
+- En cas de garde alternée, chaque parent qui a à charge fiscalement son ou ses enfants peut bénéficier de la prestation, dès
+lors qu’il est un agent MASA. Il bénéficie (sur présentation de justificatif-s) en outre d’une demi-unité supplémentaire (soit +0,5)
+par foyer.
+
+```catala
+champ d'application CalculQuotientFamilial:
+  étiquette garde_alternée exception handicap
+  définition nombre_unités
+  sous condition famille.garde_alternée
+  conséquence égal à décimal de (nombre_personnes_vivants_au_foyer + 0.5)
+```
+
+- Cas des agents affectés en outre-mer : afin de prendre en compte la spécificité ultramarine, il convient de calculer
+le quotient familial mensuel en tenant compte d’une indemnité de vie chère en appliquant un abattement de 20 % sur
+le revenu fiscal de référence.
+
+```catala
+champ d'application CalculQuotientFamilial:
+  définition revenu_fiscal_reference état outre_mer égal à revenu_fiscal_reference * 20 %
+```
+
+- Condition complémentaire pour la prestation ministérielle "Aide à la Scolarité" : si le jeune adulte (l'enfant étudiant ou
+apprenti) a un avis d’imposition distinct de ses parents, son revenu fiscal de référence est ajouté à celui du foyer fiscal pour
+le calcul du QF. Le jeune adulte doit être compté dans le nombre des «personnes vivant au foyer» pour ce QF (même si
+l'enfant est provisoirement éloigné de sa famille à cause de ses études).
+
+```catala
+# TO DO : Comptabilise t'on les eventuels revenu du grand adelphe en etudes egalement ? ou juste ceux de l'enfant concerne ?
+# TO DO : Plusieurs enfants concernes, deux demandes ?
+```
+
+## TEST
 
 # Cas N°1 :
 - Un agent en couple
