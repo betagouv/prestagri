@@ -1,6 +1,19 @@
 > Module Quotient_familial
-> Usage de Personne
-> Usage de Famille
+
+```catala
+déclaration structure Famille:
+  donnée personne_ou_enfant_porteur_handicap contenu booléen
+  donnée garde_alternée contenu booléen
+  donnée parent_isolé contenu booléen
+  donnée outre_mer contenu booléen
+  donnée membres_du_foyer contenu liste de Personne
+```
+
+```catala
+déclaration structure Personne:
+  donnée revenu_fiscal_reference contenu argent
+  donnée nombre_enfants contenu entier
+```
 
 ## Méthode de calcul du QUOTIENT FAMILIAL (QF) 
 
@@ -12,16 +25,17 @@ QF = Revenu fiscal de référence / (12 x nombre de personnes vivant au foyer (a
 ```catala
 déclaration champ d'application CalculQuotientFamilial:
   entrée famille contenu Famille
-  interne nombre_personnes_vivants_au_foyer contenu entier
+  interne nombre_personnes_vivants_au_foyer contenu décimal
+  interne revenu_total contenu argent
   interne revenu_fiscal_reference contenu argent
   interne nombre_unités contenu décimal
   résultat quotient_familial contenu argent
 
 champ d'application CalculQuotientFamilial:
-  définition nombre_personnes_vivants_au_foyer égal à Entier.somme de transforme chaque personne parmi famille.membres_du_foyer en (1 + personne.nombre_enfants)
-  étiquette nombre_unités_défaut définition nombre_unités égal à décimal de nombre_personnes_vivants_au_foyer
-  définition revenu_fiscal_reference état métropole égal à
-    Argent.somme de transforme chaque personne parmi famille.membres_du_foyer en personne.revenu_fiscal_reference 
+  définition nombre_personnes_vivants_au_foyer égal à décimal de Entier.somme de transforme chaque personne parmi famille.membres_du_foyer en (1 + personne.nombre_enfants)
+  étiquette nombre_unités_défaut définition nombre_unités égal à nombre_personnes_vivants_au_foyer
+  définition revenu_total égal à Argent.somme de transforme chaque personne parmi famille.membres_du_foyer en personne.revenu_fiscal_reference 
+  étiquette revenu_fiscal_reference_défaut définition revenu_fiscal_reference égal à revenu_total
   définition quotient_familial égal à argent de (décimal de revenu_fiscal_reference / (décimal de 12 * nombre_unités))
 ```
 
@@ -37,10 +51,10 @@ d'imposition (ex : situation au 31/12/2024 pour l'imposition des revenus perçus
 ```catala
 # TODO Question s'il y a plusieurs adultes dans le foyer, est ce un parent isole ? 
 champ d'application CalculQuotientFamilial:
-  étiquette parent_isolé exception défaut
+  étiquette parent_isolé exception nombre_unités_défaut
   définition nombre_unités
   sous condition famille.parent_isolé
-  conséquence égal à décimal de (nombre_personnes_vivants_au_foyer + 1)
+  conséquence égal à nombre_personnes_vivants_au_foyer + 1,0
 ```
 
 - L’agent demandeur, l’enfant ou la personne à charge porteur de handicap, titulaire d’une carte d’invalidité et/ou
@@ -52,7 +66,7 @@ champ d'application CalculQuotientFamilial:
   étiquette handicap exception parent_isolé
   définition nombre_unités
   sous condition famille.personne_ou_enfant_porteur_handicap
-  conséquence égal à décimal de (nombre_personnes_vivants_au_foyer + 0.5)
+  conséquence égal à nombre_personnes_vivants_au_foyer + 0,5
 ```
 
 - En cas de garde alternée, chaque parent qui a à charge fiscalement son ou ses enfants peut bénéficier de la prestation, dès
@@ -64,7 +78,7 @@ champ d'application CalculQuotientFamilial:
   étiquette garde_alternée exception handicap
   définition nombre_unités
   sous condition famille.garde_alternée
-  conséquence égal à décimal de (nombre_personnes_vivants_au_foyer + 0.5)
+  conséquence égal à nombre_personnes_vivants_au_foyer + 0,5
 ```
 
 - Cas des agents affectés en outre-mer : afin de prendre en compte la spécificité ultramarine, il convient de calculer
@@ -73,7 +87,10 @@ le revenu fiscal de référence.
 
 ```catala
 champ d'application CalculQuotientFamilial:
-  définition revenu_fiscal_reference état outre_mer égal à revenu_fiscal_reference * 20 %
+  étiquette revenu_fiscal_reference_outre_mer exception revenu_fiscal_reference_défaut
+  définition revenu_fiscal_reference 
+  sous condition famille.outre_mer
+  conséquence égal à revenu_total * 80 %
 ```
 
 - Condition complémentaire pour la prestation ministérielle "Aide à la Scolarité" : si le jeune adulte (l'enfant étudiant ou
@@ -103,7 +120,12 @@ déclaration champ d'application TestQuotientFamilial1:
 champ d'application TestQuotientFamilial1:
   définition calcul égal à
     résultat de CalculQuotientFamilial avec {
-      -- membres_du_foyer: [
+      -- famille: Famille {
+        -- personne_ou_enfant_porteur_handicap: faux
+        -- garde_alternée: faux
+        -- parent_isolé: faux
+        -- outre_mer: faux
+        -- membres_du_foyer: [
           Personne {
             -- revenu_fiscal_reference: 12 000 €
             -- nombre_enfants: 0
@@ -112,6 +134,38 @@ champ d'application TestQuotientFamilial1:
             -- revenu_fiscal_reference: 20 600 €
             -- nombre_enfants: 3
           } ]
+      }
+    }
+  assertion (calcul.quotient_familial = 543,33 €)
+```
+
+# Cas N°2 :
+- Un parent isolé
+- Nombre d'enfant(s) = 3 enfants à charge ;
+- Nombre personnes vivant au foyer = 1 + 3 + 1 = 5 (l'agent + 3 enfants + 1 pour le parent isolé)
+- Revenu Fiscal de Référence (RFR) du foyer = 32 600 €.
+- QF = 32 600 / (12 x 5) = 543,33 €
+
+```catala
+#[test]
+déclaration champ d'application TestQuotientFamilial2:
+  résultat calcul contenu CalculQuotientFamilial
+
+champ d'application TestQuotientFamilial2:
+  définition calcul égal à
+    résultat de CalculQuotientFamilial avec {
+      -- famille: Famille {
+        -- personne_ou_enfant_porteur_handicap: faux
+        -- garde_alternée: faux
+        -- parent_isolé: vrai
+        -- outre_mer: faux
+        -- membres_du_foyer: [
+          Personne {
+            -- revenu_fiscal_reference: 32 600 €
+            -- nombre_enfants: 3
+          }
+        ]
+      }
     }
   assertion (calcul.quotient_familial = 543,33 €)
 ```
