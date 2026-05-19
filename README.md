@@ -18,3 +18,4 @@ Ce projet existe grace a :
 - [Grist](https://github.com/gristlabs/grist-core), collaborative spreadsheet that minds its business
 - [One Trick Pony](https://github.com/betagouv/OTP-DS-to-Grist), gestionnaire de connecteur entre Démarches Simplifiées et Grist.
 - [Particulier API](https://particulier.api.gouv.fr/)
+- [Catala](https://catala-lang.org/fr/), un langage pour l'écriture précise d'algorithmes appliquant automatiquement du droit.
