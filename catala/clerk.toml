@@ -12,13 +12,13 @@ target_dir   = "_target"   # Définit où sortir les fichiers finaux des cibles.
 [[target]]
 name     = "quotient_famillial"
 modules  = [ "Quotient_familial"]
-tests    = [ "tests/tests_quotient_familial.catala_fr" ]
+tests    = [ "tests/commun" ]
 backends = [ "python" ]
 
 [[target]]
 name     = "aide_scolarite"
 modules  = [ "Aide_scolarite"]
-tests    = [ "tests/tests_aide_scolarite.catala_fr" ]
+tests    = [ "tests/aide_scolarite" ]
 backends = [ "python" ]
 
 [[target]]

@@ -1,6 +1,6 @@
 > Module Personne
 
-```catala
+```catala-metadata
 déclaration structure Personne:
   donnée revenu_fiscal_reference contenu argent
   donnée nombre_enfants contenu entier

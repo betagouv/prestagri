@@ -14,11 +14,11 @@
 ```catala
 #[test]
 déclaration champ d'application TestQuotientFamilial1:
-  résultat calcul contenu CalculQuotientFamilial
+  résultat calcul contenu Quotient_familial.CalculQuotientFamilial
 
 champ d'application TestQuotientFamilial1:
   définition calcul égal à
-    résultat de CalculQuotientFamilial avec {
+    résultat de Quotient_familial.CalculQuotientFamilial avec {
       -- famille: Famille {
         -- personne_ou_enfant_porteur_handicap: faux
         -- garde_alternée: faux
@@ -48,11 +48,11 @@ champ d'application TestQuotientFamilial1:
 ```catala
 #[test]
 déclaration champ d'application TestQuotientFamilial2:
-  résultat calcul contenu CalculQuotientFamilial
+  résultat calcul contenu Quotient_familial.CalculQuotientFamilial
 
 champ d'application TestQuotientFamilial2:
   définition calcul égal à
-    résultat de CalculQuotientFamilial avec {
+    résultat de Quotient_familial.CalculQuotientFamilial avec {
       -- famille: Famille {
         -- personne_ou_enfant_porteur_handicap: faux
         -- garde_alternée: faux

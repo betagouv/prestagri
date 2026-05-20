@@ -10,7 +10,7 @@ Note de  service p.8
 Applicable à tous les agents et pour toutes les prestations, HORS prestations interministérielles des agents MASA affectés en DDI
 QF = Revenu fiscal de référence / (12 x nombre de personnes vivant au foyer (a))
 
-```catala
+```catala-metadata
 déclaration champ d'application CalculQuotientFamilial:
   entrée famille contenu Famille
   interne nombre_personnes_vivants_au_foyer contenu décimal

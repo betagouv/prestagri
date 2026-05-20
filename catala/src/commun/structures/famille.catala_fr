@@ -1,7 +1,7 @@
 > Module Famille
 > Usage de Personne
 
-```catala
+```catala-metadata
 déclaration structure Famille:
   donnée personne_ou_enfant_porteur_handicap contenu booléen
   donnée garde_alternée contenu booléen
