@@ -1,5 +1,9 @@
 [project]
-include_dirs = [ "src/commun"] 
+include_dirs = [ 
+    "src/aide_scolarite",
+    "src/commun",
+    "src/commun/structures"
+] 
 build_dir    = "_build"    # Définit où sortir les fichiers compilés générés.
 target_dir   = "_target"   # Définit où sortir les fichiers finaux des cibles.
 
@@ -12,7 +16,13 @@ tests    = [ "tests/tests_quotient_familial.catala_fr" ]
 backends = [ "python" ]
 
 [[target]]
-name     = "famille"
-modules  = ["Famille", "Personne"]
+name     = "aide_scolarite"
+modules  = [ "Aide_scolarite"]
+tests    = [ "tests/tests_aide_scolarite.catala_fr" ]
+backends = [ "python" ]
+
+[[target]]
+name     = "structures"
+modules  = ["Famille", "P"]
 tests    = [ ]
 backends = [ "python" ]
