@@ -1,4 +1,5 @@
 > Module Quotient_familial
+> Usage de Personne
 
 ```catala
 déclaration structure Famille:
@@ -7,12 +8,6 @@ déclaration structure Famille:
   donnée parent_isolé contenu booléen
   donnée outre_mer contenu booléen
   donnée membres_du_foyer contenu liste de Personne
-```
-
-```catala
-déclaration structure Personne:
-  donnée revenu_fiscal_reference contenu argent
-  donnée nombre_enfants contenu entier
 ```
 
 ## Méthode de calcul du QUOTIENT FAMILIAL (QF) 
