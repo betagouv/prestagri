@@ -24,7 +24,11 @@ tasks:
   type_check:
     desc: run type checking
     cmds: 
-      - clerk typecheck tutorial.catala_fr
+      - clerk typecheck 
+  test:
+    desc: run all test in folder
+    cmds: 
+      - clerk test
 
 
 

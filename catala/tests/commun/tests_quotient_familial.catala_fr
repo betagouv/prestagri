@@ -1,0 +1,137 @@
+> Usage de Quotient_familial
+> Usage de Famille
+> Usage de Personne
+
+## TEST
+
+# Cas N°1 :
+- Un agent en couple
+- Nombre d'enfant(s) = 3 ;
+- Nombre personnes vivant au foyer = 2+ 3 = 5 (l'agent, son conjoint et ses 3 enfants)
+- Revenu Fiscal de Référence (RFR) du foyer = 32 600 €
+- QF = 32 600 / (12 x 5) = 543,33 €
+
+```catala
+#[test]
+déclaration champ d'application TestQuotientFamilial1:
+  résultat calcul contenu Quotient_familial.CalculQuotientFamilial
+
+champ d'application TestQuotientFamilial1:
+  définition calcul égal à
+    résultat de Quotient_familial.CalculQuotientFamilial avec {
+      -- famille: Famille {
+        -- personne_ou_enfant_porteur_handicap: faux
+        -- garde_alternée: faux
+        -- parent_isolé: faux
+        -- outre_mer: faux
+        -- membres_du_foyer: [
+          Personne {
+            -- revenu_fiscal_reference: 12 000 €
+            -- nombre_enfants: 0
+          } ;
+          Personne {
+            -- revenu_fiscal_reference: 20 600 €
+            -- nombre_enfants: 3
+          } ]
+      }
+    }
+  assertion (calcul.quotient_familial = 543,33 €)
+```
+
+# Cas N°2 :
+- Un parent isolé
+- Nombre d'enfant(s) = 3 enfants à charge ;
+- Nombre personnes vivant au foyer = 1 + 3 + 1 = 5 (l'agent + 3 enfants + 1 pour le parent isolé)
+- Revenu Fiscal de Référence (RFR) du foyer = 32 600 €.
+- QF = 32 600 / (12 x 5) = 543,33 €
+
+```catala
+#[test]
+déclaration champ d'application TestQuotientFamilial2:
+  résultat calcul contenu Quotient_familial.CalculQuotientFamilial
+
+champ d'application TestQuotientFamilial2:
+  définition calcul égal à
+    résultat de Quotient_familial.CalculQuotientFamilial avec {
+      -- famille: Famille {
+        -- personne_ou_enfant_porteur_handicap: faux
+        -- garde_alternée: faux
+        -- parent_isolé: vrai
+        -- outre_mer: faux
+        -- membres_du_foyer: [
+          Personne {
+            -- revenu_fiscal_reference: 32 600 €
+            -- nombre_enfants: 3
+          }
+        ]
+      }
+    }
+  assertion (calcul.quotient_familial = 543,33 €)
+```
+
+# Cas N°3 :
+- Un agent divorcé/séparé avec enfant-s en garde alternée
+- Nombre d'enfant(s) = 3 (en garde alternée) ;
+- Nombre personnes vivant au foyer = 1 + 3 + 0,5 (l'agent + 3 enfants + 0,5 pour la garde alternée des enfants :
+soit + 0,5 par foyer et par demande)
+- Revenu Fiscal de Référence (RFR) du foyer = 32 600 €
+- QF = 32 600 / (12 x 4,5) = 603,70 €
+
+```catala
+#[test]
+déclaration champ d'application TestQuotientFamilial3:
+  résultat calcul contenu Quotient_familial.CalculQuotientFamilial
+
+champ d'application TestQuotientFamilial3:
+  définition calcul égal à
+    résultat de Quotient_familial.CalculQuotientFamilial avec {
+      -- famille: Famille {
+        -- personne_ou_enfant_porteur_handicap: faux
+        -- garde_alternée: vrai
+        -- parent_isolé: faux
+        -- outre_mer: faux
+        -- membres_du_foyer: [
+          Personne {
+            -- revenu_fiscal_reference: 32 600 €
+            -- nombre_enfants: 3
+          }
+        ]
+      }
+    }
+  assertion (calcul.quotient_familial = 603,70 €)
+```
+
+# Cas N°4 :
+- Un agent vivant en couple affecté en outre-mer
+- Nombre d'enfant(s) = 3 ;
+- Nombre personnes vivant au foyer = 2 + 3 = 5
+- Revenu Fiscal de Référence (RFR) du foyer = 32 600 € - 20 % = 26 080 €
+- QF = 26 080 / (12 x 5) = 434,66 €.
+
+```catala
+#[test]
+déclaration champ d'application TestQuotientFamilial4:
+  résultat calcul contenu Quotient_familial.CalculQuotientFamilial
+
+champ d'application TestQuotientFamilial4:
+  définition calcul égal à
+    résultat de Quotient_familial.CalculQuotientFamilial avec {
+      -- famille: Famille {
+        -- personne_ou_enfant_porteur_handicap: faux
+        -- garde_alternée: faux
+        -- parent_isolé: faux
+        -- outre_mer: vrai
+        -- membres_du_foyer: [
+          Personne {
+            -- revenu_fiscal_reference: 12 000 €
+            -- nombre_enfants: 3
+          };
+          Personne {
+            -- revenu_fiscal_reference: 20 600 €
+            -- nombre_enfants: 0
+          }
+        ]
+      }
+    }
+  assertion (calcul.quotient_familial = 434,66 €)
+```
