@@ -1,0 +1,148 @@
+> Module Aide_scolarite
+
+> Usage de Quotient_familial
+> Usage de Famille
+> Usage de Personne
+
+# cf page 32
+
+
+# AIDE À LA SCOLARITÉ
+
+## Objet : 
+
+Prestation destinée à aider les agents MASA éligibles à faire face aux frais engagés pour les études de leurs enfants
+(enseignement secondaire et supérieur). La prestation concerne :
+- les études supérieures (quelque soit la filière),
+- les filières techniques, professionnelles, sports études, arts plastiques, musicologie de l'enseignement secondaire,
+- les enfants ou étudiants en internat.
+
+Pour l'enfant en internat dans l'enseignement secondaire, il doit être inscrit dans une formation orientée vers l'une des filières
+techniques ou professionnelles. C'est-à-dire les formations obtenues avec "la voie professionnelle" de l'enseignement secondaire dont
+les lycées professionnels proposant des formations niveau CAP ou BAC Pro. Les frais d'internat des filières "classiques" de
+l'enseignement secondaire sont exclus (par exemples les frais d'internat des collégiens et lycéens de l'enseignement général et
+technologique.)
+
+L'élève ou l'étudiant, hors apprentissage ou alternance, ne doit pas être rémunéré dans le cadre de ses études. Si le jeune
+adulte a un avis d’imposition distinct de ses parents, son revenu fiscal de référence est ajouté à celui du foyer fiscal pour le
+calcul du QF. Si l'enfant étudiant ou apprenti (hors contrat de professionnalisation) est exonéré d'impôts (plafond d’exonération
+en 2025 pour une personne seule est à 17 436 €), son salaire ou ses indemnités (total exprimé sur 12 mois moins 10 % de
+« déduction forfaitaire ») sont à ajouter au foyer fiscal.
+
+L'enfant doit être inscrit dans un établissement d'enseignement (secondaire ou supérieur) public ou privé sous contrat
+avec l'Etat ou dans un établissement privé donnant accès à un diplôme d'état, et implanté sur le territoire français.
+Sont éligibles à l'aide, les dépenses suivantes (sur justificatifs) :
+
+- les frais de logement de l'enfant (y compris l'internat des étudiants inscrits dans des établissements d'enseignement
+supérieurs) ou les frais d'internat des enfants inscrits en enseignement secondaire poursuivant une filière technique ou
+professionnelle : joindre la copie du contrat de location ou la facture d'internat) ;
+- les frais d'équipement scolaire obligatoires (équipement en lien avec la formation suivie par l'enfant, HORS manuels scolaires,
+ordinateurs ou tablette : joindre la copie de la liste ou du courrier de l'établissement qui demande ces équipements + les factures d'achat.
+
+## Montant de l'aide :
+Le montant de l'aide est plafonné à 1 000,00 € (mille euros) par enfant et par année scolaire / universitaire.
+Son montant est calculé sur la base d'un nombre de points attribués en fonction d'un barème. La valeur de chaque
+point (50 €, 75 € ou 100 €) varie selon le QF obtenu par l'agent demandeur (Cf. : barème en annexe F16a ainsi que les
+explications pour le calcul des points à la fin de cette Fiche F16).
+
+```catala
+# QF : implemente dans commun/quotient_famillial.catala_fr
+```
+
+## Conditions d'attribution :
+
+- Enfants fiscalement à charge l'année N, ou, si l'enfant a fait sa propre déclaration de revenus, il peut néanmoins
+ouvrir droit à la prestation et être considéré comme « personne vivant au foyer » pour le calcul du QF à condition que
+les revenus qu'il a déclarés soient intégrés au RFR des parents pour le calcul du QF.
+- Une seule subvention par enfant et par année scolaire / universitaire
+- L’aide n’est pas cumulable avec une aide financière versée pour le même objet par l’employeur du conjoint, sauf si le
+cumul est inférieur au montant calculé, auquel cas, le différentiel seul est servi.
+Le bénéfice de cette aide est soumis à conditions de ressources.
+A compter du 1er septembre 2025, les ressources à prendre en compte seront celles perçues en 2024 (avis
+d'imposition reçu en 2025).
+Si les ressources et/ou la composition de la famille du demandeur ont changé au moment de la demande, les
+modifications pourront être prises en compte au regard des justificatifs fournis ( joindre dans ce cas une copie du dernier
+bulletin de salaire du demandeur et/ou du conjoint. Si conjoint-e sans activité, joindre notification Pôle Emploi, notification
+d’admission à la retraite, accompagnés d'une attestation sur l’honneur expliquant l'évolution des ressources et/ou de la composition
+de la famille au moment du dépôt de l'allocation Aide à la Scolarité).
+
+## Bénéficiaires (outre ceux énumérés aux dispositions générales) :
+Agents du ministère chargé de l'agriculture sont bénéficiaires de l’aide sous réserve :
+- d’être rémunérés sur le budget de l'État ;
+- pour les agents contractuels (de droit public, visés par le Décret n° 86-83 du 17 janvier 1986, relatif aux dispositions générales
+applicables aux agents contractuels de l’État), il faut un contrat d’au moins 6 mois ou d'être présent depuis 6 mois (contrats
+consécutifs) et une activité au moins égale à 50% d’un temps plein.
+
+### Autres bénéficiaires :
+- Agents MASA admis à la retraite dont les enfants à charge poursuivent des études (secondaires ou supérieures) ;
+- Tuteurs d'orphelins et ayants droit d'un agent MASA ;
+- Agents MASA, tuteurs d'orphelins.
+
+## Dispositions particulières :
+L’aide est accordée dans la limite d’une demande par année scolaire (dès l'enseignement secondaire) ou année
+universitaire et par enfant. Elle est attribuée en un seul versement.
+Le dépôt de la demande doit intervenir dans un délai de trois mois à compter de la rentrée scolaire, universitaire ou de
+la date de rentrée effective pour l'établissement où est inscrit l'étudiant.
+L’aide est acquise sur présentation des pièces justificatives et ne peut excéder le montant de la dépense restant à
+charge de l'agent, une fois les aides (notamment aide financière versée pour le même objet par l’employeur du
+conjoint) et allocations (hors bourses d'études) éventuelles déduites.
+La détermination du montant de l’aide doit résulter de la méthode de calcul présentée en Annexe F16 a.
+
+## Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :
+Le calcul du montant de la prestation se fait en deux étapes. Il s'agit dans un premier temps de déterminer la valeur du point
+en fonction du quotient familial du demandeur et, dans un deuxième temps, de déterminer le nombre de points attribués en
+fonction de l'application des critères tels que définis ci-après :
+
+### I – Détermination du Quotient Familial (QF)
+Le mode de calcul du QF est déterminé par la formule : QF = Revenu fiscal de référence / (12 x nombre de personnes
+vivant au foyer) [+0,5 ou + 1 selon les règles générales définies à la page 5 de la présente note] avec quelques
+particularités par rapport aux autres prestations ministérielles :
+
+```catala-metadata
+déclaration champ d'application CalculQuotientFamilialAideScolarite:
+  entrée foyer_fiscal_agent contenu Famille
+  entrée étudiants_fiscalement_indépendants contenu liste de Personne
+  interne famille contenu Famille
+  résultat quotient_familial contenu argent
+```
+
+```catala
+champ d'application CalculQuotientFamilialAideScolarite:
+  étiquette famille_défaut définition famille égal à foyer_fiscal_agent
+  définition quotient_familial égal à résultat de Quotient_familial.CalculQuotientFamilial avec { 
+    --famille: famille
+  }.quotient_familial
+```
+
+- Les élèves ou étudiants à charge fiscalement bénéficiant d'un logement séparé sont considérés comme
+«personne vivant au foyer» ;
+```catala
+## TODO On definit comme vivant au foyer toute les personnes a charge fiscalement, c'est ca ? ou un autre adelphe n'est pas inclus ? 
+```
+- Les étudiants ayant effectué leur propre déclaration fiscale, qu'ils vivent réellement au foyer ou non, peuvent être
+considérés comme «personnes vivant au foyer» pour le calcul du QF à condition que les revenus qu'ils ont
+déclarés soient intégrés au RFR pour le calcul du QF et que ces revenus ne soient pas une rémunération liée à
+leurs études ;
+
+```catala
+champ d'application CalculQuotientFamilialAideScolarite:
+  étiquette ajout_étudiants_fiscalement_indépendants exception famille_défaut
+  définition famille
+  sous condition nombre de étudiants_fiscalement_indépendants > 0
+  conséquence égal à foyer_fiscal_agent 
+  mais en remplaçant { -- membres_du_foyer: foyer_fiscal_agent.membres_du_foyer ++ étudiants_fiscalement_indépendants }
+
+## TODO Ajouter test pour verifier la validite de la concatenation de liste
+
+```
+- Les indemnités perçues par les apprentis doivent être intégrées dans le revenu fiscal de référence pour le
+calcul du QF, que l'apprenti ait fait ou non sa propre déclaration fiscale.
+Le calcul du QF ainsi fait détermine ensuite la valeur du point à utiliser pour le calcul du montant de la prestation selon
+la formule suivante : montant de l'aide = nombre de points X valeur du point.
+Tout agent ayant un QF supérieur ou égal à 1 090,00 € est inéligible à cette aide et ne peut déposer de dossier
+
+```catala
+
+
+
+```
