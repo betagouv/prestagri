@@ -14,6 +14,11 @@ tasks:
     dir: backend
     cmds:
       - uv run fastapi dev
+  scalingo:
+    desc: serve as scalingo would
+    dir: backend
+    cmds: 
+      - uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
   doc:
     desc: run the doc locally
     cmds:

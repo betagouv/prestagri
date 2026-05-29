@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from utils import logger
-from catala.aides import impot_revenu
+from ..utils import logger
+from ..catala.aides import impot_revenu
 
 router = APIRouter()
 
