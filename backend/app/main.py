@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
-from utils import logger
+from .utils import logger
 from config import setup_sentry
 from api import default
 
