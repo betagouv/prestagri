@@ -10,19 +10,7 @@ target_dir   = "_target"   # Définit où sortir les fichiers finaux des cibles.
 # Chaque section [[target]] décrit une cible de construction pour le projet
 
 [[target]]
-name     = "quotient_famillial"
-modules  = [ "Quotient_familial"]
-tests    = [ "tests/commun" ]
-backends = [ "python" ]
-
-[[target]]
-name     = "aide_scolarite"
-modules  = [ "Aide_scolarite"]
-tests    = [ "tests/aide_scolarite" ]
-backends = [ "python" ]
-
-[[target]]
-name     = "structures"
-modules  = ["Famille", "P"]
-tests    = [ ]
+name     = "prestagri_catala"
+modules  = [ "Quotient_familial", "Aide_scolarite"]
+tests    = [ "tests/commun", "tests/aide_scolarite" ]
 backends = [ "python" ]

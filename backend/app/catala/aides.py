@@ -1,7 +1,6 @@
-from catala.generated.ImpotSimple import CalculImpotRevenuIn,CalculImpotRevenu, calcul_impot_revenu
-from catala.generated.catala_runtime import Money, Integer
+from prestagri_catala.Personne import Personne
+from prestagri_catala.catala_runtime import Money, Integer
 
-def impot_revenu(montant) -> int:
-    input = CalculImpotRevenuIn(Money(Integer(1000)))
-    result: CalculImpotRevenu = calcul_impot_revenu(input)
-    return int(result.impot_revenu.value.value)
+def impot_revenu(montant) -> str:
+    personne = Personne(Money(Integer(100000)), Integer(3))
+    return str(personne)

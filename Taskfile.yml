@@ -26,6 +26,9 @@ tasks:
     desc: build catala code and add the generated source to the python library
     cmds:
       - cd catala && clerk build
-      - cp catala/_build/libcatala/python/* backend/import/prestagri-catala
-      - cp catala/_build/aide_scolarite/python/* backend/import/prestagri-catala
-
+      - mv catala/_target/prestagri_catala/python/* catala_python_package/src/prestagri_catala
+      - cd catala_python_package && uv build
+      - find catala_python_package/src/prestagri_catala/*.py -type f -exec sed -i 's/catala_runtime/.catala_runtime/g' {} +
+      - sed -i 's/import dates/from .dates import */g' catala_python_package/src/prestagri_catala/catala_runtime.py
+      - sed -i 's/dates\.//g' catala_python_package/src/prestagri_catala/catala_runtime.py
+      - cd backend && uv pip install -e ../catala_python_package/
