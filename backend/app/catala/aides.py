@@ -1,23 +1,18 @@
+
+from .generated.Quotient_familial import CalculQuotientFamilialIn, calcul_quotient_familial
+from .generated.Aide_scolarite import CalculQuotientFamilialAideScolariteIn, calcul_quotient_familial_aide_scolarite
+from .generated.catala_runtime import Money, Integer
 from .generated.Personne import Personne as Personne_cat
 from .generated.Famille import Famille as Famille_cat
-from .generated.Quotient_familial import CalculQuotientFamilialIn, calcul_quotient_familial
-from .generated.catala_runtime import Money, Integer
 from ..model.famille import Famille
+from ..model.personne import Personne
+from .utils import to_famille_cat, to_personne_cat_list
 
+def quotient_familial(famille : Famille) -> str:
+    famille_cat = to_famille_cat(famille)
+    return str(calcul_quotient_familial(CalculQuotientFamilialIn(famille_cat)).quotient_familial)
 
-def impot_revenu(montant) -> str:
-    personne = Personne(Money(Integer(100000)), Integer(3))
-    return str(personne)
-
-def quotient_familial(famille) -> str:
-    membres_cat = []
-    for membre in famille.membres:
-        membres_cat += Personne_cat(Money(Integer(membre.revenu*100)), Integer(membre.enfants)),
-    famille_cat = Famille_cat(
-        famille.personne_ou_enfant_porteur_handicap,
-        famille.garde_alternee,
-        famille.parent_isole,
-        famille.outre_mer,
-        membres_cat
-    )
-    return str(calcul_quotient_familial(CalculQuotientFamilialIn(famille_cat)))
+def quotient_familial_aide_scolarite(famille: Famille, etudiants_fiscalement_independants: list[Personne]) -> str: 
+    famille_cat = to_famille_cat(famille)
+    etudiants_cat = to_personne_cat_list(etudiants_fiscalement_independants)
+    return str(calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(famille_cat, etudiants_cat)).quotient_familial)

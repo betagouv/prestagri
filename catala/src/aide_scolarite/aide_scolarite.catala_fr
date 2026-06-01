@@ -118,6 +118,7 @@ champ d'application CalculQuotientFamilialAideScolarite:
 «personne vivant au foyer» ;
 ```catala
 ## TODO On definit comme vivant au foyer toute les personnes a charge fiscalement, c'est ca ? ou un autre adelphe n'est pas inclus ? 
+## Donc on tient compte des enfants de l'etudiant le cas echeant ?
 ```
 - Les étudiants ayant effectué leur propre déclaration fiscale, qu'ils vivent réellement au foyer ou non, peuvent être
 considérés comme «personnes vivant au foyer» pour le calcul du QF à condition que les revenus qu'ils ont
