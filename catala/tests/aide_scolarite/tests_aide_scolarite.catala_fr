@@ -1,6 +1,7 @@
 > Usage de Aide_scolarite
 > Usage de Famille
 > Usage de Personne
+> Usage de Trajet
 
 # Cas N°1 :
 - Un agent en couple
@@ -73,6 +74,80 @@ champ d'application TestCalculPointsAideScolarite1:
   définition calcul égal à
     résultat de Aide_scolarite.CalculPointsAideScolarite avec {
       -- domiciliation_séparée_avec_loyer: vrai
+      -- trajet_depuis_domicile_agent: Trajet {
+        -- distance_km: 10
+        --durée_minutes: 20
+      }
+      -- trajet_depuis_domicile_étudiant: Trajet {
+        --distance_km: 10
+        -- durée_minutes: 20
+      }
+    }
+  assertion (calcul.nb_points = 2)
+```
+
+
+# Cas N°4 :
+```catala
+#[test]
+déclaration champ d'application TestCalculPointsTrajet1:
+  résultat calcul contenu Aide_scolarite.CalculPointsTrajet
+
+champ d'application TestCalculPointsTrajet1:
+  définition calcul égal à
+    résultat de Aide_scolarite.CalculPointsTrajet avec {
+      -- trajet: Trajet {
+        -- distance_km: 60
+        -- durée_minutes: 20
+      }
+    }
+  assertion (calcul.nb_points = 2)
+```
+
+```catala
+#[test]
+déclaration champ d'application TestCalculPointsTrajet2:
+  résultat calcul contenu Aide_scolarite.CalculPointsTrajet
+
+champ d'application TestCalculPointsTrajet2:
+  définition calcul égal à
+    résultat de Aide_scolarite.CalculPointsTrajet avec {
+      -- trajet: Trajet {
+        -- distance_km: 101
+        -- durée_minutes: 20
+      }
+    }
+  assertion (calcul.nb_points = 4)
+```
+
+```catala
+#[test]
+déclaration champ d'application TestCalculPointsTrajet3:
+  résultat calcul contenu Aide_scolarite.CalculPointsTrajet
+
+champ d'application TestCalculPointsTrajet3:
+  définition calcul égal à
+    résultat de Aide_scolarite.CalculPointsTrajet avec {
+      -- trajet: Trajet {
+        -- distance_km: 20
+        -- durée_minutes: 20
+      }
+    }
+  assertion (calcul.nb_points = 0)
+```
+
+```catala
+#[test]
+déclaration champ d'application TestCalculPointsTrajet4:
+  résultat calcul contenu Aide_scolarite.CalculPointsTrajet
+
+champ d'application TestCalculPointsTrajet4:
+  définition calcul égal à
+    résultat de Aide_scolarite.CalculPointsTrajet avec {
+      -- trajet: Trajet {
+        -- distance_km: 20
+        -- durée_minutes: 40
+      }
     }
   assertion (calcul.nb_points = 2)
 ```

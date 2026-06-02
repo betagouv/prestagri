@@ -3,6 +3,7 @@
 > Usage de Quotient_familial
 > Usage de Famille
 > Usage de Personne
+> Usage de Trajet
 
 # cf page 32
 
@@ -175,9 +176,13 @@ les critères de localisation, d'acquisition de matériel et d'études supérieu
 ```catala-metadata
 déclaration champ d'application CalculPointsAideScolarite:
   entrée domiciliation_séparée_avec_loyer contenu booléen
+  entrée trajet_depuis_domicile_agent contenu Trajet
+  entrée trajet_depuis_domicile_étudiant contenu Trajet
+  interne points_domiciliation_séparée contenu entier
   résultat nb_points contenu entier
     état base
     état domiciliation_séparée
+    état éloignement
 ```
 
 ```catala
@@ -191,10 +196,11 @@ que soit la nature du logement occupé, qu’il s’agisse d’une chambre en fo
 d’un logement privé ou social : 2 points.
 ```catala
 champ d'application CalculPointsAideScolarite:
+  définition points_domiciliation_séparée égal à 2
   définition nb_points état domiciliation_séparée
   égal à
     si domiciliation_séparée_avec_loyer
-    alors nb_points + 2
+    alors nb_points + points_domiciliation_séparée
     sinon nb_points
 ```
 
@@ -203,3 +209,41 @@ Lorsque la distance entre l’établissement d’enseignement et le domicile fam
 domiciliation séparée, est comprise entre 30 et 100 km, quels que soient les modes de transport utilisés et la
 fréquence des déplacements, ou pour un temps de trajet supérieur ou égal à 30 minutes : 2 points.
 Lorsque la distance est supérieure à 100 km : 4 points.
+
+La distance comme le temps de trajet sont forfaitaires et se calculent en utilisant des outils sur les sites Internet :
+viamichelin.fr ou mappy.com. Ne sera retenu que l'itinéraire le plus DIRECT et le plus COURT proposé par le site
+Internet sur la base d'un trajet en voiture simulé avec un départ à 8h00 du matin et pendant les jours ouvrés
+uniquement. (Joindre obligatoirement une copie de la capture d'écran de l'itinéraire calculé).
+
+REMARQUE : L'agent peut choisir le plus avantageux entre le C2 et le C3 qui ne peuvent se cumuler, en cas de
+domiciliation séparée, SAUF si c'est la distance entre le domicile de l'étudiant et l’établissement qui a servi au calcul et
+attribué des points au C3
+
+```catala-metadata
+déclaration champ d'application CalculPointsTrajet:
+  entrée trajet contenu Trajet
+  résultat nb_points contenu entier
+```
+
+```catala
+champ d'application CalculPointsTrajet:
+  définition nb_points égal à
+    si trajet.distance_km > 30 ou trajet.durée_minutes > 30 
+    alors si trajet.distance_km > 100
+      alors 4
+      sinon 2
+    sinon 0
+```
+
+```catala
+champ d'application CalculPointsAideScolarite:
+  définition nb_points état éloignement
+  égal à
+    soit points_domicile_agent égal à résultat de CalculPointsTrajet avec { -- trajet: trajet_depuis_domicile_agent }.nb_points dans
+    soit points_domicile_étudiant égal à résultat de CalculPointsTrajet avec { -- trajet: trajet_depuis_domicile_étudiant }.nb_points dans
+    si non domiciliation_séparée_avec_loyer
+    alors nb_points + points_domicile_agent
+    sinon si points_domicile_agent >= points_domicile_étudiant + points_domiciliation_séparée
+      alors nb_points + points_domicile_agent - points_domiciliation_séparée # si prise en compte du logement de l'agent, non cumulable avec les points obtenus pour la domiciliation separee
+      sinon nb_points + points_domicile_étudiant
+```
