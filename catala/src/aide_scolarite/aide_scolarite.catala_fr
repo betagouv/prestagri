@@ -132,18 +132,38 @@ champ d'application CalculQuotientFamilialAideScolarite:
   sous condition nombre de étudiants_fiscalement_indépendants > 0
   conséquence égal à foyer_fiscal_agent 
   mais en remplaçant { -- membres_du_foyer: foyer_fiscal_agent.membres_du_foyer ++ étudiants_fiscalement_indépendants }
-
-## TODO Ajouter test pour verifier la validite de la concatenation de liste
-
 ```
 - Les indemnités perçues par les apprentis doivent être intégrées dans le revenu fiscal de référence pour le
 calcul du QF, que l'apprenti ait fait ou non sa propre déclaration fiscale.
-Le calcul du QF ainsi fait détermine ensuite la valeur du point à utiliser pour le calcul du montant de la prestation selon
-la formule suivante : montant de l'aide = nombre de points X valeur du point.
-Tout agent ayant un QF supérieur ou égal à 1 090,00 € est inéligible à cette aide et ne peut déposer de dossier
 
 ```catala
 
+## Est ce qu'ils sont inclus dans la declaration fiscale initiale ?
 
+```
+Le calcul du QF ainsi fait détermine ensuite la valeur du point à utiliser pour le calcul du montant de la prestation selon
+la formule suivante : montant de l'aide = nombre de points X valeur du point.
 
+```catala-metadata
+déclaration champ d'application CalculAideScolarite:
+  entrée quotient_familial contenu argent
+  entrée nb_points contenu entier
+  interne valeur_point contenu argent
+  résultat aide_scolarite contenu argent
+```
+
+```catala
+champ d'application CalculAideScolarite:
+  définition valeur_point égal à 25€
+  étiquette aide_scolarite_défaut définition aide_scolarite égal à nb_points * valeur_point
+```
+
+Tout agent ayant un QF supérieur ou égal à 1 090,00 € est inéligible à cette aide et ne peut déposer de dossier
+
+```catala
+champ d'application CalculAideScolarite:
+  étiquette non_eligible_aide_scolarite exception aide_scolarite_défaut
+  définition aide_scolarite
+  sous condition quotient_familial > 1090 €
+  conséquence égal à 0 €
 ```
