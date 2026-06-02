@@ -167,3 +167,39 @@ champ d'application CalculAideScolarite:
   sous condition quotient_familial > 1090 €
   conséquence égal à 0 €
 ```
+
+### II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)
+Pour être éligible un dossier doit obtenir des points dans l'un au moins des critères (C2 ou C3, C4, C5, C6) étant entendu que
+les critères de localisation, d'acquisition de matériel et d'études supérieures peuvent se cumuler.
+
+```catala-metadata
+déclaration champ d'application CalculPointsAideScolarite:
+  entrée domiciliation_séparée_avec_loyer contenu booléen
+  résultat nb_points contenu entier
+    état base
+    état domiciliation_séparée
+```
+
+```catala
+champ d'application CalculPointsAideScolarite:
+  définition nb_points état base égal à 0
+```
+
+- Un critère de domiciliation séparée (C2) :
+Lorsque l’élève ou l'étudiant réside dans un domicile séparé de ses parents donnant lieu au paiement d’un loyer, quelle
+que soit la nature du logement occupé, qu’il s’agisse d’une chambre en foyer, en internat ou en résidence universitaire,
+d’un logement privé ou social : 2 points.
+```catala
+champ d'application CalculPointsAideScolarite:
+  définition nb_points état domiciliation_séparée
+  égal à
+    si domiciliation_séparée_avec_loyer
+    alors nb_points + 2
+    sinon nb_points
+```
+
+- Un critère d’éloignement (C3) :
+Lorsque la distance entre l’établissement d’enseignement et le domicile familial, ou le logement de l’étudiant en cas de
+domiciliation séparée, est comprise entre 30 et 100 km, quels que soient les modes de transport utilisés et la
+fréquence des déplacements, ou pour un temps de trajet supérieur ou égal à 30 minutes : 2 points.
+Lorsque la distance est supérieure à 100 km : 4 points.

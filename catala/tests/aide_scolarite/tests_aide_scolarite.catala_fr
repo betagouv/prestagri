@@ -62,3 +62,17 @@ champ d'application TestAideScolarite1:
     }
   assertion (calcul.aide_scolarite = 0 €)
 ```
+
+# Cas N°3 :
+```catala
+#[test]
+déclaration champ d'application TestCalculPointsAideScolarite1:
+  résultat calcul contenu Aide_scolarite.CalculPointsAideScolarite
+
+champ d'application TestCalculPointsAideScolarite1:
+  définition calcul égal à
+    résultat de Aide_scolarite.CalculPointsAideScolarite avec {
+      -- domiciliation_séparée_avec_loyer: vrai
+    }
+  assertion (calcul.nb_points = 2)
+```
