@@ -1,3 +1,4 @@
+from pydantic import BaseModel
 from fastapi import APIRouter
 from ..utils import logger
 from ..catala.aides import quotient_familial, quotient_familial_aide_scolarite
@@ -12,6 +13,10 @@ def read_root():
     logger.info('Bienvenu')
     return {"Quelle belle journee pour les abeilles"}
 
+class Response(BaseModel):
+    value: str
+    explanation: str 
+
 @router.get("/quotient_familial")
 def read_quotient_familial(
     agent_revenu: int,
@@ -22,9 +27,9 @@ def read_quotient_familial(
     garde_alternee: bool = False,
     parent_isole: bool = False,
     outre_mer: bool = False
-    ):
+    ) -> Response :
     famille = create_famille(agent_revenu, agent_enfants, conjoint_revenu, conjoint_enfants, personne_ou_enfant_porteur_handicap, garde_alternee, parent_isole, outre_mer)
-    return quotient_familial(famille)
+    return Response(value = quotient_familial(famille), explanation = "not yet available")
 
 
 @router.get("/aide_scolarite/quotient_familial")
@@ -42,8 +47,7 @@ def read_quotient_familial_aide_scolarite(
     ):
     etudiant_independant = Personne(revenu=etudiant_revenu, enfants=etudiant_enfants)
     famille = create_famille(agent_revenu, agent_enfants, conjoint_revenu, conjoint_enfants, personne_ou_enfant_porteur_handicap, garde_alternee, parent_isole, outre_mer)
-    return quotient_familial_aide_scolarite(famille, [etudiant_independant])
-
+    return Response(value = quotient_familial_aide_scolarite(famille, [etudiant_independant]), explanation = "not yet available")
 
 @router.get("/error-simulator")
 async def trigger_error():
