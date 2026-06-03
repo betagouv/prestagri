@@ -242,15 +242,11 @@ champ d'application CalculPointsAideScolarite:
   définition nb_points état éloignement
   égal à
     soit points_domicile_agent égal à résultat de CalculPointsTrajet avec { -- trajet: trajet_depuis_domicile_agent }.nb_points dans
-    si trajet_depuis_domicile_étudiant sous forme Absent
-    alors nb_points + points_domicile_agent
-    sinon 
-      soit points_domicile_étudiant égal à 
-        selon trajet_depuis_domicile_étudiant sous forme
-          -- Absent: 0,0
-          -- Présent contenu trajet : résultat de CalculPointsTrajet avec { -- trajet: trajet }.nb_points 
-      dans
-      nb_points + maximum de [points_domicile_agent - points_domiciliation_séparée; points_domicile_étudiant]
+    selon trajet_depuis_domicile_étudiant sous forme
+          -- Absent: nb_points + points_domicile_agent
+          -- Présent contenu trajet : 
+            soit points_domicile_étudiant égal à résultat de CalculPointsTrajet avec { -- trajet: trajet }.nb_points dans 
+            nb_points + maximum de [points_domicile_agent - points_domiciliation_séparée; points_domicile_étudiant]
 ```
 
 - Un critère d’acquisition de matériel spécifique (C4) :
