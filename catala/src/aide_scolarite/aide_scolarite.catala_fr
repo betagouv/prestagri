@@ -175,19 +175,21 @@ les critères de localisation, d'acquisition de matériel et d'études supérieu
 
 ```catala-metadata
 déclaration champ d'application CalculPointsAideScolarite:
-  entrée domiciliation_séparée_avec_loyer contenu booléen
+  entrée valeur_point contenu argent
   entrée trajet_depuis_domicile_agent contenu Trajet
-  entrée trajet_depuis_domicile_étudiant contenu Trajet
-  interne points_domiciliation_séparée contenu entier
-  résultat nb_points contenu entier
+  entrée trajet_depuis_domicile_étudiant contenu optionnel de Trajet
+  entrée montant_matériel_spécifique contenu argent
+  interne points_domiciliation_séparée contenu décimal
+  résultat nb_points contenu décimal
     état base
     état domiciliation_séparée
     état éloignement
+    état matériel_spécifique
 ```
 
 ```catala
 champ d'application CalculPointsAideScolarite:
-  définition nb_points état base égal à 0
+  définition nb_points état base égal à 0,0
 ```
 
 - Un critère de domiciliation séparée (C2) :
@@ -196,10 +198,10 @@ que soit la nature du logement occupé, qu’il s’agisse d’une chambre en fo
 d’un logement privé ou social : 2 points.
 ```catala
 champ d'application CalculPointsAideScolarite:
-  définition points_domiciliation_séparée égal à 2
+  définition points_domiciliation_séparée égal à 2,0
   définition nb_points état domiciliation_séparée
   égal à
-    si domiciliation_séparée_avec_loyer
+    si trajet_depuis_domicile_étudiant sous forme Présent
     alors nb_points + points_domiciliation_séparée
     sinon nb_points
 ```
@@ -222,7 +224,7 @@ attribué des points au C3
 ```catala-metadata
 déclaration champ d'application CalculPointsTrajet:
   entrée trajet contenu Trajet
-  résultat nb_points contenu entier
+  résultat nb_points contenu décimal
 ```
 
 ```catala
@@ -230,9 +232,9 @@ champ d'application CalculPointsTrajet:
   définition nb_points égal à
     si trajet.distance_km > 30 ou trajet.durée_minutes > 30 
     alors si trajet.distance_km > 100
-      alors 4
-      sinon 2
-    sinon 0
+      alors 4,0
+      sinon 2,0
+    sinon 0,0
 ```
 
 ```catala
@@ -240,10 +242,31 @@ champ d'application CalculPointsAideScolarite:
   définition nb_points état éloignement
   égal à
     soit points_domicile_agent égal à résultat de CalculPointsTrajet avec { -- trajet: trajet_depuis_domicile_agent }.nb_points dans
-    soit points_domicile_étudiant égal à résultat de CalculPointsTrajet avec { -- trajet: trajet_depuis_domicile_étudiant }.nb_points dans
-    si non domiciliation_séparée_avec_loyer
+    si trajet_depuis_domicile_étudiant sous forme Absent
     alors nb_points + points_domicile_agent
-    sinon si points_domicile_agent >= points_domicile_étudiant + points_domiciliation_séparée
-      alors nb_points + points_domicile_agent - points_domiciliation_séparée # si prise en compte du logement de l'agent, non cumulable avec les points obtenus pour la domiciliation separee
-      sinon nb_points + points_domicile_étudiant
+    sinon 
+      soit points_domicile_étudiant égal à 
+        selon trajet_depuis_domicile_étudiant sous forme
+          -- Absent: 0,0
+          -- Présent contenu trajet : résultat de CalculPointsTrajet avec { -- trajet: trajet }.nb_points 
+      dans
+      nb_points + maximum de [points_domicile_agent - points_domiciliation_séparée; points_domicile_étudiant]
+```
+
+- Un critère d’acquisition de matériel spécifique (C4) :
+Lorsque l’élève ou l'étudiant (en filière technique ou professionnelle) est dans l’obligation d’acquérir du matériel
+spécifique ou des équipements techniques au titre de l’enseignement dispensé (hors manuels scolaires,
+ordinateurs et tablettes) et sur justificatifs de l’établissement d’enseignement (joindre la copie de la liste ou du
+courrier de l'établissement qui demande ces équipements, accompagnée de la (des) facture(s) acquittée(s) de ces
+achats) : 2 points.
+Le justificatif de l’achat doit être obligatoirement fourni. La prestation, ou la part de prestation, attribuée sur ce critère
+sera limitée à la dépense réellement engagée dans la limite maximum des deux points précités et le montant dépensé
+pour ce critère doit être au moins égal à la valeur du point à appliquer (valeur obtenue après calcul du QF).
+
+```catala
+champ d'application CalculPointsAideScolarite:
+  définition nb_points état matériel_spécifique
+  égal à 
+    soit montant_eligible égal à minimum de [2*valeur_point; montant_matériel_spécifique] dans
+    nb_points + montant_eligible/valeur_point
 ```
