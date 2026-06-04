@@ -303,4 +303,43 @@ champ d'application TestCalculPointsAideScolarite7:
 
 # Cas N°2 : matériel spécifique supérieur au maximun eligible
 
+```catala
+#[test]
+déclaration champ d'application TestCalculPointsAideScolarite8:
+  résultat calcul contenu Aide_scolarite.CalculPointsAideScolarite
+
+champ d'application TestCalculPointsAideScolarite8:
+  définition calcul égal à
+    résultat de Aide_scolarite.CalculPointsAideScolarite avec {
+      -- valeur_point: 10€
+      -- trajet_depuis_domicile_agent: Trajet {
+        -- distance_km: 10
+        -- durée_minutes: 20
+      }
+      -- trajet_depuis_domicile_étudiant: Absent
+      -- montant_matériel_spécifique : 70€
+    }
+  assertion (calcul.nb_points = 2,0)
+```
+
+
 # Cas N°3 : matériel spécifique inférieur au maximum eligible
+
+```catala
+#[test]
+déclaration champ d'application TestCalculPointsAideScolarite9:
+  résultat calcul contenu Aide_scolarite.CalculPointsAideScolarite
+
+champ d'application TestCalculPointsAideScolarite9:
+  définition calcul égal à
+    résultat de Aide_scolarite.CalculPointsAideScolarite avec {
+      -- valeur_point: 10€
+      -- trajet_depuis_domicile_agent: Trajet {
+        -- distance_km: 10
+        -- durée_minutes: 20
+      }
+      -- trajet_depuis_domicile_étudiant: Absent
+      -- montant_matériel_spécifique : 12€
+    }
+  assertion (calcul.nb_points = 1,2)
+```
