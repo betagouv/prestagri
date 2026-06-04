@@ -186,6 +186,23 @@ champ d'application TestCalculPointsAideScolarite2:
   assertion (calcul.nb_points = 0,0)
 ```
 
+# Cas Intermediaire: Retrait du critere C2 
+```catala
+#[test]
+déclaration champ d'application TestCalculRetraitCritere:
+  résultat calcul contenu Aide_scolarite.RetraitCritèreC2
+
+champ d'application TestCalculRetraitCritere:
+  définition calcul égal à
+    résultat de Aide_scolarite.RetraitCritèreC2 avec {
+      -- critères: [
+        C2 contenu 2,0
+      ]
+    }
+  assertion (calcul.critères_sans_c2 = [])
+```
+
+
 # Cas N°3 : logement separe mais l'adresse des parents est plus avantageuse
 ```catala
 #[test]

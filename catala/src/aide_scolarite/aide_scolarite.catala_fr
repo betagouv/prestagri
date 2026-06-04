@@ -198,7 +198,16 @@ déclaration champ d'application CalculPointsAideScolarite:
 ```catala
 champ d'application CalculPointsAideScolarite:
   définition critères_applicables état base égal à []
-  définition nb_points égal à 0,0
+  définition nb_points égal à
+    soit points égal à 
+      transforme chaque c parmi critères_applicables en 
+        selon c sous forme 
+        -- C2 contenu c_points: c_points
+        -- C3 contenu c_points: c_points 
+        -- C4 contenu c_points: c_points 
+        -- C5 contenu c_points: c_points 
+    dans
+    Décimal.somme de points
 
 ```
 
@@ -251,7 +260,7 @@ déclaration champ d'application CalculPointsTrajet:
   résultat nb_points contenu décimal
 ```
 
-```catala-metadata
+```catala
 champ d'application CalculPointsTrajet:
   définition nb_points égal à
     si trajet.distance_km > 30 ou trajet.durée_minutes > 30 
@@ -261,13 +270,15 @@ champ d'application CalculPointsTrajet:
     sinon 0,0
 ```
 
-```catala
+```catala-metadata
 déclaration champ d'application RetraitCritèreC2:
   entrée critères contenu liste de CritèresAideScolarité
   résultat critères_sans_c2 contenu liste de CritèresAideScolarité
+```
 
+```catala
 champ d'application RetraitCritèreC2:
-  définition critères_sans_c2 égal à liste de c parmi critères tel que c sous forme  C2 
+  définition critères_sans_c2 égal à liste de c parmi critères tel que non  (c sous forme  C2) 
 ```
 
 - Un critère d’acquisition de matériel spécifique (C4) :
