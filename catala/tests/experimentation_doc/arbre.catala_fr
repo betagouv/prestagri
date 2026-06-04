@@ -1,0 +1,23 @@
+```catala-metadata
+
+déclaration structure Fruit:
+  donnée comestible contenu booléen
+
+déclaration structure Arbre:
+  donnée fruit contenu optionnel de Fruit
+
+#[test]
+déclaration champ d'application MangerTest1:
+  résultat nourriture contenu booléen 
+
+champ d'application MangerTest1:
+  définition nourriture égal à
+    soit arbre égal à Arbre { -- fruit: Présent contenu Fruit { --comestible: vrai} } dans
+    si arbre.fruit sous forme Présent contenu fruit_présent et fruit_présent.comestible
+    alors vrai
+    sinon faux
+
+  
+    
+  assertion (nourriture = vrai)
+```

@@ -1,0 +1,23 @@
+```catala-metadata
+
+declaration structure Fruit:
+  data edible content boolean
+
+declaration structure Arbre:
+  data fruit content optional of Fruit
+
+#[test]
+declaration scope EatTest1:
+  output food content boolean 
+
+scope EatTest1:
+  definition food equals
+    let arbre equals Arbre { -- fruit: Present content Fruit { --edible: true} } in
+    if arbre.fruit with pattern Present content fruit_présent and fruit_présent.edible
+    then true
+    else false
+
+  
+    
+  assertion (food = true)
+```
