@@ -158,16 +158,16 @@ class CalculAideScolariteIn:
         return "CalculAideScolariteIn(quotient_familial_in={},nb_points_in={})".format(self.quotient_familial_in, self.nb_points_in)
 
 class CalculPointsAideScolariteIn:
-    def __init__(self, valeur_point_in: Money, trajet_depuis_domicile_agent_in: trajet.Trajet, trajet_depuis_domicile_etudiant_in: Option[trajet.Trajet], montant_materiel_specifique_in: Money, etudiant_en_filiere_post_bac_in: bool) -> None:
-        self.valeur_point_in = valeur_point_in
+    def __init__(self, trajet_depuis_domicile_agent_in: trajet.Trajet, trajet_depuis_domicile_etudiant_in: Option[trajet.Trajet], montant_materiel_specifique_in: Money, valeur_point_in: Money, etudiant_en_filiere_post_bac_in: bool) -> None:
         self.trajet_depuis_domicile_agent_in = trajet_depuis_domicile_agent_in
         self.trajet_depuis_domicile_etudiant_in = trajet_depuis_domicile_etudiant_in
         self.montant_materiel_specifique_in = montant_materiel_specifique_in
+        self.valeur_point_in = valeur_point_in
         self.etudiant_en_filiere_post_bac_in = etudiant_en_filiere_post_bac_in
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, CalculPointsAideScolariteIn):
-            return (self.valeur_point_in == other.valeur_point_in and self.trajet_depuis_domicile_agent_in == other.trajet_depuis_domicile_agent_in and self.trajet_depuis_domicile_etudiant_in == other.trajet_depuis_domicile_etudiant_in and self.montant_materiel_specifique_in == other.montant_materiel_specifique_in and self.etudiant_en_filiere_post_bac_in == other.etudiant_en_filiere_post_bac_in)
+            return (self.trajet_depuis_domicile_agent_in == other.trajet_depuis_domicile_agent_in and self.trajet_depuis_domicile_etudiant_in == other.trajet_depuis_domicile_etudiant_in and self.montant_materiel_specifique_in == other.montant_materiel_specifique_in and self.valeur_point_in == other.valeur_point_in and self.etudiant_en_filiere_post_bac_in == other.etudiant_en_filiere_post_bac_in)
         else:
             return False
 
@@ -175,7 +175,7 @@ class CalculPointsAideScolariteIn:
         return not (self == other)
 
     def __str__(self) -> str:
-        return "CalculPointsAideScolariteIn(valeur_point_in={},trajet_depuis_domicile_agent_in={},trajet_depuis_domicile_etudiant_in={},montant_materiel_specifique_in={},etudiant_en_filiere_post_bac_in={})".format(self.valeur_point_in, self.trajet_depuis_domicile_agent_in, self.trajet_depuis_domicile_etudiant_in, self.montant_materiel_specifique_in, self.etudiant_en_filiere_post_bac_in)
+        return "CalculPointsAideScolariteIn(trajet_depuis_domicile_agent_in={},trajet_depuis_domicile_etudiant_in={},montant_materiel_specifique_in={},valeur_point_in={},etudiant_en_filiere_post_bac_in={})".format(self.trajet_depuis_domicile_agent_in, self.trajet_depuis_domicile_etudiant_in, self.montant_materiel_specifique_in, self.valeur_point_in, self.etudiant_en_filiere_post_bac_in)
 
 class CalculPointsTrajetIn:
     def __init__(self, trajet_in: Option[trajet.Trajet]) -> None:
@@ -264,10 +264,10 @@ def retrait_critere_c2(retrait_critere_c2_in:RetraitCritereC2In):
     return RetraitCritereC2(criteres_sans_c2 = criteres_sans_c2)
 
 def calcul_points_aide_scolarite(calcul_points_aide_scolarite_in:CalculPointsAideScolariteIn):
-    valeur_point = (calcul_points_aide_scolarite_in.valeur_point_in)
     trajet_depuis_domicile_agent = (calcul_points_aide_scolarite_in.trajet_depuis_domicile_agent_in)
     trajet_depuis_domicile_etudiant = (calcul_points_aide_scolarite_in.trajet_depuis_domicile_etudiant_in)
     montant_materiel_specifique = (calcul_points_aide_scolarite_in.montant_materiel_specifique_in)
+    valeur_point = (calcul_points_aide_scolarite_in.valeur_point_in)
     etudiant_en_filiere_post_bac = (calcul_points_aide_scolarite_in.etudiant_en_filiere_post_bac_in)
     points_domiciliation_separee = (decimal_of_string("2"))
     criteres_applicables_base = ([])

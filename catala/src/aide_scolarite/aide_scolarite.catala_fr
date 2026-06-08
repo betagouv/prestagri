@@ -182,10 +182,10 @@ déclaration énumération CritèresAideScolarité:
   -- C5 contenu décimal
 
 déclaration champ d'application CalculPointsAideScolarite:
-  entrée valeur_point contenu argent
   entrée trajet_depuis_domicile_agent contenu Trajet
   entrée trajet_depuis_domicile_étudiant contenu optionnel de Trajet
   entrée montant_matériel_spécifique contenu argent
+  entrée valeur_point contenu argent
   entrée étudiant_en_filière_post_bac contenu booléen
   interne points_domiciliation_séparée contenu décimal
   résultat critères_applicables contenu liste de CritèresAideScolarité
