@@ -9,10 +9,10 @@ calculForm.addEventListener("submit", (e) => {
     "conjoint_enfants="+ document.getElementById('conjoint_enfants').value +"&"+
     "etudiant_revenu=0&"+
     "etudiant_enfants=0&"+
-    "personne_ou_enfant_porteur_handicap="+ document.getElementById('personne_ou_enfant_porteur_handicap').value +"&"+
-    "garde_alternee="+ document.getElementById('garde_alternee').value +"&"+
-    "parent_isole="+ document.getElementById('parent_isole').value +"&"+
-    "outre_mer="+ document.getElementById('outre_mer').value
+    "personne_ou_enfant_porteur_handicap="+ document.getElementById('personne_ou_enfant_porteur_handicap').checked +"&"+
+    "garde_alternee="+ document.getElementById('garde_alternee').checked +"&"+
+    "parent_isole="+ document.getElementById('parent_isole').checked +"&"+
+    "outre_mer="+ document.getElementById('outre_mer').checked
    )
   .then((response) => {
     if (!response.ok) {
