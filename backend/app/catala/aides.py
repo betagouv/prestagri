@@ -8,14 +8,14 @@ from .utils import to_famille_cat, to_personne_cat_list, to_money, to_trajet
 def quotient_familial(famille : Famille) -> Response:
     famille_cat = to_famille_cat(famille)
     result = calcul_quotient_familial(CalculQuotientFamilialIn(famille_cat))
-    return Response (value=str(result.quotient_familial.value), explanation="a venir")
+    return Response (value=str(result.quotient_familial), explanation="a venir")
 
 
 def quotient_familial_aide_scolarite(famille: Famille, etudiants_fiscalement_independants: list[Personne]) -> Response:
     famille_cat = to_famille_cat(famille)
     etudiants_cat = to_personne_cat_list(etudiants_fiscalement_independants)
     result = calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(famille_cat, etudiants_cat))
-    return Response (value=str(result.quotient_familial.value), explanation="a venir")
+    return Response (value=str(result.quotient_familial), explanation="a venir")
 
 def criteres_eligibles_aide_scolarite(
         trajet_depuis_domicile_agent: Trajet,

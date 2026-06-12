@@ -3,8 +3,7 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
-    site: 'https://betagouv.github.io/',
-    base: '/prestagri',
+    site: 'https://doc.prest-agri.beta.gouv.fr/',
     integrations: [
         starlight({
             title: 'Prest\'Agri-DOC',

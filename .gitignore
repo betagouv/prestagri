@@ -6,3 +6,15 @@ doc/dist/
 catala/_target/
 
 catala/_build/
+
+backend/app/catala/__pycache__/
+
+backend/app/catala/generated/__pycache__/
+
+backend/app/__pycache__/
+
+backend/app/api/__pycache__/
+
+backend/app/model/__pycache__/
+
+frontend/doc/
