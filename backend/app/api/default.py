@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from ..utils import logger
 from ..catala.aides import quotient_familial, quotient_familial_aide_scolarite, criteres_eligibles_aide_scolarite
 from ..model import Famille, Personne, Trajet, Response
-
+from fastapi.middleware.cors import CORSMiddleware
 
 router = APIRouter()
 

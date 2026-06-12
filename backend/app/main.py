@@ -3,9 +3,23 @@ from fastapi.openapi.utils import get_openapi
 from .utils import logger
 from .config import setup_sentry
 from .api import default
+from fastapi.middleware.cors import CORSMiddleware
 
 setup_sentry()
 app = FastAPI()
+origins = [
+    "*",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(default.router)
 
 def custom_openapi():
