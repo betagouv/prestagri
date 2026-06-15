@@ -85,4 +85,33 @@ import DsfrLayout from "../layouts/dsfrLayout.astro"
         </div>
     </div>
 </DsfrLayout>
-<script src="./calcul.js"></script>
+<script>
+    let calculForm = document.getElementById("calculForm");
+    calculForm?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    fetch(
+        "http://localhost:8000/quotient_familial?" +
+        "agent_revenu="+ (document.getElementById('agent_revenu') as HTMLInputElement).value +"&"+
+        "agent_enfants="+ (document.getElementById('agent_enfants') as HTMLInputElement).value +"&"+
+        "conjoint_revenu="+ (document.getElementById('conjoint_revenu') as HTMLInputElement).value +"&"+
+        "conjoint_enfants="+ (document.getElementById('conjoint_enfants') as HTMLInputElement).value +"&"+
+        "etudiant_revenu=0&"+
+        "etudiant_enfants=0&"+
+        "personne_ou_enfant_porteur_handicap="+ (document.getElementById('personne_ou_enfant_porteur_handicap') as HTMLInputElement).checked +"&"+
+        "garde_alternee="+ (document.getElementById('garde_alternee') as HTMLInputElement).checked +"&"+
+        "parent_isole="+ (document.getElementById('parent_isole') as HTMLInputElement).checked +"&"+
+        "outre_mer="+ (document.getElementById('outre_mer') as HTMLInputElement).checked
+    )
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(`On a un souci, contactez le support`);
+        }
+        return response.json()
+    })
+    .then((data) => {
+        document.getElementById("answer")!.style.display="block";
+        document.getElementById('value')!.textContent = "Le quotient famillial est de " + data.value + "€"
+        document.getElementById('explanation')!.textContent = data.explanation 
+    })
+    });
+</script>
