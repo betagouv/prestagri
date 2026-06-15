@@ -1,0 +1,22 @@
+import { c as createComponent, b as renderComponent, r as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_BskC6SXv.mjs';
+import 'kleur/colors';
+import { $ as $$DsfrLayout } from '../chunks/dsfrLayout_BwcXtYtu.mjs';
+export { renderers } from '../renderers.mjs';
+
+const $$QuotientFamilial = createComponent(($$result, $$props, $$slots) => {
+  return renderTemplate`${renderComponent($$result, "DsfrLayout", $$DsfrLayout, {}, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<div class="fr-container fr-mt-8v fr-mt-md-14v fr-mb-2v fr-mb-md-8v"> <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--center"> <div class="fr-col-12 fr-col-md-10 fr-col-lg-8"> <h2>Calcul du Quotient Familial</h2> <p class="fr-text--lead">Renseignez les informations fournies par l'agent dans son dossier</p> </div> </div> </div> <div class="fr-container fr-container--fluid fr-mb-md-14v"> <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center"> <div class="fr-col-12 fr-col-md-10 fr-col-lg-8"> <div class="fr-container fr-background-alt--grey fr-px-md-0 fr-py-10v fr-py-md-14v"> <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center"> <div class="fr-col-12 fr-col-md-10 fr-col-lg-9"> <div class="fr-mb-6v"> <form id="calculForm" action="" method="get" class="form-example"> <fieldset class="fr-fieldset" aria-labelledby="text-legend text-messages"> <div class="fr-fieldset__element"> <div class="fr-input-group"> <label class="fr-label" for="agent_revenu">Quels sont les revenus déclarés par l'agent ? </label> <input class="fr-input" type="number" name="agent_revenu" id="agent_revenu" required> </div> </div> <div class="fr-fieldset__element"> <div class="fr-input-group"> <label class="fr-label" for="agent_enfants">Combien d'enfants sont déclarés par l'agent ? </label> <input class="fr-input" type="number" name="agent_enfants" id="agent_enfants" required> </div> </div> <div class="fr-fieldset__element"> <div class="fr-input-group"> <label class="fr-label" for="conjoint_revenu">En cas d'avis d'imposition distinct, quels sont les revenus déclarés par le conjoint.e de l'agent ? </label> <input class="fr-input" type="number" name="conjoint_revenu" id="conjoint_revenu"> </div> </div> <div class="fr-fieldset__element"> <div class="fr-input-group"> <label class="fr-label" for="conjoint_enfants">En cas d'avis d'imposition distinct, combien d'enfants sont déclarés par le conjoint.e de l'agent ? </label> <input class="fr-input" type="number" name="conjoint_enfants" id="conjoint_enfants"> </div> </div> <div class="fr-fieldset__element"> <div class="fr-checkbox-group"> <input type="checkbox" name="personne_ou_enfant_porteur_handicap" id="personne_ou_enfant_porteur_handicap"> <label class="fr-label" for="personne_ou_enfant_porteur_handicap">L'agent ou l'enfant concerné par la demande est porteur de handicap</label> </div> </div> <div class="fr-fieldset__element"> <div class="fr-checkbox-group"> <input type="checkbox" name="garde_alternee" id="garde_alternee"> <label class="fr-label" for="garde_alternee">L'enfant concerné par la demande est en garde alternée </label> </div> </div> <div class="fr-fieldset__element"> <div class="fr-checkbox-group"> <input type="checkbox" name="parent_isole" id="parent_isole"> <label class="fr-label" for="parent_isole">L'agent est un parent isolé</label> </div> </div> <div class="fr-fieldset__element"> <div class="fr-checkbox-group"> <input type="checkbox" name="outre_mer" id="outre_mer"> <label class="fr-label" for="outre_mer">L'agent vit dans un département d'outre-mer</label> </div> </div> </fieldset> <button class="fr-btn" type="submit">Calculer le quotient familial</button> </form> </div> <div class="fr-callout" id="answer" style="display:none"> <h3 class="fr-callout__title">Résultat du calcul</h3> <p id="value" class="fr-callout__text">...</p> <h4 class="fr-callout__text">Explication : </h4> <p id="explanation" class="fr-callout__text">...</p> </div> </div> </div> </div> </div> </div> </div> ` })} `;
+}, "/home/erica/Multi/projets/prestagri/prestagri/frontend/src/pages/quotient_familial.astro", void 0);
+
+const $$file = "/home/erica/Multi/projets/prestagri/prestagri/frontend/src/pages/quotient_familial.astro";
+const $$url = "/quotient_familial";
+
+const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+    __proto__: null,
+    default: $$QuotientFamilial,
+    file: $$file,
+    url: $$url
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const page = () => _page;
+
+export { page };
