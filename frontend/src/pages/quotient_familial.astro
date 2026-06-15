@@ -90,7 +90,7 @@ import DsfrLayout from "../layouts/dsfrLayout.astro"
     calculForm?.addEventListener("submit", (e) => {
     e.preventDefault();
     fetch(
-        "http://localhost:8000/quotient_familial?" +
+        "https://api.prest-agri.beta.gouv.fr/quotient_familial?" +
         "agent_revenu="+ (document.getElementById('agent_revenu') as HTMLInputElement).value +"&"+
         "agent_enfants="+ (document.getElementById('agent_enfants') as HTMLInputElement).value +"&"+
         "conjoint_revenu="+ (document.getElementById('conjoint_revenu') as HTMLInputElement).value +"&"+

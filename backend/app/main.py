@@ -9,7 +9,7 @@ setup_sentry()
 app = FastAPI()
 origins = [
     "*",
-    "http://localhost:8080",
+    "https://doc.prest-agri.beta.gouv.fr/",
 ]
 
 app.add_middleware(
