@@ -1,5 +1,8 @@
 from pydantic import BaseModel
+from typing import TypeVar, Generic
 
-class Response(BaseModel):
-    value: any
+DataT = TypeVar('DataT')
+
+class Response(BaseModel, Generic[DataT]):
+    value: DataT
     explanation: str

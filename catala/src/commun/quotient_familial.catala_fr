@@ -15,8 +15,8 @@ déclaration champ d'application CalculQuotientFamilial: # Can be used
   entrée famille contenu Famille
   interne nombre_personnes_vivants_au_foyer contenu décimal
   interne revenu_total contenu argent
-  interne revenu_fiscal_reference contenu argent
-  interne nombre_unités contenu décimal
+  résultat revenu_fiscal_reference contenu argent
+  résultat nombre_unités contenu décimal
   résultat quotient_familial contenu argent
 ```
 ```catala

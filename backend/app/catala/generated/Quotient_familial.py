@@ -16,12 +16,14 @@ from . import Personne as personne
 from . import Famille as famille
 
 class CalculQuotientFamilial:
-    def __init__(self, quotient_familial: Money) -> None:
+    def __init__(self, revenu_fiscal_reference: Money, nombre_unites: Decimal, quotient_familial: Money) -> None:
+        self.revenu_fiscal_reference = revenu_fiscal_reference
+        self.nombre_unites = nombre_unites
         self.quotient_familial = quotient_familial
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, CalculQuotientFamilial):
-            return (self.quotient_familial == other.quotient_familial)
+            return (self.revenu_fiscal_reference == other.revenu_fiscal_reference and self.nombre_unites == other.nombre_unites and self.quotient_familial == other.quotient_familial)
         else:
             return False
 
@@ -29,7 +31,7 @@ class CalculQuotientFamilial:
         return not (self == other)
 
     def __str__(self) -> str:
-        return "CalculQuotientFamilial(quotient_familial={})".format(self.quotient_familial)
+        return "CalculQuotientFamilial(revenu_fiscal_reference={},nombre_unites={},quotient_familial={})".format(self.revenu_fiscal_reference, self.nombre_unites, self.quotient_familial)
 
 class CalculQuotientFamilialIn:
     def __init__(self, famille_in: famille.Famille) -> None:
@@ -60,7 +62,7 @@ def calcul_quotient_familial(calcul_quotient_familial_in:CalculQuotientFamilialI
         pos = (SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=83, start_column=22, end_line=83, end_column=41, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]))
         revenu_fiscal_reference = (((revenu_total * decimal_of_string("4/5")), pos)[0])
     else:
-        pos = (SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=18, start_column=11, end_line=18, end_column=34, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]))
+        pos = (SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=18, start_column=12, end_line=18, end_column=35, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]))
         revenu_fiscal_reference = ((revenu_total, pos)[0])
     if famille__1.garde_alternee:
         pos = (SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=71, start_column=22, end_line=71, end_column=61, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]))
@@ -72,8 +74,8 @@ def calcul_quotient_familial(calcul_quotient_familial_in:CalculQuotientFamilialI
         pos = (SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=46, start_column=22, end_line=46, end_column=61, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]))
         nombre_unites = (((nombre_personnes_vivants_au_foyer + decimal_of_string("1")), pos)[0])
     else:
-        pos = (SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=19, start_column=11, end_line=19, end_column=24, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]))
+        pos = (SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=19, start_column=12, end_line=19, end_column=25, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]))
         nombre_unites = ((nombre_personnes_vivants_au_foyer, pos)[0])
     pos = (SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=28, start_column=85, end_line=28, end_column=86, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]))
     quotient_familial = (money_of_decimal(div(pos, decimal_of_money(revenu_fiscal_reference), (decimal_of_integer(Integer(12)) * nombre_unites))))
-    return CalculQuotientFamilial(quotient_familial = quotient_familial)
+    return CalculQuotientFamilial(revenu_fiscal_reference = revenu_fiscal_reference, nombre_unites = nombre_unites, quotient_familial = quotient_familial)

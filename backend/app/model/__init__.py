@@ -1,5 +1,5 @@
+from .centimes import Centimes
 from .personne import Personne
 from .famille import Famille
 from .trajet import Trajet
 from .response import Response
-from .centimes import Centimes
