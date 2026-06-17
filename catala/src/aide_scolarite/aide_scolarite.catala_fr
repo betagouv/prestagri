@@ -155,7 +155,7 @@ déclaration champ d'application CalculAideScolarite:
 
 ```catala
 champ d'application CalculAideScolarite:
-  définition valeur_point égal à 25€
+  définition valeur_point égal à quotient_familial
   étiquette aide_scolarite_défaut définition aide_scolarite égal à nb_points * valeur_point
 ```
 

@@ -226,7 +226,7 @@ def calcul_quotient_familial_aide_scolarite(calcul_quotient_familial_aide_scolar
 def calcul_aide_scolarite(calcul_aide_scolarite_in:CalculAideScolariteIn):
     quotient_familial__1 = (calcul_aide_scolarite_in.quotient_familial_in)
     nb_points = (calcul_aide_scolarite_in.nb_points_in)
-    valeur_point = (Money(Integer(2500)))
+    valeur_point = (quotient_familial__1)
     if (quotient_familial__1 > Money(Integer(109000))):
         pos = (SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=169, start_column=22, end_line=169, end_column=25, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]))
         aide_scolarite = ((Money(Integer(0)), pos)[0])
