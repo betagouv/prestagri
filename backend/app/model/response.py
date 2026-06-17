@@ -1,5 +1,5 @@
 from pydantic import BaseModel
 
 class Response(BaseModel):
-    value: str
+    value: any
     explanation: str
