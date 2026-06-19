@@ -179,11 +179,12 @@ les critères de localisation, d'acquisition de matériel et d'études supérieu
 
 
 ```catala-metadata
-déclaration énumération CritèresAideScolarité:
-  -- C2 contenu décimal
-  -- C3 contenu décimal
-  -- C4 contenu décimal
-  -- C5 contenu décimal
+déclaration énumération Critères:
+  -- C2_domiciliation_séparée contenu décimal
+  -- C3_éloignement_agent contenu décimal
+  -- C3_éloignement_étudiant contenu décimal
+  -- C4_matériel contenu décimal
+  -- C5_études_supérieures contenu décimal
 
 déclaration champ d'application CalculPointsAideScolarite:
   entrée trajet_depuis_domicile_agent contenu Trajet
@@ -192,7 +193,7 @@ déclaration champ d'application CalculPointsAideScolarite:
   entrée valeur_point contenu argent
   entrée étudiant_en_filière_post_bac contenu booléen
   interne points_domiciliation_séparée contenu décimal
-  résultat critères_applicables contenu liste de CritèresAideScolarité
+  résultat critères_applicables contenu liste de Critères
     état base
     état domiciliation_séparée
     état éloignement
@@ -208,10 +209,11 @@ champ d'application CalculPointsAideScolarite:
     soit points égal à 
       transforme chaque c parmi critères_applicables en 
         selon c sous forme 
-        -- C2 contenu c_points: c_points
-        -- C3 contenu c_points: c_points 
-        -- C4 contenu c_points: c_points 
-        -- C5 contenu c_points: c_points 
+        -- C2_domiciliation_séparée contenu c_points: c_points
+        -- C3_éloignement_agent contenu c_points: c_points 
+        -- C3_éloignement_étudiant contenu c_points: c_points 
+        -- C4_matériel contenu c_points: c_points 
+        -- C5_études_supérieures contenu c_points: c_points 
     dans
     Décimal.somme de points
 
@@ -227,7 +229,7 @@ champ d'application CalculPointsAideScolarite:
   définition critères_applicables état domiciliation_séparée
   égal à
     si trajet_depuis_domicile_étudiant sous forme Présent
-    alors critères_applicables ++ [ C2 contenu points_domiciliation_séparée ]
+    alors critères_applicables ++ [ C2_domiciliation_séparée contenu points_domiciliation_séparée ]
     sinon critères_applicables
 ```
 
@@ -252,11 +254,11 @@ champ d'application CalculPointsAideScolarite:
   égal à
     soit points_domicile_agent égal à résultat de CalculPointsTrajet avec { -- trajet: Présent contenu trajet_depuis_domicile_agent }.nb_points dans
     soit points_domicile_étudiant égal à résultat de CalculPointsTrajet avec { -- trajet: trajet_depuis_domicile_étudiant }.nb_points dans 
-    si points_domicile_étudiant > 0,0 ou points_domicile_agent > 0,0 
-    alors si (points_domicile_étudiant > points_domicile_agent - points_domiciliation_séparée)
-      alors critères_applicables ++ [C3 contenu points_domicile_étudiant]
-      sinon résultat de RetraitCritèreC2 avec { -- critères: critères_applicables }.critères_sans_c2 ++ [ C3 contenu points_domicile_agent]
-    sinon critères_applicables
+    si points_domicile_étudiant > 0,0 et (points_domicile_étudiant >= points_domicile_agent - points_domiciliation_séparée)
+      alors critères_applicables ++ [C3_éloignement_étudiant contenu points_domicile_étudiant]
+      sinon si points_domicile_agent > 2,0 ou (trajet_depuis_domicile_étudiant sous forme Absent et points_domicile_agent > 0,0)
+        alors résultat de RetraitCritèreC2 avec { -- critères: critères_applicables }.critères_sans_c2 ++ [ C3_éloignement_agent contenu points_domicile_agent]
+        sinon critères_applicables
 ```
 
 ```catala-metadata
@@ -280,13 +282,13 @@ champ d'application CalculPointsTrajet:
 
 ```catala-metadata
 déclaration champ d'application RetraitCritèreC2:
-  entrée critères contenu liste de CritèresAideScolarité
-  résultat critères_sans_c2 contenu liste de CritèresAideScolarité
+  entrée critères contenu liste de Critères
+  résultat critères_sans_c2 contenu liste de Critères
 ```
 
 ```catala
 champ d'application RetraitCritèreC2:
-  définition critères_sans_c2 égal à liste de c parmi critères tel que non  (c sous forme  C2) 
+  définition critères_sans_c2 égal à liste de c parmi critères tel que non  (c sous forme C2_domiciliation_séparée) 
 ```
 
 - Un critère d’acquisition de matériel spécifique (C4) :
@@ -306,7 +308,7 @@ champ d'application CalculPointsAideScolarite:
     soit montant_eligible égal à minimum de [2,0*valeur_point; montant_matériel_spécifique] dans
     soit points égal à montant_eligible/valeur_point dans
     si points > 0,0 
-    alors critères_applicables ++ [ C4 contenu points]
+    alors critères_applicables ++ [ C4_matériel contenu points]
     sinon critères_applicables 
 ```
 
@@ -321,8 +323,8 @@ champ d'application CalculPointsAideScolarite:
   égal à 
     si étudiant_en_filière_post_bac 
       et 
-      ( existe critère parmi critères_applicables tel que critère sous forme C2 
-      ou existe critère parmi critères_applicables tel que critère sous forme C3 )
-    alors critères_applicables ++ [ C5 contenu 1,0]
+      ( existe critère parmi critères_applicables tel que critère sous forme C2_domiciliation_séparée 
+      ou existe critère parmi critères_applicables tel que critère sous forme C3_éloignement_agent )
+    alors critères_applicables ++ [ C5_études_supérieures contenu 1,0]
     sinon critères_applicables 
 ```

@@ -164,7 +164,7 @@ champ d'application TestCalculPointsAideScolarite1:
       -- montant_matériel_spécifique : 0€
       -- étudiant_en_filière_post_bac: faux
     }
-  assertion (calcul.critères_applicables = [C2 contenu 2,0])
+  assertion (calcul.critères_applicables = [C2_domiciliation_séparée contenu 2,0])
   assertion (calcul.nb_points = 2,0)
 ```
 
@@ -200,7 +200,7 @@ champ d'application TestCalculRetraitCritere:
   définition calcul égal à
     résultat de Aide_scolarite.RetraitCritèreC2 avec {
       -- critères: [
-        C2 contenu 2,0
+        C2_domiciliation_séparée contenu 2,0
       ]
     }
   assertion (calcul.critères_sans_c2 = [])
@@ -228,7 +228,7 @@ champ d'application TestCalculPointsAideScolarite3:
       -- montant_matériel_spécifique : 0€
       -- étudiant_en_filière_post_bac: faux
     }
-  assertion (calcul.critères_applicables = [C3 contenu 4,0])
+  assertion (calcul.critères_applicables = [C3_éloignement_agent contenu 4,0])
   assertion (calcul.nb_points = 4,0)
 ```
 
@@ -254,7 +254,7 @@ champ d'application TestCalculPointsAideScolarite4:
       -- montant_matériel_spécifique : 0€
       -- étudiant_en_filière_post_bac: faux
     }
-  assertion (calcul.critères_applicables = [C2 contenu 2,0; C3 contenu 2,0])
+  assertion (calcul.critères_applicables = [C2_domiciliation_séparée contenu 2,0; C3_éloignement_étudiant contenu 2,0])
   assertion (calcul.nb_points = 4,0)
 ```
 
@@ -279,7 +279,7 @@ champ d'application TestCalculPointsAideScolarite5:
       -- montant_matériel_spécifique : 0€
       -- étudiant_en_filière_post_bac: faux
     }
-  assertion (calcul.critères_applicables = [C3 contenu 4,0])
+  assertion (calcul.critères_applicables = [C2_domiciliation_séparée contenu 2,0; C3_éloignement_étudiant contenu 2,0])
   assertion (calcul.nb_points = 4,0)
 ```
 
@@ -304,7 +304,7 @@ champ d'application TestCalculPointsAideScolarite6:
       -- montant_matériel_spécifique : 0€
       -- étudiant_en_filière_post_bac: faux
     }
-  assertion (calcul.critères_applicables = [C3 contenu 2,0])
+  assertion (calcul.critères_applicables = [C2_domiciliation_séparée contenu 2,0])
   assertion (calcul.nb_points = 2,0)
 ```
 
@@ -351,7 +351,7 @@ champ d'application TestCalculPointsAideScolarite8:
       -- montant_matériel_spécifique : 70€
       -- étudiant_en_filière_post_bac: faux
     }
-  assertion (calcul.critères_applicables = [C4 contenu 2,0])
+  assertion (calcul.critères_applicables = [C4_matériel contenu 2,0])
   assertion (calcul.nb_points = 2,0)
 ```
 
@@ -375,7 +375,7 @@ champ d'application TestCalculPointsAideScolarite9:
       -- montant_matériel_spécifique : 12€
       -- étudiant_en_filière_post_bac: faux
     }
-  assertion (calcul.critères_applicables = [C4 contenu 1,2])
+  assertion (calcul.critères_applicables = [C4_matériel contenu 1,2])
   assertion (calcul.nb_points = 1,2)
 ```
 
@@ -400,7 +400,7 @@ champ d'application TestCalculPointsAideScolarite10:
       -- montant_matériel_spécifique : 0€
       -- étudiant_en_filière_post_bac: vrai
     }
-  assertion (calcul.critères_applicables = [C3 contenu 2,0 ; C5 contenu 1,0])
+  assertion (calcul.critères_applicables = [C3_éloignement_agent contenu 2,0 ; C5_études_supérieures contenu 1,0])
   assertion (calcul.nb_points = 3,0)
 ```
 
@@ -449,7 +449,7 @@ champ d'application TestCalculPointsAideScolarite12:
       -- montant_matériel_spécifique : 0€
       -- étudiant_en_filière_post_bac: vrai
     }
-  assertion (calcul.critères_applicables = [C2 contenu 2,0 ; C5 contenu 1,0])
+  assertion (calcul.critères_applicables = [C2_domiciliation_séparée contenu 2,0 ; C5_études_supérieures contenu 1,0])
   assertion (calcul.nb_points = 3,0)
 ```
 
@@ -475,6 +475,6 @@ champ d'application TestCalculPointsAideScolarite13:
       -- montant_matériel_spécifique : 0€
       -- étudiant_en_filière_post_bac: faux
     }
-  assertion (calcul.critères_applicables = [C2 contenu 2,0])
+  assertion (calcul.critères_applicables = [C2_domiciliation_séparée contenu 2,0])
   assertion (calcul.nb_points = 2,0)
 ```
