@@ -1,3 +1,4 @@
+from .centimes import Centimes
 from .personne import Personne
 from .famille import Famille
 from .trajet import Trajet

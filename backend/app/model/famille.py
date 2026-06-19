@@ -1,7 +1,7 @@
 from pydantic import BaseModel
-from .personne import Personne
+from app.model import Personne
 
-class Famille(BaseModel):
+class Famille (BaseModel):
     personne_ou_enfant_porteur_handicap: bool
     garde_alternee: bool
     parent_isole: bool
