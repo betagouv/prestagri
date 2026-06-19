@@ -26,8 +26,6 @@ def get_aide_scolarite(
         quotient_familial_scolarite.value,
         etudiant_post_bac
     )
-    print("AAAA")
-    print(type(nb_points.value))
     aide_scolarite = get_catala_aide_scolarite(quotient_familial_scolarite.value, nb_points.value)
 
     explanation = {

@@ -152,7 +152,7 @@ la formule suivante : montant de l'aide = nombre de points X valeur du point.
 ```catala-metadata
 déclaration champ d'application CalculAideScolarite:
   entrée quotient_familial contenu argent
-  entrée nb_points contenu entier
+  entrée nb_points contenu décimal
   interne valeur_point contenu argent
   résultat aide_scolarite contenu argent
 ```

@@ -144,7 +144,7 @@ class CalculQuotientFamilialAideScolariteIn:
         return "CalculQuotientFamilialAideScolariteIn(foyer_fiscal_agent_in={},etudiants_fiscalement_independants_in={})".format(self.foyer_fiscal_agent_in, self.etudiants_fiscalement_independants_in)
 
 class CalculAideScolariteIn:
-    def __init__(self, quotient_familial_in: Money, nb_points_in: Integer) -> None:
+    def __init__(self, quotient_familial_in: Money, nb_points_in: Decimal) -> None:
         self.quotient_familial_in = quotient_familial_in
         self.nb_points_in = nb_points_in
 

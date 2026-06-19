@@ -3,7 +3,7 @@ from .generated.Personne import Personne as Personne_cat
 from .generated.Trajet import Trajet as Trajet_cat
 from .generated.Famille import Famille as Famille_cat
 from ..model import Famille, Personne, Trajet, Centimes
-
+from gmpy2 import mpq
 
 def to_famille_cat(famille: Famille) -> Famille_cat:
     membres_cat = to_personne_cat_list(famille.membres)
@@ -27,3 +27,7 @@ def to_money(centimes: Centimes) -> Money_cat:
 
 def to_trajet(trajet: Trajet) -> Trajet_cat:
     return Trajet_cat(distance_km=Integer(trajet.distance_km),duree_minutes=Integer(trajet.duree_minutes))
+
+def to_float(_mpq: mpq):
+    [a, b] = _mpq.as_integer_ratio()
+    return float(round(a / b, 5))

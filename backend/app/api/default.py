@@ -58,7 +58,7 @@ def read_quotient_familial_aide_scolarite(
     famille = Famille(personne_ou_enfant_porteur_handicap=personne_ou_enfant_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
     response = get_aide_scolarite(famille, etudiant_independant,
         adresse_agent, adresse_etablissement, adresse_etudiant,
-        montant_materiel_specifique,
+        Centimes.from_euros_int(montant_materiel_specifique),
         etudiant_post_bac)
     return Response(value=str(response.value) , explanation=response.explanation)
 

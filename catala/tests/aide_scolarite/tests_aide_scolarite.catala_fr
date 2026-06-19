@@ -59,7 +59,7 @@ champ d'application TestAideScolarite1:
   définition calcul égal à
     résultat de Aide_scolarite.CalculAideScolarite avec {
       -- quotient_familial: 2500€
-      -- nb_points: 12
+      -- nb_points: 12,0
     }
   assertion (calcul.aide_scolarite = 0 €)
 ```
