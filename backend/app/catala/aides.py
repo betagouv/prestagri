@@ -13,16 +13,16 @@ def get_catala_quotient_familial(famille : Famille) -> Response[Centimes]:
         explanation=str(result.revenu_fiscal_reference) + "/ (12 x " + str(result.nombre_unites) +")"
     )
 
-def get_catala_aide_scolarite(quotient_famillial: Centimes, nb_points: int ) -> Response[Centimes]:
-    result = calcul_aide_scolarite(CalculAideScolariteIn(to_money(quotient_famillial), Integer(nb_points)))
-    return Response(value=result.aide_scolarite.value.value, explanation="a venir")
+def get_catala_aide_scolarite(quotient_familial: Centimes, nb_points: int ) -> Response[Centimes]:
+    result = calcul_aide_scolarite(CalculAideScolariteIn(to_money(quotient_familial), Integer(nb_points)))
+    return Response(value=Centimes(valeur=result.aide_scolarite.value.value), explanation="a venir")
 
 
-def get_catala_quotient_familial_aide_scolarite(famille: Famille, etudiant_fiscalement_independant: list[Personne]) -> Response[Centimes]:
+def get_catala_quotient_familial_aide_scolarite(famille: Famille, etudiants_fiscalement_independants: list[Personne]) -> Response[Centimes]:
     famille_cat = to_famille_cat(famille)
-    etudiants_cat = to_personne_cat_list(etudiant_fiscalement_independant)
+    etudiants_cat = to_personne_cat_list(etudiants_fiscalement_independants)
     result = calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(famille_cat, etudiants_cat))
-    return Response (value=result.quotient_familial.value.value, explanation="a venir")
+    return Response (value=Centimes(valeur=result.quotient_familial.value.value), explanation="a venir")
 
 def get_catala_criteres_eligibles_aide_scolarite(
         trajet_depuis_domicile_agent: Trajet,
@@ -40,5 +40,5 @@ def get_catala_criteres_eligibles_aide_scolarite(
             to_money(montant_materiel_specifique),
             to_money(valeur_point),
             etudiant_en_filiere_post_bac))
-    return Response(value=result.nb_points.value, explanation=str(list(map(str, result.criteres_applicables))))
+    return Response(value= result.nb_points.value, explanation=str(list(map(str, result.criteres_applicables))))
 

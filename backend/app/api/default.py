@@ -56,10 +56,11 @@ def read_quotient_familial_aide_scolarite(
         membres.append(conjoint)
     etudiant_independant = Personne(revenu=Centimes.from_euros_int(etudiant_revenu), enfants=etudiant_enfants) if etudiant_revenu is not None else None
     famille = Famille(personne_ou_enfant_porteur_handicap=personne_ou_enfant_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
-    return get_aide_scolarite(famille, etudiant_independant,
+    response = get_aide_scolarite(famille, etudiant_independant,
         adresse_agent, adresse_etablissement, adresse_etudiant,
         montant_materiel_specifique,
         etudiant_post_bac)
+    return Response(value=str(response.value) , explanation=response.explanation)
 
 
 @router.get("/error-simulator")
