@@ -15,18 +15,20 @@ def get_catala_quotient_familial(famille : Famille) -> Response[Centimes]:
 
 def get_catala_aide_scolarite(quotient_familial: Centimes, nb_points: int ) -> Response[Centimes]:
     result = calcul_aide_scolarite(CalculAideScolariteIn(to_money(quotient_familial), Integer(nb_points)))
+    value = Centimes(valeur=result.aide_scolarite.value.value)
     return Response(
-        value=Centimes(valeur=result.aide_scolarite.value.value),
-        explanation=str(quotient_familial) + " x " + str(nb_points) )
+        value=value,
+        explanation=str(quotient_familial) + " x " + str(nb_points) + " = " + str(value) )
 
 
 def get_catala_quotient_familial_aide_scolarite(famille: Famille, etudiants_fiscalement_independants: list[Personne]) -> Response[Centimes]:
     famille_cat = to_famille_cat(famille)
     etudiants_cat = to_personne_cat_list(etudiants_fiscalement_independants)
     result = calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(famille_cat, etudiants_cat))
+    value = Centimes(valeur=result.quotient_familial.value.value)
     return Response (
-        value=Centimes(valeur=result.quotient_familial.value.value),
-        explanation=str(result.revenu_fiscal_reference) + "/ (12 x " + str(result.nombre_unites) +")"
+        value=value,
+        explanation=str(result.revenu_fiscal_reference) + "/ (12 x " + str(result.nombre_unites) +") = " + str(value)
     )
 
 def get_catala_criteres_eligibles_aide_scolarite(
