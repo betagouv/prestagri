@@ -104,15 +104,19 @@ déclaration champ d'application CalculQuotientFamilialAideScolarite:
   entrée foyer_fiscal_agent contenu Famille
   entrée étudiants_fiscalement_indépendants contenu liste de Personne
   interne famille contenu Famille
+  calcul_quotient_familial champ d'application Quotient_familial.CalculQuotientFamilial
+  résultat revenu_fiscal_reference contenu argent
+  résultat nombre_unités contenu décimal
   résultat quotient_familial contenu argent
 ```
 
 ```catala
 champ d'application CalculQuotientFamilialAideScolarite:
   étiquette famille_défaut définition famille égal à foyer_fiscal_agent
-  définition quotient_familial égal à résultat de Quotient_familial.CalculQuotientFamilial avec { 
-    --famille: famille
-  }.quotient_familial
+  définition calcul_quotient_familial.famille égal à famille
+  définition revenu_fiscal_reference égal à calcul_quotient_familial.revenu_fiscal_reference
+  définition nombre_unités égal à calcul_quotient_familial.nombre_unités
+  définition quotient_familial égal à calcul_quotient_familial.quotient_familial
 ```
 
 - Les élèves ou étudiants à charge fiscalement bénéficiant d'un logement séparé sont considérés comme

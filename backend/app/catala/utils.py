@@ -23,7 +23,7 @@ def to_personne_cat(personne: Personne) -> Personne_cat:
     return Personne_cat(to_money(personne.revenu), Integer(personne.enfants))
 
 def to_money(centimes: Centimes) -> Money_cat:
-    return  Money_cat(Integer(centimes.valeur))
+    return Money_cat(Integer(centimes.valeur))
 
 def to_trajet(trajet: Trajet) -> Trajet_cat:
     return Trajet_cat(distance_km=Integer(trajet.distance_km),duree_minutes=Integer(trajet.duree_minutes))
