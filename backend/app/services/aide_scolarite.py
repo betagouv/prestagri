@@ -18,7 +18,7 @@ def get_aide_scolarite(
     quotient_familial_scolarite = get_catala_quotient_familial_aide_scolarite(famille, etudiants_independants)
 
     trajet_domicile_agent = get_trajet(adresse_agent, adresse_etablissement)
-    trajet_domicile_etudiant = get_trajet(adresse_etudiant, adresse_etablissement)
+    trajet_domicile_etudiant = get_trajet(adresse_etudiant, adresse_etablissement) if adresse_etudiant is not None else None
     nb_points = get_catala_criteres_eligibles_aide_scolarite(
         trajet_domicile_agent,
         trajet_domicile_etudiant,

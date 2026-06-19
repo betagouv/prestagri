@@ -17,20 +17,21 @@ from . import Famille as famille
 from . import Quotient_familial as quotient_familial
 from . import Trajet as trajet
 
-class CriteresAideScolarite_Code(Enum):
-    C2 = 0
-    C3 = 1
-    C4 = 2
-    C5 = 3
+class Criteres_Code(Enum):
+    C2_domiciliation_separee = 0
+    C3_eloignement_agent = 1
+    C3_eloignement_etudiant = 2
+    C4_materiel = 3
+    C5_etudes_superieures = 4
 
-class CriteresAideScolarite:
-    def __init__(self, code: CriteresAideScolarite_Code, value: Any) -> None:
+class Criteres:
+    def __init__(self, code: Criteres_Code, value: Any) -> None:
         self.code = code
         self.value = value
 
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, CriteresAideScolarite):
+        if isinstance(other, Criteres):
             return self.code == other.code and self.value == other.value
         else:
             return False
@@ -93,7 +94,7 @@ class CalculPointsTrajet:
         return "CalculPointsTrajet(nb_points={})".format(self.nb_points)
 
 class RetraitCritereC2:
-    def __init__(self, criteres_sans_c2: List[CriteresAideScolarite]) -> None:
+    def __init__(self, criteres_sans_c2: List[Criteres]) -> None:
         self.criteres_sans_c2 = criteres_sans_c2
 
     def __eq__(self, other: object) -> bool:
@@ -109,7 +110,7 @@ class RetraitCritereC2:
         return "RetraitCritereC2(criteres_sans_c2={})".format(self.criteres_sans_c2)
 
 class CalculPointsAideScolarite:
-    def __init__(self, criteres_applicables: List[CriteresAideScolarite], nb_points: Decimal) -> None:
+    def __init__(self, criteres_applicables: List[Criteres], nb_points: Decimal) -> None:
         self.criteres_applicables = criteres_applicables
         self.nb_points = nb_points
 
@@ -196,7 +197,7 @@ class CalculPointsTrajetIn:
         return "CalculPointsTrajetIn(trajet_in={})".format(self.trajet_in)
 
 class RetraitCritereC2In:
-    def __init__(self, criteres_in: List[CriteresAideScolarite]) -> None:
+    def __init__(self, criteres_in: List[Criteres]) -> None:
         self.criteres_in = criteres_in
 
     def __eq__(self, other: object) -> bool:
@@ -255,14 +256,16 @@ def calcul_points_trajet(calcul_points_trajet_in:CalculPointsTrajetIn):
 
 def retrait_critere_c2(retrait_critere_c2_in:RetraitCritereC2In):
     criteres = (retrait_critere_c2_in.criteres_in)
-    def criteres_sans_c2__1(c:CriteresAideScolarite):
-        if c.code == CriteresAideScolarite_Code.C2:
+    def criteres_sans_c2__1(c:Criteres):
+        if c.code == Criteres_Code.C2_domiciliation_separee:
             criteres_sans_c2__2 = (True)
-        elif c.code == CriteresAideScolarite_Code.C3:
+        elif c.code == Criteres_Code.C3_eloignement_agent:
             criteres_sans_c2__2 = (False)
-        elif c.code == CriteresAideScolarite_Code.C4:
+        elif c.code == Criteres_Code.C3_eloignement_etudiant:
             criteres_sans_c2__2 = (False)
-        elif c.code == CriteresAideScolarite_Code.C5:
+        elif c.code == Criteres_Code.C4_materiel:
+            criteres_sans_c2__2 = (False)
+        elif c.code == Criteres_Code.C5_etudes_superieures:
             criteres_sans_c2__2 = (False)
         return not criteres_sans_c2__2
     criteres_sans_c2 = (list_filter(criteres_sans_c2__1, criteres))
@@ -281,67 +284,77 @@ def calcul_points_aide_scolarite(calcul_points_aide_scolarite_in:CalculPointsAid
     else:
         criteres_applicables_domiciliation_separee__1 = (False)
     if criteres_applicables_domiciliation_separee__1:
-        criteres_applicables_domiciliation_separee = ((criteres_applicables_base + [CriteresAideScolarite(CriteresAideScolarite_Code.C2, points_domiciliation_separee)]))
+        criteres_applicables_domiciliation_separee = ((criteres_applicables_base + [Criteres(Criteres_Code.C2_domiciliation_separee, points_domiciliation_separee)]))
     else:
         criteres_applicables_domiciliation_separee = (criteres_applicables_base)
     result = (calcul_points_trajet(CalculPointsTrajetIn(trajet_in = Option(trajet_depuis_domicile_agent))))
     points_domicile_agent = (CalculPointsTrajet(nb_points = result.nb_points).nb_points)
     result__1 = (calcul_points_trajet(CalculPointsTrajetIn(trajet_in = trajet_depuis_domicile_etudiant)))
     points_domicile_etudiant = (CalculPointsTrajet(nb_points = result__1.nb_points).nb_points)
-    if ((points_domicile_etudiant > decimal_of_string("0")) or (points_domicile_agent > decimal_of_string("0"))):
-        if (points_domicile_etudiant > (points_domicile_agent - points_domiciliation_separee)):
-            criteres_applicables_eloignement = ((criteres_applicables_domiciliation_separee + [CriteresAideScolarite(CriteresAideScolarite_Code.C3, points_domicile_etudiant)]))
-        else:
-            result__2 = (retrait_critere_c2(RetraitCritereC2In(criteres_in = criteres_applicables_domiciliation_separee)))
-            criteres_applicables_eloignement = ((RetraitCritereC2(criteres_sans_c2 = result__2.criteres_sans_c2).criteres_sans_c2 + [CriteresAideScolarite(CriteresAideScolarite_Code.C3, points_domicile_agent)]))
+    if ((points_domicile_etudiant > decimal_of_string("0")) and (points_domicile_etudiant >= (points_domicile_agent - points_domiciliation_separee))):
+        criteres_applicables_eloignement = ((criteres_applicables_domiciliation_separee + [Criteres(Criteres_Code.C3_eloignement_etudiant, points_domicile_etudiant)]))
     else:
-        criteres_applicables_eloignement = (criteres_applicables_domiciliation_separee)
+        if trajet_depuis_domicile_etudiant.value is not None:
+            criteres_applicables_eloignement__1 = (False)
+        else:
+            criteres_applicables_eloignement__1 = (True)
+        if ((points_domicile_agent > decimal_of_string("2")) or (criteres_applicables_eloignement__1 and (points_domicile_agent > decimal_of_string("0")))):
+            result__2 = (retrait_critere_c2(RetraitCritereC2In(criteres_in = criteres_applicables_domiciliation_separee)))
+            criteres_applicables_eloignement = ((RetraitCritereC2(criteres_sans_c2 = result__2.criteres_sans_c2).criteres_sans_c2 + [Criteres(Criteres_Code.C3_eloignement_agent, points_domicile_agent)]))
+        else:
+            criteres_applicables_eloignement = (criteres_applicables_domiciliation_separee)
     def points__1(min1:Money, min2:Money):
         if (min1 < min2):
             return min1
         else:
             return min2
     def points__2(_:Unit):
-        pos = (SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=306, start_column=34, end_line=306, end_column=41, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]))
+        pos = (SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=308, start_column=34, end_line=308, end_column=41, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]))
         raise ListEmpty(pos, None)
-    pos__1 = (SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=307, start_column=40, end_line=307, end_column=41, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]))
+    pos__1 = (SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=309, start_column=40, end_line=309, end_column=41, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]))
     points = (div(pos__1, list_reduce(points__1, points__2, [(valeur_point * decimal_of_string("2")), montant_materiel_specifique]), valeur_point))
     if (points > decimal_of_string("0")):
-        criteres_applicables_materiel_specifique = ((criteres_applicables_eloignement + [CriteresAideScolarite(CriteresAideScolarite_Code.C4, points)]))
+        criteres_applicables_materiel_specifique = ((criteres_applicables_eloignement + [Criteres(Criteres_Code.C4_materiel, points)]))
     else:
         criteres_applicables_materiel_specifique = (criteres_applicables_eloignement)
-    def criteres_applicables_etudes_superieures__1(acc:bool, critere:CriteresAideScolarite):
-        if critere.code == CriteresAideScolarite_Code.C2:
+    def criteres_applicables_etudes_superieures__1(acc:bool, critere:Criteres):
+        if critere.code == Criteres_Code.C2_domiciliation_separee:
             criteres_applicables_etudes_superieures__2 = (True)
-        elif critere.code == CriteresAideScolarite_Code.C3:
+        elif critere.code == Criteres_Code.C3_eloignement_agent:
             criteres_applicables_etudes_superieures__2 = (False)
-        elif critere.code == CriteresAideScolarite_Code.C4:
+        elif critere.code == Criteres_Code.C3_eloignement_etudiant:
             criteres_applicables_etudes_superieures__2 = (False)
-        elif critere.code == CriteresAideScolarite_Code.C5:
+        elif critere.code == Criteres_Code.C4_materiel:
             criteres_applicables_etudes_superieures__2 = (False)
-        def criteres_applicables_etudes_superieures__3(acc__1:bool, critere__1:CriteresAideScolarite):
-            if critere__1.code == CriteresAideScolarite_Code.C2:
+        elif critere.code == Criteres_Code.C5_etudes_superieures:
+            criteres_applicables_etudes_superieures__2 = (False)
+        def criteres_applicables_etudes_superieures__3(acc__1:bool, critere__1:Criteres):
+            if critere__1.code == Criteres_Code.C2_domiciliation_separee:
                 criteres_applicables_etudes_superieures__4 = (False)
-            elif critere__1.code == CriteresAideScolarite_Code.C3:
+            elif critere__1.code == Criteres_Code.C3_eloignement_agent:
                 criteres_applicables_etudes_superieures__4 = (True)
-            elif critere__1.code == CriteresAideScolarite_Code.C4:
+            elif critere__1.code == Criteres_Code.C3_eloignement_etudiant:
                 criteres_applicables_etudes_superieures__4 = (False)
-            elif critere__1.code == CriteresAideScolarite_Code.C5:
+            elif critere__1.code == Criteres_Code.C4_materiel:
+                criteres_applicables_etudes_superieures__4 = (False)
+            elif critere__1.code == Criteres_Code.C5_etudes_superieures:
                 criteres_applicables_etudes_superieures__4 = (False)
             return (acc__1 or criteres_applicables_etudes_superieures__4)
         return (acc or (criteres_applicables_etudes_superieures__2 or list_fold_left(criteres_applicables_etudes_superieures__3, False, criteres_applicables_materiel_specifique)))
     if (etudiant_en_filiere_post_bac and list_fold_left(criteres_applicables_etudes_superieures__1, False, criteres_applicables_materiel_specifique)):
-        criteres_applicables_etudes_superieures = ((criteres_applicables_materiel_specifique + [CriteresAideScolarite(CriteresAideScolarite_Code.C5, decimal_of_string("1"))]))
+        criteres_applicables_etudes_superieures = ((criteres_applicables_materiel_specifique + [Criteres(Criteres_Code.C5_etudes_superieures, decimal_of_string("1"))]))
     else:
         criteres_applicables_etudes_superieures = (criteres_applicables_materiel_specifique)
-    def nb_points__1(c:CriteresAideScolarite):
-        if c.code == CriteresAideScolarite_Code.C2:
+    def nb_points__1(c:Criteres):
+        if c.code == Criteres_Code.C2_domiciliation_separee:
             return c.value
-        elif c.code == CriteresAideScolarite_Code.C3:
+        elif c.code == Criteres_Code.C3_eloignement_agent:
             return c.value
-        elif c.code == CriteresAideScolarite_Code.C4:
+        elif c.code == Criteres_Code.C3_eloignement_etudiant:
             return c.value
-        elif c.code == CriteresAideScolarite_Code.C5:
+        elif c.code == Criteres_Code.C4_materiel:
+            return c.value
+        elif c.code == Criteres_Code.C5_etudes_superieures:
             return c.value
     nb_points = (decimal_fr.somme(list_map(nb_points__1, criteres_applicables_etudes_superieures)))
     return CalculPointsAideScolarite(criteres_applicables = criteres_applicables_etudes_superieures, nb_points = nb_points)
