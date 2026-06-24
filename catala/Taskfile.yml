@@ -9,18 +9,23 @@ tasks:
     cmds:
       - opam init -c 4.14.2 --shell-setup
       - eval $(opam env)
-      - opam update && opam install catala.1.1.0
+      - opam update && opam install catala.1.2.0
       - opam upgrade catala
-      - opam install catala-lsp.1.1.0
-      - opam install catala-format.1.1.0
+      - opam install catala-lsp.1.2.0
+      - opam install catala-format.1.2.0
   build:
     desc: build targets
     cmds: 
       - clerk build
-  serve:
-    desc: run tutoriel test
+  exception:
+    desc: display exception tree
+    cmds: 
+      - clerk exceptions src/commun/quotient_familial.catala_fr --scope=CalculQuotientFamilial --variable=nombre_unités
+  trace: 
+    desc: display json trace for explicability
     cmds:
-      - clerk run tutorial.catala_fr --scope=Test
+      - clerk run exec/executable_test.catala_fr  -c--trace=exec/trace.json -c--trace-format=json --scope TestQuotientFamilialAideScolarite1
+      - clerk run exec/executable_aide_scolarite.catala_fr  -c--trace=exec/trace_aide_scolarite.json -c--trace-format=json --scope TestCalculPointsAideScolarite4
   type_check:
     desc: run type checking
     cmds: 

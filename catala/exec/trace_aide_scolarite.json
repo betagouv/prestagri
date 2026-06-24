@@ -1,0 +1,116 @@
+[
+  {"event": "DecisionTaken", "pos": {"filename":"exec/executable_aide_scolarite.catala_fr","start_line":12,"start_column":14,"end_line":12,"end_column":20,"law_headings":[]}},
+  {"event": "BeginCall", "name": "CalculPointsAideScolarite.direct"},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculPointsAideScolarite.direct.input",
+         "io": {"io_input":"OnlyInput","io_output":false},
+         "value": {"trajet_depuis_domicile_agent_in": {"distance_km": "60", "durée_minutes": "50"}, "trajet_depuis_domicile_étudiant_in": {"Présent": {"distance_km": "32", "durée_minutes": "20"}}, "montant_matériel_spécifique_in": 0.00, "valeur_point_in": 10.00, "étudiant_en_filière_post_bac_in": false}
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":228,"start_column":14,"end_line":228,"end_column":42,"law_headings":["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculPointsAideScolarite.points_domiciliation_séparée",
+         "io": {"io_input":"NoInput","io_output":false},
+         "value": {"Présent": ["2.0", {"file": "src/aide_scolarite/aide_scolarite.catala_fr", "start":{"line":228, "character":50}, "end":{"line":228, "character":53}}]}
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":207,"start_column":14,"end_line":207,"end_column":34,"law_headings":["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculPointsAideScolarite.critères_applicables#base",
+         "io": {"io_input":"NoInput","io_output":false},
+         "value": {"Présent": [[], {"file": "src/aide_scolarite/aide_scolarite.catala_fr", "start":{"line":207, "character":52}, "end":{"line":207, "character":54}}]}
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":229,"start_column":14,"end_line":229,"end_column":34,"law_headings":["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculPointsAideScolarite.critères_applicables#domiciliation_séparée",
+         "io": {"io_input":"NoInput","io_output":false},
+         "value": {"Présent": [[{"C2_domiciliation_séparée": "2.0"}], {"file": "src/aide_scolarite/aide_scolarite.catala_fr", "start":{"line":231, "character":5}, "end":{"line":233, "character":31}}]}
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":253,"start_column":14,"end_line":253,"end_column":34,"law_headings":["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculPointsTrajet.direct.input",
+         "io": {"io_input":"OnlyInput","io_output":false},
+         "value": {"trajet_in": {"Présent": {"distance_km": "60", "durée_minutes": "50"}}}
+         },
+  {"event": "BeginCall", "name": "CalculPointsTrajet.direct"},
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":272,"start_column":14,"end_line":272,"end_column":23,"law_headings":["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculPointsTrajet.nb_points",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": "2.0"
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":255,"start_column":39,"end_line":255,"end_column":134,"law_headings":["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculPointsTrajet.direct.output",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": {"nb_points": "2.0"}
+         },
+  {"event": "EndCall", "name": "CalculPointsTrajet.direct"},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculPointsTrajet.direct.input",
+         "io": {"io_input":"OnlyInput","io_output":false},
+         "value": {"trajet_in": {"Présent": {"distance_km": "32", "durée_minutes": "20"}}}
+         },
+  {"event": "BeginCall", "name": "CalculPointsTrajet.direct"},
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":272,"start_column":14,"end_line":272,"end_column":23,"law_headings":["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculPointsTrajet.nb_points",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": "2.0"
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":256,"start_column":42,"end_line":256,"end_column":124,"law_headings":["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculPointsTrajet.direct.output",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": {"nb_points": "2.0"}
+         },
+  {"event": "EndCall", "name": "CalculPointsTrajet.direct"},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculPointsAideScolarite.critères_applicables#éloignement",
+         "io": {"io_input":"NoInput","io_output":false},
+         "value": {"Présent": [[{"C2_domiciliation_séparée": "2.0"}, {"C3_éloignement_étudiant": "2.0"}], {"file": "src/aide_scolarite/aide_scolarite.catala_fr", "start":{"line":255, "character":5}, "end":{"line":261, "character":35}}]}
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":306,"start_column":14,"end_line":306,"end_column":34,"law_headings":["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculPointsAideScolarite.critères_applicables#matériel_spécifique",
+         "io": {"io_input":"NoInput","io_output":false},
+         "value": {"Présent": [[{"C2_domiciliation_séparée": "2.0"}, {"C3_éloignement_étudiant": "2.0"}], {"file": "src/aide_scolarite/aide_scolarite.catala_fr", "start":{"line":308, "character":5}, "end":{"line":312, "character":31}}]}
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":322,"start_column":14,"end_line":322,"end_column":34,"law_headings":["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculPointsAideScolarite.critères_applicables#études_supérieures",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": [{"C2_domiciliation_séparée": "2.0"}, {"C3_éloignement_étudiant": "2.0"}]
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":208,"start_column":14,"end_line":208,"end_column":23,"law_headings":["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculPointsAideScolarite.nb_points",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": "4.0"
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"exec/executable_aide_scolarite.catala_fr","start_line":13,"start_column":5,"end_line":25,"end_column":6,"law_headings":[]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculPointsAideScolarite.direct.output",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": {"critères_applicables": [{"C2_domiciliation_séparée": "2.0"}, {"C3_éloignement_étudiant": "2.0"}], "nb_points": "4.0"}
+         },
+  {"event": "EndCall", "name": "CalculPointsAideScolarite.direct"},
+  {
+         "event": "VariableDefinition",
+         "name": "TestCalculPointsAideScolarite4.calcul",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": {"critères_applicables": [{"C2_domiciliation_séparée": "2.0"}, {"C3_éloignement_étudiant": "2.0"}], "nb_points": "4.0"}
+         }]

@@ -1,0 +1,41 @@
+> Usage de Aide_scolarite
+> Usage de Famille
+> Usage de Personne
+> Usage de Trajet
+
+# Cas N°1 :
+- Un agent en couple
+- Nombre d'enfant(s) = 3 ;
+- Nombre personnes vivant au foyer = 2+ 2 = 4 (l'agent, son conjoint et ses 3 enfants)
+- Revenu Fiscal de Référence (RFR) du foyer = 32 600 €
+- Etudiant ayant sa propre declaration fiscale, revenu 10 000 €
+- QF = 42 600 / (12 x 5) = 710
+
+```catala
+déclaration champ d'application TestQuotientFamilialAideScolarite1:
+  résultat calcul contenu Aide_scolarite.CalculQuotientFamilialAideScolarite
+
+champ d'application TestQuotientFamilialAideScolarite1:
+  définition calcul égal à
+    résultat de Aide_scolarite.CalculQuotientFamilialAideScolarite avec {
+      -- foyer_fiscal_agent: Famille {
+        -- personne_ou_enfant_porteur_handicap: faux
+        -- garde_alternée: faux
+        -- parent_isolé: faux
+        -- outre_mer: faux
+        -- membres_du_foyer: [
+          Personne {
+            -- revenu_fiscal_reference: 12 000 €
+            -- nombre_enfants: 0
+          } ;
+          Personne {
+            -- revenu_fiscal_reference: 20 600 €
+            -- nombre_enfants: 2
+          } ]
+      }
+      -- étudiants_fiscalement_indépendants: [Personne {
+        -- revenu_fiscal_reference: 10 000 €
+        -- nombre_enfants: 0
+      }]
+    }
+```

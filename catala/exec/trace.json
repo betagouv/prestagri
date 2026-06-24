@@ -1,0 +1,108 @@
+[
+  {"event": "DecisionTaken", "pos": {"filename":"exec/executable_test.catala_fr","start_line":19,"start_column":14,"end_line":19,"end_column":20,"law_headings":["Cas N°1 :"]}},
+  {"event": "BeginCall", "name": "CalculQuotientFamilialAideScolarite.direct"},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculQuotientFamilialAideScolarite.direct.input",
+         "io": {"io_input":"OnlyInput","io_output":false},
+         "value": {"foyer_fiscal_agent_in": {"personne_ou_enfant_porteur_handicap": false, "garde_alternée": false, "parent_isolé": false, "outre_mer": false, "membres_du_foyer": [{"revenu_fiscal_reference": 12000.00, "nombre_enfants": "0"}, {"revenu_fiscal_reference": 20600.00, "nombre_enfants": "2"}]}, "étudiants_fiscalement_indépendants_in": [{"revenu_fiscal_reference": 10000.00, "nombre_enfants": "0"}]}
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":137,"start_column":18,"end_line":137,"end_column":66,"law_headings":["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculQuotientFamilialAideScolarite.famille",
+         "io": {"io_input":"NoInput","io_output":false},
+         "value": {"Présent": [{"personne_ou_enfant_porteur_handicap": false, "garde_alternée": false, "parent_isolé": false, "outre_mer": false, "membres_du_foyer": [{"revenu_fiscal_reference": 12000.00, "nombre_enfants": "0"}, {"revenu_fiscal_reference": 20600.00, "nombre_enfants": "2"}, {"revenu_fiscal_reference": 10000.00, "nombre_enfants": "0"}]}, {"file": "src/aide_scolarite/aide_scolarite.catala_fr", "start":{"line":138, "character":22}, "end":{"line":139, "character":120}}]}
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":116,"start_column":14,"end_line":116,"end_column":46,"law_headings":["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculQuotientFamilial.direct.input",
+         "io": {"io_input":"OnlyInput","io_output":false},
+         "value": {"famille_in": {"personne_ou_enfant_porteur_handicap": false, "garde_alternée": false, "parent_isolé": false, "outre_mer": false, "membres_du_foyer": [{"revenu_fiscal_reference": 12000.00, "nombre_enfants": "0"}, {"revenu_fiscal_reference": 20600.00, "nombre_enfants": "2"}, {"revenu_fiscal_reference": 10000.00, "nombre_enfants": "0"}]}}
+         },
+  {"event": "BeginCall", "name": "CalculQuotientFamilial.direct"},
+  {"event": "DecisionTaken", "pos": {"filename":"src/commun/quotient_familial.catala_fr","start_line":23,"start_column":14,"end_line":23,"end_column":47,"law_headings":["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculQuotientFamilial.nombre_personnes_vivants_au_foyer",
+         "io": {"io_input":"NoInput","io_output":false},
+         "value": {"Présent": ["5.0", {"file": "src/commun/quotient_familial.catala_fr", "start":{"line":23, "character":55}, "end":{"line":23, "character":172}}]}
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/commun/quotient_familial.catala_fr","start_line":25,"start_column":14,"end_line":25,"end_column":26,"law_headings":["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculQuotientFamilial.revenu_total",
+         "io": {"io_input":"NoInput","io_output":false},
+         "value": {"Présent": [42600.00, {"file": "src/commun/quotient_familial.catala_fr", "start":{"line":25, "character":34}, "end":{"line":25, "character":143}}]}
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/commun/quotient_familial.catala_fr","start_line":26,"start_column":55,"end_line":26,"end_column":78,"law_headings":["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculQuotientFamilial.revenu_fiscal_reference",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": 42600.00
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/commun/quotient_familial.catala_fr","start_line":24,"start_column":45,"end_line":24,"end_column":58,"law_headings":["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculQuotientFamilial.nombre_unités",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": "5.0"
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/commun/quotient_familial.catala_fr","start_line":27,"start_column":14,"end_line":27,"end_column":31,"law_headings":["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculQuotientFamilial.quotient_familial",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": 710.00
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":107,"start_column":3,"end_line":107,"end_column":27,"law_headings":["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculQuotientFamilial.direct.output",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": {"revenu_fiscal_reference": 42600.00, "nombre_unités": "5.0", "quotient_familial": 710.00}
+         },
+  {"event": "EndCall", "name": "CalculQuotientFamilial.direct"},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculQuotientFamilialAideScolarite.calcul_quotient_familial",
+         "io": {"io_input":"NoInput","io_output":false},
+         "value": {"revenu_fiscal_reference": 42600.00, "nombre_unités": "5.0", "quotient_familial": 710.00}
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":117,"start_column":14,"end_line":117,"end_column":37,"law_headings":["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculQuotientFamilialAideScolarite.revenu_fiscal_reference",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": 42600.00
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":118,"start_column":14,"end_line":118,"end_column":27,"law_headings":["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculQuotientFamilialAideScolarite.nombre_unités",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": "5.0"
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":119,"start_column":14,"end_line":119,"end_column":31,"law_headings":["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculQuotientFamilialAideScolarite.quotient_familial",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": 710.00
+         },
+  {"event": "DecisionTaken", "pos": {"filename":"exec/executable_test.catala_fr","start_line":20,"start_column":5,"end_line":40,"end_column":6,"law_headings":["Cas N°1 :"]}},
+  {
+         "event": "VariableDefinition",
+         "name": "CalculQuotientFamilialAideScolarite.direct.output",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": {"revenu_fiscal_reference": 42600.00, "nombre_unités": "5.0", "quotient_familial": 710.00}
+         },
+  {"event": "EndCall", "name": "CalculQuotientFamilialAideScolarite.direct"},
+  {
+         "event": "VariableDefinition",
+         "name": "TestQuotientFamilialAideScolarite1.calcul",
+         "io": {"io_input":"NoInput","io_output":true},
+         "value": {"revenu_fiscal_reference": 42600.00, "nombre_unités": "5.0", "quotient_familial": 710.00}
+         }]
