@@ -1,10 +1,14 @@
+import sentry_sdk
 from fastapi import APIRouter
+
+from ..services.properties import Properties
 from ..utils import logger
 from ..model import Famille, Personne, Response, Centimes
 from ..services.quotient_familial import get_quotient_familial
 from ..services.aide_scolarite import get_aide_scolarite
 
 router = APIRouter()
+properties = Properties.import_properties()
 
 @router.get("/")
 def read_root():
@@ -22,14 +26,18 @@ def read_quotient_familial(
     parent_isole: bool = False,
     outre_mer: bool = False
     ) -> Response :
-    agent = Personne(revenu=Centimes.from_euros_int(agent_revenu), enfants=agent_enfants)
-    membres = [agent]
-    if conjoint_revenu is not None:
-        conjoint = Personne(revenu=Centimes.from_euros_int(conjoint_revenu), enfants=conjoint_enfants)
-        membres.append(conjoint)
-    famille = Famille(personne_ou_enfant_porteur_handicap=personne_ou_enfant_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
-    response = get_quotient_familial(famille)
-    return Response(value=str(response.value), explanation= response.explanation)
+    try : 
+        agent = Personne(revenu=Centimes.from_euros_int(agent_revenu), enfants=agent_enfants)
+        membres = [agent]
+        if conjoint_revenu is not None and conjoint_enfants is not None:
+            conjoint = Personne(revenu=Centimes.from_euros_int(conjoint_revenu), enfants=conjoint_enfants)
+            membres.append(conjoint)
+        famille = Famille(personne_ou_enfant_porteur_handicap=personne_ou_enfant_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
+        response = get_quotient_familial(famille)
+        return Response(value=str(response.value), explanation= response.explanation)
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
+        return Response(value="Une erreur est survenue", explanation=properties.error_contact)
 
 @router.get("/aide_scolarite")
 def read_quotient_familial_aide_scolarite(
@@ -49,23 +57,32 @@ def read_quotient_familial_aide_scolarite(
     montant_materiel_specifique: int | None = None,
     etudiant_post_bac: bool = False,
     ) -> Response:
-    agent = Personne(revenu=Centimes.from_euros_int(agent_revenu), enfants=agent_enfants)
-    membres = [agent]
-    if conjoint_revenu is not None:
-        conjoint = Personne(revenu=Centimes.from_euros_int(conjoint_revenu), enfants=conjoint_enfants)
-        membres.append(conjoint)
-    etudiant_independant = Personne(revenu=Centimes.from_euros_int(etudiant_revenu), enfants=etudiant_enfants) if etudiant_revenu is not None else None
-    famille = Famille(personne_ou_enfant_porteur_handicap=personne_ou_enfant_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
-    response = get_aide_scolarite(famille, etudiant_independant,
-        adresse_agent, adresse_etablissement, adresse_etudiant,
-        Centimes.from_euros_int(montant_materiel_specifique) if montant_materiel_specifique is not None else None,
-        etudiant_post_bac)
-    return Response(value=str(response.value) , explanation=response.explanation)
+    try:
+        agent = Personne(revenu=Centimes.from_euros_int(agent_revenu), enfants=agent_enfants)
+        membres = [agent]
+        if conjoint_revenu is not None:
+            conjoint = Personne(revenu=Centimes.from_euros_int(conjoint_revenu), enfants=conjoint_enfants)
+            membres.append(conjoint)
+        etudiant_independant = Personne(revenu=Centimes.from_euros_int(etudiant_revenu), enfants=etudiant_enfants) if etudiant_revenu is not None else None
+        famille = Famille(personne_ou_enfant_porteur_handicap=personne_ou_enfant_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
+        response = get_aide_scolarite(famille, etudiant_independant,
+            adresse_agent, adresse_etablissement, adresse_etudiant,
+            Centimes.from_euros_int(montant_materiel_specifique) if montant_materiel_specifique is not None else None,
+            etudiant_post_bac)
+        return Response(value=str(response.value) , explanation=response.explanation)
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
+        return Response(value="Une erreur est survenue", explanation=properties.error_contact)
 
 
 @router.get("/error-simulator")
 async def trigger_error():
     logger.info('This will be sent to Sentry')
-    division_by_zero = 1 / 0
+    try:
+        division_by_zero = 1 / 0
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
+        return Response(value="Une erreur est survenue", explanation=properties.error_contact)
+
 
 

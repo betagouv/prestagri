@@ -429,12 +429,14 @@ source = { virtual = "." }
 dependencies = [
     { name = "fastapi", extra = ["standard"] },
     { name = "gmpy2" },
+    { name = "pyyaml" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "fastapi", extras = ["standard"], specifier = ">=0.136.1" },
     { name = "gmpy2", specifier = ">=2.3.0" },
+    { name = "pyyaml", specifier = ">=6.0.3,<7.0.0" },
 ]
 
 [[package]]
