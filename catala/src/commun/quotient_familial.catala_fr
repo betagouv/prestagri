@@ -1,5 +1,5 @@
 > Module Quotient_familial
-> Usage de Famille
+> Usage de Menage
 > Usage de Personne
 
 ## Méthode de calcul du QUOTIENT FAMILIAL (QF) 
@@ -11,7 +11,7 @@ QF = Revenu fiscal de référence / (12 x nombre de personnes vivant au foyer (a
 
 ```catala-metadata
 déclaration champ d'application CalculQuotientFamilial: # Can be used
-  entrée famille contenu Famille
+  entrée famille contenu Menage
   interne nombre_personnes_vivants_au_foyer contenu décimal
   interne revenu_total contenu argent
   résultat revenu_fiscal_reference contenu argent

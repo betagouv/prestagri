@@ -1,5 +1,5 @@
 > Usage de Quotient_familial
-> Usage de Famille
+> Usage de Menage
 > Usage de Personne
 
 ## TEST
@@ -19,7 +19,7 @@ déclaration champ d'application TestQuotientFamilial1:
 champ d'application TestQuotientFamilial1:
   définition calcul égal à
     résultat de Quotient_familial.CalculQuotientFamilial avec {
-      -- famille: Famille {
+      -- menage: Menage {
         -- personne_ou_enfant_porteur_handicap: faux
         -- garde_alternée: faux
         -- parent_isolé: faux
@@ -53,7 +53,7 @@ déclaration champ d'application TestQuotientFamilial2:
 champ d'application TestQuotientFamilial2:
   définition calcul égal à
     résultat de Quotient_familial.CalculQuotientFamilial avec {
-      -- famille: Famille {
+      -- menage: Menage {
         -- personne_ou_enfant_porteur_handicap: faux
         -- garde_alternée: faux
         -- parent_isolé: vrai
@@ -85,7 +85,7 @@ déclaration champ d'application TestQuotientFamilial3:
 champ d'application TestQuotientFamilial3:
   définition calcul égal à
     résultat de Quotient_familial.CalculQuotientFamilial avec {
-      -- famille: Famille {
+      -- menage: Menage {
         -- personne_ou_enfant_porteur_handicap: faux
         -- garde_alternée: vrai
         -- parent_isolé: faux
@@ -116,7 +116,7 @@ déclaration champ d'application TestQuotientFamilial4:
 champ d'application TestQuotientFamilial4:
   définition calcul égal à
     résultat de Quotient_familial.CalculQuotientFamilial avec {
-      -- famille: Famille {
+      -- menage: Menage {
         -- personne_ou_enfant_porteur_handicap: faux
         -- garde_alternée: faux
         -- parent_isolé: faux
