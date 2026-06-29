@@ -2,7 +2,7 @@
 
 > Usage de Quotient_familial
 > Usage de Menage
-> Usage de Personne
+> Usage de Foyer_fiscal
 > Usage de Trajet
 
 # cf page 32
@@ -102,7 +102,7 @@ particularités par rapport aux autres prestations ministérielles :
 ```catala-metadata
 déclaration champ d'application CalculQuotientFamilialAideScolarite:
   entrée foyer_fiscal_agent contenu Menage
-  entrée étudiants_fiscalement_indépendants contenu liste de Personne
+  entrée étudiants_fiscalement_indépendants contenu liste de Foyer_fiscal
   interne famille contenu Menage
   calcul_quotient_familial champ d'application Quotient_familial.CalculQuotientFamilial
   résultat revenu_fiscal_reference contenu argent

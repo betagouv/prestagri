@@ -1,6 +1,6 @@
 > Usage de Quotient_familial
 > Usage de Menage
-> Usage de Personne
+> Usage de Foyer_fiscal
 
 ## TEST
 
@@ -25,13 +25,13 @@ champ d'application TestQuotientFamilial1:
         -- parent_isolé: faux
         -- outre_mer: faux
         -- membres_du_foyer: [
-          Personne {
+          Foyer_fiscal {
             -- revenu_fiscal_reference: 12 000 €
-            -- nombre_enfants: 0
+            -- nombre_personnes: 1
           } ;
-          Personne {
+          Foyer_fiscal {
             -- revenu_fiscal_reference: 20 600 €
-            -- nombre_enfants: 3
+            -- nombre_personnes: 4
           } ]
       }
     }
@@ -59,9 +59,9 @@ champ d'application TestQuotientFamilial2:
         -- parent_isolé: vrai
         -- outre_mer: faux
         -- membres_du_foyer: [
-          Personne {
+          Foyer_fiscal {
             -- revenu_fiscal_reference: 32 600 €
-            -- nombre_enfants: 3
+            -- nombre_personnes: 4
           }
         ]
       }
@@ -91,9 +91,9 @@ champ d'application TestQuotientFamilial3:
         -- parent_isolé: faux
         -- outre_mer: faux
         -- membres_du_foyer: [
-          Personne {
+          Foyer_fiscal {
             -- revenu_fiscal_reference: 32 600 €
-            -- nombre_enfants: 3
+            -- nombre_personnes: 4
           }
         ]
       }
@@ -122,13 +122,13 @@ champ d'application TestQuotientFamilial4:
         -- parent_isolé: faux
         -- outre_mer: vrai
         -- membres_du_foyer: [
-          Personne {
+          Foyer_fiscal {
             -- revenu_fiscal_reference: 12 000 €
-            -- nombre_enfants: 3
+            -- nombre_personnes: 4
           };
-          Personne {
+          Foyer_fiscal {
             -- revenu_fiscal_reference: 20 600 €
-            -- nombre_enfants: 0
+            -- nombre_personnes: 1
           }
         ]
       }

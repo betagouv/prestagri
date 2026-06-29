@@ -1,5 +1,5 @@
 > Module Menage
-> Usage de Personne
+> Usage de Foyer_fiscal
 
 ```catala-metadata
 déclaration structure Menage:
@@ -7,5 +7,5 @@ déclaration structure Menage:
   donnée garde_alternée contenu booléen
   donnée parent_isolé contenu booléen
   donnée outre_mer contenu booléen
-  donnée membres_du_foyer contenu liste de Personne
+  donnée membres_du_foyer contenu liste de Foyer_fiscal
 ```
