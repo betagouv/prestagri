@@ -20,7 +20,7 @@ champ d'application TestQuotientFamilial1:
   définition calcul égal à
     résultat de Quotient_familial.CalculQuotientFamilial avec {
       -- menage: Menage {
-        -- personne_ou_enfant_porteur_handicap: faux
+        -- beneficiaire_porteur_handicap: faux
         -- garde_alternée: faux
         -- parent_isolé: faux
         -- outre_mer: faux
@@ -54,7 +54,7 @@ champ d'application TestQuotientFamilial2:
   définition calcul égal à
     résultat de Quotient_familial.CalculQuotientFamilial avec {
       -- menage: Menage {
-        -- personne_ou_enfant_porteur_handicap: faux
+        -- beneficiaire_porteur_handicap: faux
         -- garde_alternée: faux
         -- parent_isolé: vrai
         -- outre_mer: faux
@@ -86,7 +86,7 @@ champ d'application TestQuotientFamilial3:
   définition calcul égal à
     résultat de Quotient_familial.CalculQuotientFamilial avec {
       -- menage: Menage {
-        -- personne_ou_enfant_porteur_handicap: faux
+        -- beneficiaire_porteur_handicap: faux
         -- garde_alternée: vrai
         -- parent_isolé: faux
         -- outre_mer: faux
@@ -117,7 +117,7 @@ champ d'application TestQuotientFamilial4:
   définition calcul égal à
     résultat de Quotient_familial.CalculQuotientFamilial avec {
       -- menage: Menage {
-        -- personne_ou_enfant_porteur_handicap: faux
+        -- beneficiaire_porteur_handicap: faux
         -- garde_alternée: faux
         -- parent_isolé: faux
         -- outre_mer: vrai

@@ -155,14 +155,14 @@ def calcul_quotient_familial_aide_scolarite(calcul_quotient_familial_aide_scolar
     foyer_fiscal_agent = (calcul_quotient_familial_aide_scolarite_in.foyer_fiscal_agent_in)
     etudiants_fiscalement_independants = (calcul_quotient_familial_aide_scolarite_in.etudiants_fiscalement_independants_in)
     if (etudiants_fiscalement_independants.length() > Integer(0)):
-        famille = (Option(CatalaTuple(menage.Menage(personne_ou_enfant_porteur_handicap = foyer_fiscal_agent.personne_ou_enfant_porteur_handicap, garde_alternee = foyer_fiscal_agent.garde_alternee, parent_isole = foyer_fiscal_agent.parent_isole, outre_mer = foyer_fiscal_agent.outre_mer, membres_du_foyer = (foyer_fiscal_agent.membres_du_foyer + etudiants_fiscalement_independants)), loc[2])))
+        menage = (Option(CatalaTuple(menage.Menage(beneficiaire_porteur_handicap = foyer_fiscal_agent.beneficiaire_porteur_handicap, garde_alternee = foyer_fiscal_agent.garde_alternee, parent_isole = foyer_fiscal_agent.parent_isole, outre_mer = foyer_fiscal_agent.outre_mer, membres_du_foyer = (foyer_fiscal_agent.membres_du_foyer + etudiants_fiscalement_independants)), loc[2])))
     else:
-        famille = (Option(CatalaTuple(foyer_fiscal_agent, loc[0])))
-    if famille.value is not None:
-        result__1 = (famille.value[0])
+        menage = (Option(CatalaTuple(foyer_fiscal_agent, loc[0])))
+    if menage.value is not None:
+        result__1 = (menage.value[0])
     else:
         raise NoValue(loc[1])
-    result = (quotient_familial.calcul_quotient_familial(quotient_familial.CalculQuotientFamilialIn(famille_in = result__1)))
+    result = (quotient_familial.calcul_quotient_familial(quotient_familial.CalculQuotientFamilialIn(menage_in = result__1)))
     calcul_quotient_familial = (quotient_familial.CalculQuotientFamilial(revenu_fiscal_reference = result.revenu_fiscal_reference, nombre_unites = result.nombre_unites, quotient_familial = result.quotient_familial))
     revenu_fiscal_reference = (calcul_quotient_familial.revenu_fiscal_reference)
     nombre_unites = (calcul_quotient_familial.nombre_unites)

@@ -21,7 +21,7 @@ def read_quotient_familial(
     agent_enfants: int,
     conjoint_revenu: int | None = None,
     conjoint_enfants: int | None = None,
-    personne_ou_enfant_porteur_handicap: bool = False,
+    beneficiaire_porteur_handicap: bool = False,
     garde_alternee: bool = False,
     parent_isole: bool = False,
     outre_mer: bool = False
@@ -32,8 +32,8 @@ def read_quotient_familial(
         if conjoint_revenu is not None and conjoint_enfants is not None:
             conjoint = FoyerFiscal(revenu=Centimes.from_euros_int(conjoint_revenu), personnes=conjoint_enfants)
             membres.append(conjoint)
-        famille = Menage(personne_ou_enfant_porteur_handicap=personne_ou_enfant_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
-        response = get_quotient_familial(famille)
+        menage = Menage(beneficiaire_porteur_handicap=beneficiaire_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
+        response = get_quotient_familial(menage)
         return Response(value=str(response.value), explanation= response.explanation)
     except Exception as e:
         sentry_sdk.capture_exception(e)
@@ -49,7 +49,7 @@ def read_quotient_familial_aide_scolarite(
     conjoint_enfants: int | None = None,
     etudiant_revenu: int  | None = None,
     etudiant_enfants: int | None = None,
-    personne_ou_enfant_porteur_handicap: bool = False,
+    beneficiaire_porteur_handicap: bool = False,
     garde_alternee: bool = False,
     parent_isole: bool = False,
     outre_mer: bool = False,
@@ -64,8 +64,8 @@ def read_quotient_familial_aide_scolarite(
             conjoint = FoyerFiscal(revenu=Centimes.from_euros_int(conjoint_revenu), personnes=conjoint_enfants)
             membres.append(conjoint)
         etudiant_independant = FoyerFiscal(revenu=Centimes.from_euros_int(etudiant_revenu), personnes=etudiant_enfants) if etudiant_revenu is not None else None
-        famille = Menage(personne_ou_enfant_porteur_handicap=personne_ou_enfant_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
-        response = get_aide_scolarite(famille, etudiant_independant,
+        menage = Menage(beneficiaire_porteur_handicap=beneficiaire_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
+        response = get_aide_scolarite(menage, etudiant_independant,
             adresse_agent, adresse_etablissement, adresse_etudiant,
             Centimes.from_euros_int(montant_materiel_specifique) if montant_materiel_specifique is not None else None,
             etudiant_post_bac)

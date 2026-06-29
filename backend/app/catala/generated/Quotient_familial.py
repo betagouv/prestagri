@@ -29,11 +29,11 @@ class CalculQuotientFamilial(CatalaStruct):
     }
 
 class CalculQuotientFamilialIn(CatalaStruct):
-    __slots__ = ('famille_in')
-    famille_in: menage.Menage
+    __slots__ = ('menage_in')
+    menage_in: menage.Menage
     name = 'CalculQuotientFamilial_in'
     fields = {
-        'famille_in': 'famille_in', # content menage.Menage
+        'menage_in': 'menage_in', # content menage.Menage
     }
 
 
@@ -54,16 +54,16 @@ loc = (Array([SourcePosition(filename="src/commun/quotient_familial.catala_fr", 
               SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=82, start_column=22, end_line=82, end_column=41, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"])]))
 
 def calcul_quotient_familial(calcul_quotient_familial_in:CalculQuotientFamilialIn) -> CalculQuotientFamilial:
-    famille = (calcul_quotient_familial_in.famille_in)
+    menage = (calcul_quotient_familial_in.menage_in)
     def _nombre_personnes_vivants_au_foyer__1(personne:foyer_fiscal.FoyerFiscal):
         return (Integer(1) + personne.nombre_personnes)
     nombre_personnes_vivants_au_foyer__1 = Function(_nombre_personnes_vivants_au_foyer__1)
-    nombre_personnes_vivants_au_foyer = (Option(CatalaTuple(Decimal(integer_fr.somme(famille.membres_du_foyer.map(nombre_personnes_vivants_au_foyer__1))), loc[0])))
+    nombre_personnes_vivants_au_foyer = (Option(CatalaTuple(Decimal(integer_fr.somme(menage.membres_du_foyer.map(nombre_personnes_vivants_au_foyer__1))), loc[0])))
     def _revenu_total__1(personne__1:foyer_fiscal.FoyerFiscal):
         return personne__1.revenu_fiscal_reference
     revenu_total__1 = Function(_revenu_total__1)
-    revenu_total = (Option(CatalaTuple(money_fr.somme(famille.membres_du_foyer.map(revenu_total__1)), loc[1])))
-    if famille.outre_mer:
+    revenu_total = (Option(CatalaTuple(money_fr.somme(menage.membres_du_foyer.map(revenu_total__1)), loc[1])))
+    if menage.outre_mer:
         if revenu_total.value is not None:
             revenu_fiscal_reference__1 = (revenu_total.value[0])
         else:
@@ -75,19 +75,19 @@ def calcul_quotient_familial(calcul_quotient_familial_in:CalculQuotientFamilialI
         else:
             raise NoValue(loc[5])
         revenu_fiscal_reference = (CatalaTuple(revenu_fiscal_reference__1, loc[2])[0])
-    if famille.garde_alternee:
+    if menage.garde_alternee:
         if nombre_personnes_vivants_au_foyer.value is not None:
             nombre_unites__1 = (nombre_personnes_vivants_au_foyer.value[0])
         else:
             raise NoValue(loc[11])
         nombre_unites = (CatalaTuple((nombre_unites__1 + Decimal('1/2')), loc[12])[0])
-    elif famille.personne_ou_enfant_porteur_handicap:
+    elif menage.beneficiaire_porteur_handicap:
         if nombre_personnes_vivants_au_foyer.value is not None:
             nombre_unites__1 = (nombre_personnes_vivants_au_foyer.value[0])
         else:
             raise NoValue(loc[9])
         nombre_unites = (CatalaTuple((nombre_unites__1 + Decimal('1/2')), loc[10])[0])
-    elif famille.parent_isole:
+    elif menage.parent_isole:
         if nombre_personnes_vivants_au_foyer.value is not None:
             nombre_unites__1 = (nombre_personnes_vivants_au_foyer.value[0])
         else:

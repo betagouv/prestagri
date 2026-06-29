@@ -54,7 +54,7 @@ fiscale) bénéficie (sur présentation de justificatif-s) d’une demi-unité s
 champ d'application CalculQuotientFamilial:
   étiquette handicap exception parent_isolé
   définition nombre_unités
-  sous condition famille.personne_ou_enfant_porteur_handicap
+  sous condition famille.beneficiaire_porteur_handicap
   conséquence égal à nombre_personnes_vivants_au_foyer + 0,5
 ```
 

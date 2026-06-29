@@ -16,15 +16,15 @@ from . import Decimal_fr as decimal_fr
 from . import Foyer_fiscal as foyer_fiscal
 
 class Menage(CatalaStruct):
-    __slots__ = ('personne_ou_enfant_porteur_handicap', 'garde_alternee', 'parent_isole', 'outre_mer', 'membres_du_foyer')
-    personne_ou_enfant_porteur_handicap: Bool
+    __slots__ = ('beneficiaire_porteur_handicap', 'garde_alternee', 'parent_isole', 'outre_mer', 'membres_du_foyer')
+    beneficiaire_porteur_handicap: Bool
     garde_alternee: Bool
     parent_isole: Bool
     outre_mer: Bool
     membres_du_foyer: List[foyer_fiscal.FoyerFiscal]
     name = 'Menage'
     fields = {
-        'personne_ou_enfant_porteur_handicap': 'personne_ou_enfant_porteur_handicap', # content Bool
+        'beneficiaire_porteur_handicap': 'beneficiaire_porteur_handicap', # content Bool
         'garde_alternee': 'garde_alternée', # content Bool
         'parent_isole': 'parent_isolé', # content Bool
         'outre_mer': 'outre_mer', # content Bool
