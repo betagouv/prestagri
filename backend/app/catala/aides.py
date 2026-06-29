@@ -2,13 +2,13 @@
 from .generated.Quotient_familial import CalculQuotientFamilialIn, calcul_quotient_familial
 from .generated.Aide_scolarite import CalculQuotientFamilialAideScolariteIn, calcul_quotient_familial_aide_scolarite, CalculPointsAideScolariteIn, calcul_points_aide_scolarite, calcul_aide_scolarite, CalculAideScolariteIn, Integer
 from .generated.catala_runtime import Option, Decimal
-from ..model import Famille, Personne, Trajet, Response, Centimes
-from .utils import to_famille_cat, to_personne_cat_list, to_money, to_trajet, to_float
+from ..model import Menage, Personne, Trajet, Response, Centimes
+from .utils import to_Menage_cat, to_personne_cat_list, to_money, to_trajet, to_float
 
 
-def get_catala_quotient_familial(famille : Famille) -> Response[Centimes]:
-    famille_cat = to_famille_cat(famille)
-    result = calcul_quotient_familial(CalculQuotientFamilialIn(famille_cat))
+def get_catala_quotient_familial(Menage : Menage) -> Response[Centimes]:
+    Menage_cat = to_Menage_cat(Menage)
+    result = calcul_quotient_familial(CalculQuotientFamilialIn(Menage_cat))
     return Response (
         value=Centimes(valeur=result.quotient_familial.value.value),
         explanation=str(result.revenu_fiscal_reference) + "/ (12 x " + str(result.nombre_unites) +")"
@@ -22,10 +22,10 @@ def get_catala_aide_scolarite(quotient_familial: Centimes, nb_points: float ) ->
         explanation=str(quotient_familial) + " x " + str(nb_points) + " = " + str(value) )
 
 
-def get_catala_quotient_familial_aide_scolarite(famille: Famille, etudiants_fiscalement_independants: list[Personne]) -> Response[Centimes]:
-    famille_cat = to_famille_cat(famille)
+def get_catala_quotient_familial_aide_scolarite(Menage: Menage, etudiants_fiscalement_independants: list[Personne]) -> Response[Centimes]:
+    Menage_cat = to_Menage_cat(Menage)
     etudiants_cat = to_personne_cat_list(etudiants_fiscalement_independants)
-    result = calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(famille_cat, etudiants_cat))
+    result = calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(Menage_cat, etudiants_cat))
     value = Centimes(valeur=result.quotient_familial.value.value)
     return Response (
         value=value,

@@ -3,7 +3,7 @@ from fastapi import APIRouter
 
 from ..services.properties import Properties
 from ..utils import logger
-from ..model import Famille, Personne, Response, Centimes
+from ..model import Menage, Personne, Response, Centimes
 from ..services.quotient_familial import get_quotient_familial
 from ..services.aide_scolarite import get_aide_scolarite
 
@@ -32,8 +32,8 @@ def read_quotient_familial(
         if conjoint_revenu is not None and conjoint_enfants is not None:
             conjoint = Personne(revenu=Centimes.from_euros_int(conjoint_revenu), enfants=conjoint_enfants)
             membres.append(conjoint)
-        famille = Famille(personne_ou_enfant_porteur_handicap=personne_ou_enfant_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
-        response = get_quotient_familial(famille)
+        Menage = Menage(personne_ou_enfant_porteur_handicap=personne_ou_enfant_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
+        response = get_quotient_familial(Menage)
         return Response(value=str(response.value), explanation= response.explanation)
     except Exception as e:
         sentry_sdk.capture_exception(e)
@@ -64,8 +64,8 @@ def read_quotient_familial_aide_scolarite(
             conjoint = Personne(revenu=Centimes.from_euros_int(conjoint_revenu), enfants=conjoint_enfants)
             membres.append(conjoint)
         etudiant_independant = Personne(revenu=Centimes.from_euros_int(etudiant_revenu), enfants=etudiant_enfants) if etudiant_revenu is not None else None
-        famille = Famille(personne_ou_enfant_porteur_handicap=personne_ou_enfant_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
-        response = get_aide_scolarite(famille, etudiant_independant,
+        Menage = Menage(personne_ou_enfant_porteur_handicap=personne_ou_enfant_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
+        response = get_aide_scolarite(Menage, etudiant_independant,
             adresse_agent, adresse_etablissement, adresse_etudiant,
             Centimes.from_euros_int(montant_materiel_specifique) if montant_materiel_specifique is not None else None,
             etudiant_post_bac)

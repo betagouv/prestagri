@@ -13,7 +13,7 @@ from . import Money_fr as money_fr
 from . import Integer_fr as integer_fr
 from . import Decimal_fr as decimal_fr
 from . import Personne as personne
-from . import Famille as famille
+from . import Menage as Menage
 
 class CalculQuotientFamilial:
     def __init__(self, revenu_fiscal_reference: Money, nombre_unites: Decimal, quotient_familial: Money) -> None:
@@ -34,12 +34,12 @@ class CalculQuotientFamilial:
         return "CalculQuotientFamilial(revenu_fiscal_reference={},nombre_unites={},quotient_familial={})".format(self.revenu_fiscal_reference, self.nombre_unites, self.quotient_familial)
 
 class CalculQuotientFamilialIn:
-    def __init__(self, famille_in: famille.Famille) -> None:
-        self.famille_in = famille_in
+    def __init__(self, Menage_in: Menage.Menage) -> None:
+        self.Menage_in = Menage_in
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, CalculQuotientFamilialIn):
-            return (self.famille_in == other.famille_in)
+            return (self.Menage_in == other.Menage_in)
         else:
             return False
 
@@ -47,30 +47,30 @@ class CalculQuotientFamilialIn:
         return not (self == other)
 
     def __str__(self) -> str:
-        return "CalculQuotientFamilialIn(famille_in={})".format(self.famille_in)
+        return "CalculQuotientFamilialIn(Menage_in={})".format(self.Menage_in)
 
 
 def calcul_quotient_familial(calcul_quotient_familial_in:CalculQuotientFamilialIn):
-    famille__1 = (calcul_quotient_familial_in.famille_in)
+    Menage__1 = (calcul_quotient_familial_in.Menage_in)
     def revenu_total__1(personne__1:personne.Personne):
         return personne__1.revenu_fiscal_reference
-    revenu_total = (money_fr.somme(list_map(revenu_total__1, famille__1.membres_du_foyer)))
+    revenu_total = (money_fr.somme(list_map(revenu_total__1, Menage__1.membres_du_foyer)))
     def nombre_personnes_vivants_au_foyer__1(personne__2:personne.Personne):
         return (Integer(1) + personne__2.nombre_enfants)
-    nombre_personnes_vivants_au_foyer = (decimal_of_integer(integer_fr.somme(list_map(nombre_personnes_vivants_au_foyer__1, famille__1.membres_du_foyer))))
-    if famille__1.outre_mer:
+    nombre_personnes_vivants_au_foyer = (decimal_of_integer(integer_fr.somme(list_map(nombre_personnes_vivants_au_foyer__1, Menage__1.membres_du_foyer))))
+    if Menage__1.outre_mer:
         pos = (SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=83, start_column=22, end_line=83, end_column=41, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]))
         revenu_fiscal_reference = (((revenu_total * decimal_of_string("4/5")), pos)[0])
     else:
         pos = (SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=18, start_column=12, end_line=18, end_column=35, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]))
         revenu_fiscal_reference = ((revenu_total, pos)[0])
-    if famille__1.garde_alternee:
+    if Menage__1.garde_alternee:
         pos = (SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=71, start_column=22, end_line=71, end_column=61, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]))
         nombre_unites = (((nombre_personnes_vivants_au_foyer + decimal_of_string("1/2")), pos)[0])
-    elif famille__1.personne_ou_enfant_porteur_handicap:
+    elif Menage__1.personne_ou_enfant_porteur_handicap:
         pos = (SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=59, start_column=22, end_line=59, end_column=61, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]))
         nombre_unites = (((nombre_personnes_vivants_au_foyer + decimal_of_string("1/2")), pos)[0])
-    elif famille__1.parent_isole:
+    elif Menage__1.parent_isole:
         pos = (SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=46, start_column=22, end_line=46, end_column=61, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]))
         nombre_unites = (((nombre_personnes_vivants_au_foyer + decimal_of_string("1")), pos)[0])
     else:

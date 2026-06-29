@@ -13,7 +13,7 @@ from . import Money_fr as money_fr
 from . import Integer_fr as integer_fr
 from . import Decimal_fr as decimal_fr
 from . import Personne as personne
-from . import Famille as famille
+from . import Menage as Menage
 from . import Quotient_familial as quotient_familial
 from . import Trajet as trajet
 
@@ -127,7 +127,7 @@ class CalculPointsAideScolarite:
         return "CalculPointsAideScolarite(criteres_applicables={},nb_points={})".format(self.criteres_applicables, self.nb_points)
 
 class CalculQuotientFamilialAideScolariteIn:
-    def __init__(self, foyer_fiscal_agent_in: famille.Famille, etudiants_fiscalement_independants_in: List[personne.Personne]) -> None:
+    def __init__(self, foyer_fiscal_agent_in: Menage.Menage, etudiants_fiscalement_independants_in: List[personne.Personne]) -> None:
         self.foyer_fiscal_agent_in = foyer_fiscal_agent_in
         self.etudiants_fiscalement_independants_in = etudiants_fiscalement_independants_in
 
@@ -218,11 +218,11 @@ def calcul_quotient_familial_aide_scolarite(calcul_quotient_familial_aide_scolar
     etudiants_fiscalement_independants = (calcul_quotient_familial_aide_scolarite_in.etudiants_fiscalement_independants_in)
     if (list_length(etudiants_fiscalement_independants) > Integer(0)):
         pos = (SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=138, start_column=22, end_line=139, end_column=120, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]))
-        famille__1 = ((famille.Famille(personne_ou_enfant_porteur_handicap = foyer_fiscal_agent.personne_ou_enfant_porteur_handicap, garde_alternee = foyer_fiscal_agent.garde_alternee, parent_isole = foyer_fiscal_agent.parent_isole, outre_mer = foyer_fiscal_agent.outre_mer, membres_du_foyer = (foyer_fiscal_agent.membres_du_foyer + etudiants_fiscalement_independants)), pos)[0])
+        Menage__1 = ((Menage.Menage(personne_ou_enfant_porteur_handicap = foyer_fiscal_agent.personne_ou_enfant_porteur_handicap, garde_alternee = foyer_fiscal_agent.garde_alternee, parent_isole = foyer_fiscal_agent.parent_isole, outre_mer = foyer_fiscal_agent.outre_mer, membres_du_foyer = (foyer_fiscal_agent.membres_du_foyer + etudiants_fiscalement_independants)), pos)[0])
     else:
         pos = (SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=106, start_column=11, end_line=106, end_column=18, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]))
-        famille__1 = ((foyer_fiscal_agent, pos)[0])
-    result = (quotient_familial.calcul_quotient_familial(quotient_familial.CalculQuotientFamilialIn(famille_in = famille__1)))
+        Menage__1 = ((foyer_fiscal_agent, pos)[0])
+    result = (quotient_familial.calcul_quotient_familial(quotient_familial.CalculQuotientFamilialIn(Menage_in = Menage__1)))
     calcul_quotient_familial = (quotient_familial.CalculQuotientFamilial(revenu_fiscal_reference = result.revenu_fiscal_reference, nombre_unites = result.nombre_unites, quotient_familial = result.quotient_familial))
     quotient_familial__1 = (calcul_quotient_familial.quotient_familial)
     nombre_unites = (calcul_quotient_familial.nombre_unites)

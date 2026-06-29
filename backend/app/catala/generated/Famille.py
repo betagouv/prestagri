@@ -14,7 +14,7 @@ from . import Integer_fr as integer_fr
 from . import Decimal_fr as decimal_fr
 from . import Personne as personne
 
-class Famille:
+class Menage:
     def __init__(self, personne_ou_enfant_porteur_handicap: bool, garde_alternee: bool, parent_isole: bool, outre_mer: bool, membres_du_foyer: List[personne.Personne]) -> None:
         self.personne_ou_enfant_porteur_handicap = personne_ou_enfant_porteur_handicap
         self.garde_alternee = garde_alternee
@@ -23,7 +23,7 @@ class Famille:
         self.membres_du_foyer = membres_du_foyer
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, Famille):
+        if isinstance(other, Menage):
             return (self.personne_ou_enfant_porteur_handicap == other.personne_ou_enfant_porteur_handicap and self.garde_alternee == other.garde_alternee and self.parent_isole == other.parent_isole and self.outre_mer == other.outre_mer and self.membres_du_foyer == other.membres_du_foyer)
         else:
             return False
@@ -32,6 +32,6 @@ class Famille:
         return not (self == other)
 
     def __str__(self) -> str:
-        return "Famille(personne_ou_enfant_porteur_handicap={},garde_alternee={},parent_isole={},outre_mer={},membres_du_foyer={})".format(self.personne_ou_enfant_porteur_handicap, self.garde_alternee, self.parent_isole, self.outre_mer, self.membres_du_foyer)
+        return "Menage(personne_ou_enfant_porteur_handicap={},garde_alternee={},parent_isole={},outre_mer={},membres_du_foyer={})".format(self.personne_ou_enfant_porteur_handicap, self.garde_alternee, self.parent_isole, self.outre_mer, self.membres_du_foyer)
 
 

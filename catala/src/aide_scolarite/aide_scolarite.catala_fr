@@ -1,7 +1,7 @@
 > Module Aide_scolarite
 
 > Usage de Quotient_familial
-> Usage de Famille
+> Usage de Menage
 > Usage de Personne
 > Usage de Trajet
 
@@ -61,11 +61,11 @@ cumul est inférieur au montant calculé, auquel cas, le différentiel seul est 
 Le bénéfice de cette aide est soumis à conditions de ressources.
 A compter du 1er septembre 2025, les ressources à prendre en compte seront celles perçues en 2024 (avis
 d'imposition reçu en 2025).
-Si les ressources et/ou la composition de la famille du demandeur ont changé au moment de la demande, les
+Si les ressources et/ou la composition de la Menage du demandeur ont changé au moment de la demande, les
 modifications pourront être prises en compte au regard des justificatifs fournis ( joindre dans ce cas une copie du dernier
 bulletin de salaire du demandeur et/ou du conjoint. Si conjoint-e sans activité, joindre notification Pôle Emploi, notification
 d’admission à la retraite, accompagnés d'une attestation sur l’honneur expliquant l'évolution des ressources et/ou de la composition
-de la famille au moment du dépôt de l'allocation Aide à la Scolarité).
+de la Menage au moment du dépôt de l'allocation Aide à la Scolarité).
 
 ## Bénéficiaires (outre ceux énumérés aux dispositions générales) :
 Agents du ministère chargé de l'agriculture sont bénéficiaires de l’aide sous réserve :
@@ -101,9 +101,9 @@ particularités par rapport aux autres prestations ministérielles :
 
 ```catala-metadata
 déclaration champ d'application CalculQuotientFamilialAideScolarite:
-  entrée foyer_fiscal_agent contenu Famille
+  entrée foyer_fiscal_agent contenu Menage
   entrée étudiants_fiscalement_indépendants contenu liste de Personne
-  interne famille contenu Famille
+  interne Menage contenu Menage
   calcul_quotient_familial champ d'application Quotient_familial.CalculQuotientFamilial
   résultat revenu_fiscal_reference contenu argent
   résultat nombre_unités contenu décimal
@@ -112,8 +112,8 @@ déclaration champ d'application CalculQuotientFamilialAideScolarite:
 
 ```catala
 champ d'application CalculQuotientFamilialAideScolarite:
-  étiquette famille_défaut définition famille égal à foyer_fiscal_agent
-  définition calcul_quotient_familial.famille égal à famille
+  étiquette Menage_défaut définition Menage égal à foyer_fiscal_agent
+  définition calcul_quotient_familial.Menage égal à Menage
   définition revenu_fiscal_reference égal à calcul_quotient_familial.revenu_fiscal_reference
   définition nombre_unités égal à calcul_quotient_familial.nombre_unités
   définition quotient_familial égal à calcul_quotient_familial.quotient_familial
@@ -132,8 +132,8 @@ leurs études ;
 
 ```catala
 champ d'application CalculQuotientFamilialAideScolarite:
-  étiquette ajout_étudiants_fiscalement_indépendants exception famille_défaut
-  définition famille
+  étiquette ajout_étudiants_fiscalement_indépendants exception Menage_défaut
+  définition Menage
   sous condition nombre de étudiants_fiscalement_indépendants > 0
   conséquence égal à foyer_fiscal_agent 
   mais en remplaçant { -- membres_du_foyer: foyer_fiscal_agent.membres_du_foyer ++ étudiants_fiscalement_indépendants }

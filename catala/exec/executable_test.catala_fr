@@ -1,5 +1,5 @@
 > Usage de Aide_scolarite
-> Usage de Famille
+> Usage de Menage
 > Usage de Personne
 > Usage de Trajet
 
@@ -18,7 +18,7 @@ déclaration champ d'application TestQuotientFamilialAideScolarite1:
 champ d'application TestQuotientFamilialAideScolarite1:
   définition calcul égal à
     résultat de Aide_scolarite.CalculQuotientFamilialAideScolarite avec {
-      -- foyer_fiscal_agent: Famille {
+      -- foyer_fiscal_agent: Menage {
         -- personne_ou_enfant_porteur_handicap: faux
         -- garde_alternée: faux
         -- parent_isolé: faux

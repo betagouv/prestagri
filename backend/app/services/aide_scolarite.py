@@ -1,10 +1,10 @@
 from app.catala.aides import get_catala_quotient_familial_aide_scolarite, get_catala_criteres_eligibles_aide_scolarite, get_catala_aide_scolarite
-from app.model import Response, Famille, Centimes, Personne
+from app.model import Response, Menage, Centimes, Personne
 from app.services.gps import get_trajet
 
 
 def get_aide_scolarite(
-    famille: Famille,
+    Menage: Menage,
     etudiant_fiscalement_independant: Personne | None,
     adresse_agent: str,
     adresse_etablissement: str,
@@ -15,7 +15,7 @@ def get_aide_scolarite(
     etudiants_independants = []
     if etudiant_fiscalement_independant is not None:
         etudiants_independants.append(etudiant_fiscalement_independant)
-    quotient_familial_scolarite = get_catala_quotient_familial_aide_scolarite(famille, etudiants_independants)
+    quotient_familial_scolarite = get_catala_quotient_familial_aide_scolarite(Menage, etudiants_independants)
 
     trajet_domicile_agent = get_trajet(adresse_agent, adresse_etablissement)
     trajet_domicile_etudiant = get_trajet(adresse_etudiant, adresse_etablissement) if adresse_etudiant is not None else None
