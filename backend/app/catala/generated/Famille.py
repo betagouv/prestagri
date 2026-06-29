@@ -12,10 +12,10 @@ from . import Period_fr as period_fr
 from . import Money_fr as money_fr
 from . import Integer_fr as integer_fr
 from . import Decimal_fr as decimal_fr
-from . import FoyerFiscal as foyer_fiscal
+from . import Foyer_fiscal as foyer_fiscal
 
 class Menage:
-    def __init__(self, beneficiaire_porteur_handicap: bool, garde_alternee: bool, parent_isole: bool, outre_mer: bool, foyers_fiscaux: List[foyer_fiscal.FoyerFiscal]) -> None:
+    def __init__(self, beneficiaire_porteur_handicap: bool, garde_alternee: bool, parent_isole: bool, outre_mer: bool, foyers_fiscaux: List[foyer_fiscal.Foyer_fiscal]) -> None:
         self.beneficiaire_porteur_handicap = beneficiaire_porteur_handicap
         self.garde_alternee = garde_alternee
         self.parent_isole = parent_isole

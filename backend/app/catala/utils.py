@@ -1,8 +1,8 @@
 from .generated.catala_runtime import Money as Money_cat, Integer
-from .generated.FoyerFiscal import FoyerFiscal as FoyerFiscal_cat
+from .generated.Foyer_fiscal import Foyer_fiscal as Foyer_fiscal_cat
 from .generated.Trajet import Trajet as Trajet_cat
 from .generated.Menage import Menage as Menage_cat
-from ..model import Menage, FoyerFiscal, Trajet, Centimes
+from ..model import Menage, Foyer_fiscal, Trajet, Centimes
 from gmpy2 import mpq
 
 def to_Menage_cat(Menage: Menage) -> Menage_cat:
@@ -16,11 +16,11 @@ def to_Menage_cat(Menage: Menage) -> Menage_cat:
     )
     return Menage_cat
 
-def to_foyer_fiscal_cat_list(foyer_fiscals: list[FoyerFiscal]) -> list[FoyerFiscal_cat]:
+def to_foyer_fiscal_cat_list(foyer_fiscals: list[Foyer_fiscal]) -> list[Foyer_fiscal_cat]:
     return list(map(to_foyer_fiscal_cat, foyer_fiscals))
 
-def to_foyer_fiscal_cat(foyer_fiscal: FoyerFiscal) -> FoyerFiscal_cat:
-    return FoyerFiscal_cat(to_money(foyer_fiscal.revenu), Integer(foyer_fiscal.enfants))
+def to_foyer_fiscal_cat(foyer_fiscal: Foyer_fiscal) -> Foyer_fiscal_cat:
+    return Foyer_fiscal_cat(to_money(foyer_fiscal.revenu), Integer(foyer_fiscal.enfants))
 
 def to_money(centimes: Centimes) -> Money_cat:
     return Money_cat(Integer(centimes.valeur))

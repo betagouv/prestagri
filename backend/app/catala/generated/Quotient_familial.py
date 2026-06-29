@@ -12,7 +12,7 @@ from . import Period_fr as period_fr
 from . import Money_fr as money_fr
 from . import Integer_fr as integer_fr
 from . import Decimal_fr as decimal_fr
-from . import FoyerFiscal as foyer_fiscal
+from . import Foyer_fiscal as foyer_fiscal
 from . import Menage as Menage
 
 class CalculQuotientFamilial:
@@ -52,10 +52,10 @@ class CalculQuotientFamilialIn:
 
 def calcul_quotient_familial(calcul_quotient_familial_in:CalculQuotientFamilialIn):
     Menage__1 = (calcul_quotient_familial_in.Menage_in)
-    def revenu_total__1(foyer_fiscal__1:foyer_fiscal.FoyerFiscal):
+    def revenu_total__1(foyer_fiscal__1:foyer_fiscal.Foyer_fiscal):
         return foyer_fiscal__1.revenu_fiscal_reference
     revenu_total = (money_fr.somme(list_map(revenu_total__1, Menage__1.foyers_fiscaux)))
-    def nombre_personnes_vivants_au_foyer__1(foyer_fiscal__2:foyer_fiscal.FoyerFiscal):
+    def nombre_personnes_vivants_au_foyer__1(foyer_fiscal__2:foyer_fiscal.Foyer_fiscal):
         return (Integer(1) + foyer_fiscal__2.nombre_personnes)
     nombre_personnes_vivants_au_foyer = (decimal_of_integer(integer_fr.somme(list_map(nombre_personnes_vivants_au_foyer__1, Menage__1.foyers_fiscaux))))
     if Menage__1.outre_mer:

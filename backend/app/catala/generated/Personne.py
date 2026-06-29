@@ -13,13 +13,13 @@ from . import Money_fr as money_fr
 from . import Integer_fr as integer_fr
 from . import Decimal_fr as decimal_fr
 
-class FoyerFiscal:
+class Foyer_fiscal:
     def __init__(self, revenu_fiscal_reference: Money, nombre_personnes: Integer) -> None:
         self.revenu_fiscal_reference = revenu_fiscal_reference
         self.nombre_personnes = nombre_personnes
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, FoyerFiscal):
+        if isinstance(other, Foyer_fiscal):
             return (self.revenu_fiscal_reference == other.revenu_fiscal_reference and self.nombre_personnes == other.nombre_personnes)
         else:
             return False
@@ -28,6 +28,6 @@ class FoyerFiscal:
         return not (self == other)
 
     def __str__(self) -> str:
-        return "FoyerFiscal(revenu_fiscal_reference={},nombre_personnes={})".format(self.revenu_fiscal_reference, self.nombre_personnes)
+        return "Foyer_fiscal(revenu_fiscal_reference={},nombre_personnes={})".format(self.revenu_fiscal_reference, self.nombre_personnes)
 
 

@@ -1,6 +1,6 @@
 > Usage de Aide_scolarite
 > Usage de Menage
-> Usage de FoyerFiscal
+> Usage de Foyer_fiscal
 > Usage de Trajet
 
 # Cas N°1 :
@@ -24,16 +24,16 @@ champ d'application TestQuotientFamilialAideScolarite1:
         -- parent_isolé: faux
         -- outre_mer: faux
         -- foyers_fiscaux: [
-          FoyerFiscal {
+          Foyer_fiscal {
             -- revenu_fiscal_reference: 12 000 €
             -- nombre_personnes: 0
           } ;
-          FoyerFiscal {
+          Foyer_fiscal {
             -- revenu_fiscal_reference: 20 600 €
             -- nombre_personnes: 2
           } ]
       }
-      -- étudiants_fiscalement_indépendants: [FoyerFiscal {
+      -- étudiants_fiscalement_indépendants: [Foyer_fiscal {
         -- revenu_fiscal_reference: 10 000 €
         -- nombre_personnes: 0
       }]

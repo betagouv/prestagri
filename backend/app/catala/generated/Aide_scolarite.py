@@ -12,7 +12,7 @@ from . import Period_fr as period_fr
 from . import Money_fr as money_fr
 from . import Integer_fr as integer_fr
 from . import Decimal_fr as decimal_fr
-from . import FoyerFiscal as foyer_fiscal
+from . import Foyer_fiscal as foyer_fiscal
 from . import Menage as Menage
 from . import Quotient_familial as quotient_familial
 from . import Trajet as trajet
@@ -127,7 +127,7 @@ class CalculPointsAideScolarite:
         return "CalculPointsAideScolarite(criteres_applicables={},nb_points={})".format(self.criteres_applicables, self.nb_points)
 
 class CalculQuotientFamilialAideScolariteIn:
-    def __init__(self, foyer_fiscal_agent_in: Menage.Menage, etudiants_fiscalement_independants_in: List[foyer_fiscal.FoyerFiscal]) -> None:
+    def __init__(self, foyer_fiscal_agent_in: Menage.Menage, etudiants_fiscalement_independants_in: List[foyer_fiscal.Foyer_fiscal]) -> None:
         self.foyer_fiscal_agent_in = foyer_fiscal_agent_in
         self.etudiants_fiscalement_independants_in = etudiants_fiscalement_independants_in
 

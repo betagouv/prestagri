@@ -2,7 +2,7 @@
 from .generated.Quotient_familial import CalculQuotientFamilialIn, calcul_quotient_familial
 from .generated.Aide_scolarite import CalculQuotientFamilialAideScolariteIn, calcul_quotient_familial_aide_scolarite, CalculPointsAideScolariteIn, calcul_points_aide_scolarite, calcul_aide_scolarite, CalculAideScolariteIn, Integer
 from .generated.catala_runtime import Option, Decimal
-from ..model import Menage, FoyerFiscal, Trajet, Response, Centimes
+from ..model import Menage, Foyer_fiscal, Trajet, Response, Centimes
 from .utils import to_Menage_cat, to_foyer_fiscal_cat_list, to_money, to_trajet, to_float
 
 
@@ -22,7 +22,7 @@ def get_catala_aide_scolarite(quotient_familial: Centimes, nb_points: float ) ->
         explanation=str(quotient_familial) + " x " + str(nb_points) + " = " + str(value) )
 
 
-def get_catala_quotient_familial_aide_scolarite(Menage: Menage, etudiants_fiscalement_independants: list[FoyerFiscal]) -> Response[Centimes]:
+def get_catala_quotient_familial_aide_scolarite(Menage: Menage, etudiants_fiscalement_independants: list[Foyer_fiscal]) -> Response[Centimes]:
     Menage_cat = to_Menage_cat(Menage)
     etudiants_cat = to_foyer_fiscal_cat_list(etudiants_fiscalement_independants)
     result = calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(Menage_cat, etudiants_cat))

@@ -3,7 +3,7 @@ from fastapi import APIRouter
 
 from ..services.properties import Properties
 from ..utils import logger
-from ..model import Menage, FoyerFiscal, Response, Centimes
+from ..model import Menage, Foyer_fiscal, Response, Centimes
 from ..services.quotient_familial import get_quotient_familial
 from ..services.aide_scolarite import get_aide_scolarite
 
@@ -27,10 +27,10 @@ def read_quotient_familial(
     outre_mer: bool = False
     ) -> Response :
     try : 
-        agent = FoyerFiscal(revenu=Centimes.from_euros_int(agent_revenu), enfants=agent_enfants)
+        agent = Foyer_fiscal(revenu=Centimes.from_euros_int(agent_revenu), enfants=agent_enfants)
         membres = [agent]
         if conjoint_revenu is not None and conjoint_enfants is not None:
-            conjoint = FoyerFiscal(revenu=Centimes.from_euros_int(conjoint_revenu), enfants=conjoint_enfants)
+            conjoint = Foyer_fiscal(revenu=Centimes.from_euros_int(conjoint_revenu), enfants=conjoint_enfants)
             membres.append(conjoint)
         Menage = Menage(beneficiaire_porteur_handicap=beneficiaire_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
         response = get_quotient_familial(Menage)
@@ -58,12 +58,12 @@ def read_quotient_familial_aide_scolarite(
     etudiant_post_bac: bool = False,
     ) -> Response:
     try:
-        agent = FoyerFiscal(revenu=Centimes.from_euros_int(agent_revenu), enfants=agent_enfants)
+        agent = Foyer_fiscal(revenu=Centimes.from_euros_int(agent_revenu), enfants=agent_enfants)
         membres = [agent]
         if conjoint_revenu is not None:
-            conjoint = FoyerFiscal(revenu=Centimes.from_euros_int(conjoint_revenu), enfants=conjoint_enfants)
+            conjoint = Foyer_fiscal(revenu=Centimes.from_euros_int(conjoint_revenu), enfants=conjoint_enfants)
             membres.append(conjoint)
-        etudiant_independant = FoyerFiscal(revenu=Centimes.from_euros_int(etudiant_revenu), enfants=etudiant_enfants) if etudiant_revenu is not None else None
+        etudiant_independant = Foyer_fiscal(revenu=Centimes.from_euros_int(etudiant_revenu), enfants=etudiant_enfants) if etudiant_revenu is not None else None
         Menage = Menage(beneficiaire_porteur_handicap=beneficiaire_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
         response = get_aide_scolarite(Menage, etudiant_independant,
             adresse_agent, adresse_etablissement, adresse_etudiant,

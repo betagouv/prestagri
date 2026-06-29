@@ -2,7 +2,7 @@
 
 > Usage de Quotient_familial
 > Usage de Menage
-> Usage de FoyerFiscal
+> Usage de Foyer_fiscal
 > Usage de Trajet
 
 # cf page 32
@@ -102,8 +102,8 @@ particularités par rapport aux autres prestations ministérielles :
 ```catala-metadata
 déclaration champ d'application CalculQuotientFamilialAideScolarite:
   entrée foyer_fiscal_agent contenu Menage
-  entrée étudiants_fiscalement_indépendants contenu liste de FoyerFiscal
-  interne Menage contenu Menage
+  entrée étudiants_fiscalement_indépendants contenu liste de Foyer_fiscal
+  interne menage contenu Menage
   calcul_quotient_familial champ d'application Quotient_familial.CalculQuotientFamilial
   résultat revenu_fiscal_reference contenu argent
   résultat nombre_unités contenu décimal
@@ -112,8 +112,8 @@ déclaration champ d'application CalculQuotientFamilialAideScolarite:
 
 ```catala
 champ d'application CalculQuotientFamilialAideScolarite:
-  étiquette Menage_défaut définition Menage égal à foyer_fiscal_agent
-  définition calcul_quotient_familial.Menage égal à Menage
+  étiquette menage_défaut définition menage égal à foyer_fiscal_agent
+  définition calcul_quotient_familial.menage égal à menage
   définition revenu_fiscal_reference égal à calcul_quotient_familial.revenu_fiscal_reference
   définition nombre_unités égal à calcul_quotient_familial.nombre_unités
   définition quotient_familial égal à calcul_quotient_familial.quotient_familial
@@ -132,8 +132,8 @@ leurs études ;
 
 ```catala
 champ d'application CalculQuotientFamilialAideScolarite:
-  étiquette ajout_étudiants_fiscalement_indépendants exception Menage_défaut
-  définition Menage
+  étiquette ajout_étudiants_fiscalement_indépendants exception menage_défaut
+  définition menage
   sous condition nombre de étudiants_fiscalement_indépendants > 0
   conséquence égal à foyer_fiscal_agent 
   mais en remplaçant { -- foyers_fiscaux: foyer_fiscal_agent.foyers_fiscaux ++ étudiants_fiscalement_indépendants }

@@ -2,6 +2,6 @@ from pydantic import BaseModel
 
 from app.model import Centimes
 
-class FoyerFiscal(BaseModel):
+class Foyer_fiscal(BaseModel):
     revenu: Centimes
     enfants: int
