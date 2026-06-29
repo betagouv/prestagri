@@ -12,19 +12,19 @@ from . import Period_fr as period_fr
 from . import Money_fr as money_fr
 from . import Integer_fr as integer_fr
 from . import Decimal_fr as decimal_fr
-from . import Personne as personne
+from . import FoyerFiscal as foyer_fiscal
 
 class Menage:
-    def __init__(self, personne_ou_enfant_porteur_handicap: bool, garde_alternee: bool, parent_isole: bool, outre_mer: bool, membres_du_foyer: List[personne.Personne]) -> None:
-        self.personne_ou_enfant_porteur_handicap = personne_ou_enfant_porteur_handicap
+    def __init__(self, beneficiaire_porteur_handicap: bool, garde_alternee: bool, parent_isole: bool, outre_mer: bool, foyers_fiscaux: List[foyer_fiscal.FoyerFiscal]) -> None:
+        self.beneficiaire_porteur_handicap = beneficiaire_porteur_handicap
         self.garde_alternee = garde_alternee
         self.parent_isole = parent_isole
         self.outre_mer = outre_mer
-        self.membres_du_foyer = membres_du_foyer
+        self.foyers_fiscaux = foyers_fiscaux
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Menage):
-            return (self.personne_ou_enfant_porteur_handicap == other.personne_ou_enfant_porteur_handicap and self.garde_alternee == other.garde_alternee and self.parent_isole == other.parent_isole and self.outre_mer == other.outre_mer and self.membres_du_foyer == other.membres_du_foyer)
+            return (self.beneficiaire_porteur_handicap == other.beneficiaire_porteur_handicap and self.garde_alternee == other.garde_alternee and self.parent_isole == other.parent_isole and self.outre_mer == other.outre_mer and self.foyers_fiscaux == other.foyers_fiscaux)
         else:
             return False
 
@@ -32,6 +32,6 @@ class Menage:
         return not (self == other)
 
     def __str__(self) -> str:
-        return "Menage(personne_ou_enfant_porteur_handicap={},garde_alternee={},parent_isole={},outre_mer={},membres_du_foyer={})".format(self.personne_ou_enfant_porteur_handicap, self.garde_alternee, self.parent_isole, self.outre_mer, self.membres_du_foyer)
+        return "Menage(beneficiaire_porteur_handicap={},garde_alternee={},parent_isole={},outre_mer={},foyers_fiscaux={})".format(self.beneficiaire_porteur_handicap, self.garde_alternee, self.parent_isole, self.outre_mer, self.foyers_fiscaux)
 
 

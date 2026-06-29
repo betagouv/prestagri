@@ -1,6 +1,6 @@
 > Usage de Aide_scolarite
 > Usage de Menage
-> Usage de Personne
+> Usage de FoyerFiscal
 > Usage de Trajet
 
 # Cas N°1 :
@@ -20,23 +20,19 @@ champ d'application TestQuotientFamilialAideScolarite1:
   définition calcul égal à
     résultat de Aide_scolarite.CalculQuotientFamilialAideScolarite avec {
       -- foyer_fiscal_agent: Menage {
-        -- personne_ou_enfant_porteur_handicap: faux
+        -- beneficiaire_porteur_handicap: faux
         -- garde_alternée: faux
         -- parent_isolé: faux
         -- outre_mer: faux
-        -- membres_du_foyer: [
-          Personne {
-            -- revenu_fiscal_reference: 12 000 €
-            -- nombre_enfants: 0
+        -- foyers_fiscaux: [
+          FoyerFiscal {
+            -- revenu_fiscal_reference: 32 600 €
+            -- nombre_personnes: 5
           } ;
-          Personne {
-            -- revenu_fiscal_reference: 20 600 €
-            -- nombre_enfants: 2
-          } ]
       }
-      -- étudiants_fiscalement_indépendants: [Personne {
+      -- étudiants_fiscalement_indépendants: [FoyerFiscal {
         -- revenu_fiscal_reference: 10 000 €
-        -- nombre_enfants: 0
+        -- nombre_personnes: 0
       }]
     }
   assertion (calcul.quotient_familial = 710 €)

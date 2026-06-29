@@ -1,6 +1,6 @@
 > Usage de Quotient_familial
 > Usage de Menage
-> Usage de Personne
+> Usage de FoyerFiscal
 
 ## TEST
 
@@ -20,19 +20,16 @@ champ d'application TestQuotientFamilial1:
   définition calcul égal à
     résultat de Quotient_familial.CalculQuotientFamilial avec {
       -- Menage: Menage {
-        -- personne_ou_enfant_porteur_handicap: faux
+        -- beneficiaire_porteur_handicap: faux
         -- garde_alternée: faux
         -- parent_isolé: faux
         -- outre_mer: faux
-        -- membres_du_foyer: [
-          Personne {
-            -- revenu_fiscal_reference: 12 000 €
-            -- nombre_enfants: 0
-          } ;
-          Personne {
-            -- revenu_fiscal_reference: 20 600 €
-            -- nombre_enfants: 3
-          } ]
+        -- foyers_fiscaux: [
+          FoyerFiscal {
+            -- revenu_fiscal_reference: 32 600 €
+            -- nombre_personnes: 5
+          }
+        ]
       }
     }
   assertion (calcul.quotient_familial = 543,33 €)
@@ -54,14 +51,14 @@ champ d'application TestQuotientFamilial2:
   définition calcul égal à
     résultat de Quotient_familial.CalculQuotientFamilial avec {
       -- Menage: Menage {
-        -- personne_ou_enfant_porteur_handicap: faux
+        -- beneficiaire_porteur_handicap: faux
         -- garde_alternée: faux
         -- parent_isolé: vrai
         -- outre_mer: faux
-        -- membres_du_foyer: [
-          Personne {
+        -- foyers_fiscaux: [
+          FoyerFiscal {
             -- revenu_fiscal_reference: 32 600 €
-            -- nombre_enfants: 3
+            -- nombre_personnes: 3
           }
         ]
       }
@@ -86,14 +83,14 @@ champ d'application TestQuotientFamilial3:
   définition calcul égal à
     résultat de Quotient_familial.CalculQuotientFamilial avec {
       -- Menage: Menage {
-        -- personne_ou_enfant_porteur_handicap: faux
+        -- beneficiaire_porteur_handicap: faux
         -- garde_alternée: vrai
         -- parent_isolé: faux
         -- outre_mer: faux
-        -- membres_du_foyer: [
-          Personne {
+        -- foyers_fiscaux: [
+          FoyerFiscal {
             -- revenu_fiscal_reference: 32 600 €
-            -- nombre_enfants: 3
+            -- nombre_personnes: 3
           }
         ]
       }
@@ -117,18 +114,18 @@ champ d'application TestQuotientFamilial4:
   définition calcul égal à
     résultat de Quotient_familial.CalculQuotientFamilial avec {
       -- Menage: Menage {
-        -- personne_ou_enfant_porteur_handicap: faux
+        -- beneficiaire_porteur_handicap: faux
         -- garde_alternée: faux
         -- parent_isolé: faux
         -- outre_mer: vrai
-        -- membres_du_foyer: [
-          Personne {
+        -- foyers_fiscaux: [
+          FoyerFiscal {
             -- revenu_fiscal_reference: 12 000 €
-            -- nombre_enfants: 3
+            -- nombre_personnes: 3
           };
-          Personne {
+          FoyerFiscal {
             -- revenu_fiscal_reference: 20 600 €
-            -- nombre_enfants: 0
+            -- nombre_personnes: 2
           }
         ]
       }

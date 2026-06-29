@@ -2,7 +2,7 @@
 
 > Usage de Quotient_familial
 > Usage de Menage
-> Usage de Personne
+> Usage de FoyerFiscal
 > Usage de Trajet
 
 # cf page 32
@@ -27,7 +27,7 @@ technologique.)
 L'élève ou l'étudiant, hors apprentissage ou alternance, ne doit pas être rémunéré dans le cadre de ses études. Si le jeune
 adulte a un avis d’imposition distinct de ses parents, son revenu fiscal de référence est ajouté à celui du foyer fiscal pour le
 calcul du QF. Si l'enfant étudiant ou apprenti (hors contrat de professionnalisation) est exonéré d'impôts (plafond d’exonération
-en 2025 pour une personne seule est à 17 436 €), son salaire ou ses indemnités (total exprimé sur 12 mois moins 10 % de
+en 2025 pour une foyer_fiscal seule est à 17 436 €), son salaire ou ses indemnités (total exprimé sur 12 mois moins 10 % de
 « déduction forfaitaire ») sont à ajouter au foyer fiscal.
 
 L'enfant doit être inscrit dans un établissement d'enseignement (secondaire ou supérieur) public ou privé sous contrat
@@ -53,7 +53,7 @@ explications pour le calcul des points à la fin de cette Fiche F16).
 ## Conditions d'attribution :
 
 - Enfants fiscalement à charge l'année N, ou, si l'enfant a fait sa propre déclaration de revenus, il peut néanmoins
-ouvrir droit à la prestation et être considéré comme « personne vivant au foyer » pour le calcul du QF à condition que
+ouvrir droit à la prestation et être considéré comme « foyer_fiscal vivant au foyer » pour le calcul du QF à condition que
 les revenus qu'il a déclarés soient intégrés au RFR des parents pour le calcul du QF.
 - Une seule subvention par enfant et par année scolaire / universitaire
 - L’aide n’est pas cumulable avec une aide financière versée pour le même objet par l’employeur du conjoint, sauf si le
@@ -95,14 +95,14 @@ en fonction du quotient familial du demandeur et, dans un deuxième temps, de d�
 fonction de l'application des critères tels que définis ci-après :
 
 ### I – Détermination du Quotient Familial (QF)
-Le mode de calcul du QF est déterminé par la formule : QF = Revenu fiscal de référence / (12 x nombre de personnes
+Le mode de calcul du QF est déterminé par la formule : QF = Revenu fiscal de référence / (12 x nombre de foyer_fiscals
 vivant au foyer) [+0,5 ou + 1 selon les règles générales définies à la page 5 de la présente note] avec quelques
 particularités par rapport aux autres prestations ministérielles :
 
 ```catala-metadata
 déclaration champ d'application CalculQuotientFamilialAideScolarite:
   entrée foyer_fiscal_agent contenu Menage
-  entrée étudiants_fiscalement_indépendants contenu liste de Personne
+  entrée étudiants_fiscalement_indépendants contenu liste de FoyerFiscal
   interne Menage contenu Menage
   calcul_quotient_familial champ d'application Quotient_familial.CalculQuotientFamilial
   résultat revenu_fiscal_reference contenu argent
@@ -120,13 +120,13 @@ champ d'application CalculQuotientFamilialAideScolarite:
 ```
 
 - Les élèves ou étudiants à charge fiscalement bénéficiant d'un logement séparé sont considérés comme
-«personne vivant au foyer» ;
+«foyer_fiscal vivant au foyer» ;
 ```catala
-## TODO On definit comme vivant au foyer toute les personnes a charge fiscalement, c'est ca ? ou un autre adelphe n'est pas inclus ? 
+## TODO On definit comme vivant au foyer toute les foyer_fiscals a charge fiscalement, c'est ca ? ou un autre adelphe n'est pas inclus ? 
 ## Donc on tient compte des enfants de l'etudiant le cas echeant ?
 ```
 - Les étudiants ayant effectué leur propre déclaration fiscale, qu'ils vivent réellement au foyer ou non, peuvent être
-considérés comme «personnes vivant au foyer» pour le calcul du QF à condition que les revenus qu'ils ont
+considérés comme «foyer_fiscals vivant au foyer» pour le calcul du QF à condition que les revenus qu'ils ont
 déclarés soient intégrés au RFR pour le calcul du QF et que ces revenus ne soient pas une rémunération liée à
 leurs études ;
 
@@ -136,7 +136,7 @@ champ d'application CalculQuotientFamilialAideScolarite:
   définition Menage
   sous condition nombre de étudiants_fiscalement_indépendants > 0
   conséquence égal à foyer_fiscal_agent 
-  mais en remplaçant { -- membres_du_foyer: foyer_fiscal_agent.membres_du_foyer ++ étudiants_fiscalement_indépendants }
+  mais en remplaçant { -- foyers_fiscaux: foyer_fiscal_agent.foyers_fiscaux ++ étudiants_fiscalement_indépendants }
 ```
 - Les indemnités perçues par les apprentis doivent être intégrées dans le revenu fiscal de référence pour le
 calcul du QF, que l'apprenti ait fait ou non sa propre déclaration fiscale.

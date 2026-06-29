@@ -1,13 +1,13 @@
 > Module Quotient_familial
 > Usage de Menage
-> Usage de Personne
+> Usage de FoyerFiscal
 
 ## Méthode de calcul du QUOTIENT FAMILIAL (QF) 
 
 Note de  service p.8
 
 Applicable à tous les agents et pour toutes les prestations, HORS prestations interministérielles des agents MASA affectés en DDI
-QF = Revenu fiscal de référence / (12 x nombre de personnes vivant au foyer (a))
+QF = Revenu fiscal de référence / (12 x nombre de foyer_fiscals vivant au foyer (a))
 
 ```catala-metadata
 déclaration champ d'application CalculQuotientFamilial: # Can be used
@@ -20,16 +20,16 @@ déclaration champ d'application CalculQuotientFamilial: # Can be used
 ```
 ```catala
 champ d'application CalculQuotientFamilial:
-  définition nombre_personnes_vivants_au_foyer égal à décimal de Entier.somme de transforme chaque personne parmi Menage.membres_du_foyer en (1 + personne.nombre_enfants)
+  définition nombre_personnes_vivants_au_foyer égal à décimal de Entier.somme de transforme chaque foyer_fiscal parmi Menage.foyers_fiscaux en (foyer_fiscal.nombre_personnes)
   étiquette nombre_unités_défaut définition nombre_unités égal à nombre_personnes_vivants_au_foyer
-  définition revenu_total égal à Argent.somme de transforme chaque personne parmi Menage.membres_du_foyer en personne.revenu_fiscal_reference 
+  définition revenu_total égal à Argent.somme de transforme chaque foyer_fiscal parmi Menage.foyers_fiscaux en foyer_fiscal.revenu_fiscal_reference 
   étiquette revenu_fiscal_reference_défaut définition revenu_fiscal_reference égal à revenu_total
   définition quotient_familial égal à argent de (décimal de revenu_fiscal_reference / (décimal de 12 * nombre_unités))
 ```
 
 (a) = cas particuliers à adapter selon le foyer :
 - Pour les parents isolés et les Menages monoparentales, il convient d’ajouter 1 unité supplémentaire au nombre de
-personnes vivant au foyer. Il est possible d'être considéré comme "parent isolé" pour un enfant en garde partagée. Pour cela,
+foyer_fiscals vivant au foyer. Il est possible d'être considéré comme "parent isolé" pour un enfant en garde partagée. Pour cela,
 il faut que l'agent supporte seul la charge de l'enfant pendant les périodes où l'enfant réside au domicile de l'agent ET que
 l'agent ne soit pas en couple (Menage recomposée) : remariage, PACS, concubinage… Cette situation peut être aussi vérifiée
 sur la déclaration de revenus avec la case « T » (parent isolé). En effet, l'impôt sur les revenus de l'année du divorce,
@@ -45,7 +45,7 @@ champ d'application CalculQuotientFamilial:
   conséquence égal à nombre_personnes_vivants_au_foyer + 1,0
 ```
 
-- L’agent demandeur, l’enfant ou la personne à charge porteur de handicap, titulaire d’une carte d’invalidité et/ou
+- L’agent demandeur, l’enfant ou la foyer_fiscal à charge porteur de handicap, titulaire d’une carte d’invalidité et/ou
 bénéficiant d’une prestation sociale liée au handicap, (en complément de ce qui est déjà attribué par l’administration
 fiscale) bénéficie (sur présentation de justificatif-s) d’une demi-unité supplémentaire (soit +0,5).
 
@@ -54,7 +54,7 @@ fiscale) bénéficie (sur présentation de justificatif-s) d’une demi-unité s
 champ d'application CalculQuotientFamilial:
   étiquette handicap exception parent_isolé
   définition nombre_unités
-  sous condition Menage.personne_ou_enfant_porteur_handicap
+  sous condition Menage.beneficiaire_porteur_handicap
   conséquence égal à nombre_personnes_vivants_au_foyer + 0,5
 ```
 
@@ -84,7 +84,7 @@ champ d'application CalculQuotientFamilial:
 
 - Condition complémentaire pour la prestation ministérielle "Aide à la Scolarité" : si le jeune adulte (l'enfant étudiant ou
 apprenti) a un avis d’imposition distinct de ses parents, son revenu fiscal de référence est ajouté à celui du foyer fiscal pour
-le calcul du QF. Le jeune adulte doit être compté dans le nombre des «personnes vivant au foyer» pour ce QF (même si
+le calcul du QF. Le jeune adulte doit être compté dans le nombre des «foyer_fiscals vivant au foyer» pour ce QF (même si
 l'enfant est provisoirement éloigné de sa Menage à cause de ses études).
 
 ```catala

@@ -1,11 +1,11 @@
 from app.catala.aides import get_catala_quotient_familial_aide_scolarite, get_catala_criteres_eligibles_aide_scolarite, get_catala_aide_scolarite
-from app.model import Response, Menage, Centimes, Personne
+from app.model import Response, Menage, Centimes, FoyerFiscal
 from app.services.gps import get_trajet
 
 
 def get_aide_scolarite(
     Menage: Menage,
-    etudiant_fiscalement_independant: Personne | None,
+    etudiant_fiscalement_independant: FoyerFiscal | None,
     adresse_agent: str,
     adresse_etablissement: str,
     adresse_etudiant: str | None = None,

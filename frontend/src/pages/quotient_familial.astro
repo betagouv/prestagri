@@ -46,8 +46,8 @@ import DsfrLayout from "../layouts/dsfrLayout.astro"
                                         </div>
                                         <div class="fr-fieldset__element">
                                         <div class="fr-checkbox-group">        
-                                            <input type="checkbox" name="personne_ou_enfant_porteur_handicap" id="personne_ou_enfant_porteur_handicap" />
-                                            <label class="fr-label" for="personne_ou_enfant_porteur_handicap">L'agent ou l'enfant concerné par la demande est porteur de handicap</label>
+                                            <input type="checkbox" name="beneficiaire_porteur_handicap" id="beneficiaire_porteur_handicap" />
+                                            <label class="fr-label" for="beneficiaire_porteur_handicap">L'agent ou l'enfant concerné par la demande est porteur de handicap</label>
                                         </div>
                                         </div>
                                         <div class="fr-fieldset__element">
@@ -97,7 +97,7 @@ import DsfrLayout from "../layouts/dsfrLayout.astro"
         "conjoint_enfants="+ (document.getElementById('conjoint_enfants') as HTMLInputElement).value +"&"+
         "etudiant_revenu=0&"+
         "etudiant_enfants=0&"+
-        "personne_ou_enfant_porteur_handicap="+ (document.getElementById('personne_ou_enfant_porteur_handicap') as HTMLInputElement).checked +"&"+
+        "beneficiaire_porteur_handicap="+ (document.getElementById('beneficiaire_porteur_handicap') as HTMLInputElement).checked +"&"+
         "garde_alternee="+ (document.getElementById('garde_alternee') as HTMLInputElement).checked +"&"+
         "parent_isole="+ (document.getElementById('parent_isole') as HTMLInputElement).checked +"&"+
         "outre_mer="+ (document.getElementById('outre_mer') as HTMLInputElement).checked

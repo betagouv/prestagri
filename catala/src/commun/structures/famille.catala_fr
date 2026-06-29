@@ -1,11 +1,11 @@
 > Module Menage
-> Usage de Personne
+> Usage de FoyerFiscal
 
 ```catala-metadata
 déclaration structure Menage:
-  donnée personne_ou_enfant_porteur_handicap contenu booléen
+  donnée beneficiaire_porteur_handicap contenu booléen
   donnée garde_alternée contenu booléen
   donnée parent_isolé contenu booléen
   donnée outre_mer contenu booléen
-  donnée membres_du_foyer contenu liste de Personne
+  donnée foyers_fiscaux contenu liste de FoyerFiscal
 ```
