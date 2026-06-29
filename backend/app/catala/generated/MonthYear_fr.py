@@ -3,52 +3,47 @@
 from .catala_runtime import *
 from typing import Any, List, Callable, Tuple
 from enum import Enum
+from sys import stderr
 from . import Date_internal as date_internal
 from . import List_internal as list_internal
 from . import List_fr as list_fr
 from . import Date_fr as date_fr
 
-class MoisAnnee:
-    def __init__(self, nom_mois: date_fr.Mois, annee: Integer) -> None:
-        self.nom_mois = nom_mois
-        self.annee = annee
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, MoisAnnee):
-            return (self.nom_mois == other.nom_mois and self.annee == other.annee)
-        else:
-            return False
-
-    def __ne__(self, other: object) -> bool:
-        return not (self == other)
-
-    def __str__(self) -> str:
-        return "MoisAnnee(nom_mois={},annee={})".format(self.nom_mois, self.annee)
+class MoisAnnee(CatalaStruct):
+    __slots__ = ('nom_mois', 'annee')
+    nom_mois: date_fr.Mois
+    annee: Integer
+    name = 'MoisAnnée'
+    fields = {
+        'nom_mois': 'nom_mois', # content date_fr.Mois
+        'annee': 'année', # content Integer
+    }
 
 
-def depuis_date(d:Date):
-    pos = (SourcePosition(filename="libcatala/monthyear_fr.catala_fr", start_line=18, start_column=20, end_line=18, end_column=38, law_headings=["Mois d'années spécifiques"]))
-    return MoisAnnee(nom_mois = date_fr.entier_vers_mois(pos, date_fr.acces_mois(d)), annee = date_fr.acces_annee(d))
+loc = (Array([SourcePosition(filename="libcatala/monthyear_fr.catala_fr", start_line=18, start_column=20, end_line=18, end_column=38, law_headings=["Mois d'années spécifiques"]),
+              SourcePosition(filename="libcatala/monthyear_fr.catala_fr", start_line=26, start_column=5, end_line=26, end_column=29, law_headings=["Mois d'années spécifiques"]),
+              SourcePosition(filename="libcatala/monthyear_fr.catala_fr", start_line=34, start_column=8, end_line=34, end_column=32, law_headings=["Mois d'années spécifiques"])]))
 
-def premier_jour_du_mois(m:MoisAnnee):
-    pos = (SourcePosition(filename="libcatala/monthyear_fr.catala_fr", start_line=26, start_column=5, end_line=26, end_column=29, law_headings=["Mois d'années spécifiques"]))
-    return date_fr.depuis_annee_mois_jour(pos, m.annee, date_fr.mois_vers_entier(m.nom_mois), Integer(1))
+def depuis_date(d:Date) -> MoisAnnee:
+    return MoisAnnee(nom_mois = date_fr.entier_vers_mois(loc[0], date_fr.acces_mois(d)), annee = date_fr.acces_annee(d))
 
-def dernier_jour_du_mois(m:MoisAnnee):
-    pos = (SourcePosition(filename="libcatala/monthyear_fr.catala_fr", start_line=34, start_column=8, end_line=34, end_column=32, law_headings=["Mois d'années spécifiques"]))
-    return date_fr.dernier_jour_du_mois(date_fr.depuis_annee_mois_jour(pos, m.annee, date_fr.mois_vers_entier(m.nom_mois), Integer(1)))
+def premier_jour_du_mois(m:MoisAnnee) -> Date:
+    return date_fr.depuis_annee_mois_jour(loc[1], m.annee, date_fr.mois_vers_entier(m.nom_mois), Integer(1))
 
-def est_pendant_ou_apres_le_mois(m:MoisAnnee, d:Date):
-    return (d >= premier_jour_du_mois(m))
+def dernier_jour_du_mois(m:MoisAnnee) -> Date:
+    return date_fr.dernier_jour_du_mois(date_fr.depuis_annee_mois_jour(loc[2], m.annee, date_fr.mois_vers_entier(m.nom_mois), Integer(1)))
 
-def est_avant_le_mois(m:MoisAnnee, d:Date):
+def est_avant_le_mois(m:MoisAnnee, d:Date) -> Bool:
     return (d < premier_jour_du_mois(m))
 
-def est_avant_ou_pendant_le_mois(m:MoisAnnee, d:Date):
-    return (d <= dernier_jour_du_mois(m))
-
-def est_apres_le_mois(m:MoisAnnee, d:Date):
+def est_apres_le_mois(m:MoisAnnee, d:Date) -> Bool:
     return (d > dernier_jour_du_mois(m))
 
-def est_dans_le_mois(m:MoisAnnee, d:Date):
+def est_avant_ou_pendant_le_mois(m:MoisAnnee, d:Date) -> Bool:
+    return (d <= dernier_jour_du_mois(m))
+
+def est_pendant_ou_apres_le_mois(m:MoisAnnee, d:Date) -> Bool:
+    return (d >= premier_jour_du_mois(m))
+
+def est_dans_le_mois(m:MoisAnnee, d:Date) -> Bool:
     return (est_avant_ou_pendant_le_mois(m, d) and est_pendant_ou_apres_le_mois(m, d))

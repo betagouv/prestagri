@@ -3,6 +3,7 @@
 from .catala_runtime import *
 from typing import Any, List, Callable, Tuple
 from enum import Enum
+from sys import stderr
 from . import Stdlib_fr as stdlib_fr
 from . import Date_fr as date_fr
 from . import List_fr as list_fr
@@ -12,349 +13,352 @@ from . import Period_fr as period_fr
 from . import Money_fr as money_fr
 from . import Integer_fr as integer_fr
 from . import Decimal_fr as decimal_fr
-from . import Personne as personne
-from . import Famille as famille
+from . import Foyer_fiscal as foyer_fiscal
+from . import Menage as menage
 from . import Quotient_familial as quotient_familial
 from . import Trajet as trajet
 
-class Criteres_Code(Enum):
-    C2_domiciliation_separee = 0
-    C3_eloignement_agent = 1
-    C3_eloignement_etudiant = 2
-    C4_materiel = 3
-    C5_etudes_superieures = 4
+class Criteres(CatalaEnum):
+    name = 'Critères'
+    class Code(CatalaEnum.Code):
+        C2_domiciliation_separee = 'C2_domiciliation_séparée' # content Decimal
+        C3_eloignement_agent = 'C3_éloignement_agent' # content Decimal
+        C3_eloignement_etudiant = 'C3_éloignement_étudiant' # content Decimal
+        C4_materiel = 'C4_matériel' # content Decimal
+        C5_etudes_superieures = 'C5_études_supérieures' # content Decimal
 
-class Criteres:
-    def __init__(self, code: Criteres_Code, value: Any) -> None:
-        self.code = code
-        self.value = value
+class CalculQuotientFamilialAideScolarite(CatalaStruct):
+    __slots__ = ('revenu_fiscal_reference', 'nombre_unites', 'quotient_familial')
+    revenu_fiscal_reference: Money
+    nombre_unites: Decimal
+    quotient_familial: Money
+    name = 'CalculQuotientFamilialAideScolarite'
+    fields = {
+        'revenu_fiscal_reference': 'revenu_fiscal_reference', # content Money
+        'nombre_unites': 'nombre_unités', # content Decimal
+        'quotient_familial': 'quotient_familial', # content Money
+    }
 
+class CalculAideScolarite(CatalaStruct):
+    __slots__ = ('aide_scolarite')
+    aide_scolarite: Money
+    name = 'CalculAideScolarite'
+    fields = {
+        'aide_scolarite': 'aide_scolarite', # content Money
+    }
 
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Criteres):
-            return self.code == other.code and self.value == other.value
-        else:
-            return False
+class CalculPointsAideScolarite(CatalaStruct):
+    __slots__ = ('criteres_applicables', 'nb_points')
+    criteres_applicables: List[Criteres]
+    nb_points: Decimal
+    name = 'CalculPointsAideScolarite'
+    fields = {
+        'criteres_applicables': 'critères_applicables', # content List[Criteres]
+        'nb_points': 'nb_points', # content Decimal
+    }
 
+class CalculPointsTrajet(CatalaStruct):
+    __slots__ = ('nb_points')
+    nb_points: Decimal
+    name = 'CalculPointsTrajet'
+    fields = {
+        'nb_points': 'nb_points', # content Decimal
+    }
 
-    def __ne__(self, other: object) -> bool:
-        return not (self == other)
+class RetraitCritereC2(CatalaStruct):
+    __slots__ = ('criteres_sans_c2')
+    criteres_sans_c2: List[Criteres]
+    name = 'RetraitCritèreC2'
+    fields = {
+        'criteres_sans_c2': 'critères_sans_c2', # content List[Criteres]
+    }
 
-    def __str__(self) -> str:
-        return "{}({})".format(self.code, self.value)
+class CalculQuotientFamilialAideScolariteIn(CatalaStruct):
+    __slots__ = ('foyer_fiscal_agent_in', 'etudiants_fiscalement_independants_in')
+    foyer_fiscal_agent_in: menage.Menage
+    etudiants_fiscalement_independants_in: List[foyer_fiscal.FoyerFiscal]
+    name = 'CalculQuotientFamilialAideScolarite_in'
+    fields = {
+        'foyer_fiscal_agent_in': 'foyer_fiscal_agent_in', # content menage.Menage
+        'etudiants_fiscalement_independants_in': 'étudiants_fiscalement_indépendants_in', # content List[foyer_fiscal.FoyerFiscal]
+    }
 
-class CalculQuotientFamilialAideScolarite:
-    def __init__(self, revenu_fiscal_reference: Money, nombre_unites: Decimal, quotient_familial: Money) -> None:
-        self.revenu_fiscal_reference = revenu_fiscal_reference
-        self.nombre_unites = nombre_unites
-        self.quotient_familial = quotient_familial
+class CalculAideScolariteIn(CatalaStruct):
+    __slots__ = ('quotient_familial_in', 'nb_points_in')
+    quotient_familial_in: Money
+    nb_points_in: Decimal
+    name = 'CalculAideScolarite_in'
+    fields = {
+        'quotient_familial_in': 'quotient_familial_in', # content Money
+        'nb_points_in': 'nb_points_in', # content Decimal
+    }
 
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, CalculQuotientFamilialAideScolarite):
-            return (self.revenu_fiscal_reference == other.revenu_fiscal_reference and self.nombre_unites == other.nombre_unites and self.quotient_familial == other.quotient_familial)
-        else:
-            return False
+class CalculPointsAideScolariteIn(CatalaStruct):
+    __slots__ = ('trajet_depuis_domicile_agent_in', 'trajet_depuis_domicile_etudiant_in', 'montant_materiel_specifique_in', 'valeur_point_in', 'etudiant_en_filiere_post_bac_in')
+    trajet_depuis_domicile_agent_in: trajet.Trajet
+    trajet_depuis_domicile_etudiant_in: Option[trajet.Trajet]
+    montant_materiel_specifique_in: Money
+    valeur_point_in: Money
+    etudiant_en_filiere_post_bac_in: Bool
+    name = 'CalculPointsAideScolarite_in'
+    fields = {
+        'trajet_depuis_domicile_agent_in': 'trajet_depuis_domicile_agent_in', # content trajet.Trajet
+        'trajet_depuis_domicile_etudiant_in': 'trajet_depuis_domicile_étudiant_in', # content Option[trajet.Trajet]
+        'montant_materiel_specifique_in': 'montant_matériel_spécifique_in', # content Money
+        'valeur_point_in': 'valeur_point_in', # content Money
+        'etudiant_en_filiere_post_bac_in': 'étudiant_en_filière_post_bac_in', # content Bool
+    }
 
-    def __ne__(self, other: object) -> bool:
-        return not (self == other)
+class CalculPointsTrajetIn(CatalaStruct):
+    __slots__ = ('trajet_in')
+    trajet_in: Option[trajet.Trajet]
+    name = 'CalculPointsTrajet_in'
+    fields = {
+        'trajet_in': 'trajet_in', # content Option[trajet.Trajet]
+    }
 
-    def __str__(self) -> str:
-        return "CalculQuotientFamilialAideScolarite(revenu_fiscal_reference={},nombre_unites={},quotient_familial={})".format(self.revenu_fiscal_reference, self.nombre_unites, self.quotient_familial)
-
-class CalculAideScolarite:
-    def __init__(self, aide_scolarite: Money) -> None:
-        self.aide_scolarite = aide_scolarite
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, CalculAideScolarite):
-            return (self.aide_scolarite == other.aide_scolarite)
-        else:
-            return False
-
-    def __ne__(self, other: object) -> bool:
-        return not (self == other)
-
-    def __str__(self) -> str:
-        return "CalculAideScolarite(aide_scolarite={})".format(self.aide_scolarite)
-
-class CalculPointsTrajet:
-    def __init__(self, nb_points: Decimal) -> None:
-        self.nb_points = nb_points
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, CalculPointsTrajet):
-            return (self.nb_points == other.nb_points)
-        else:
-            return False
-
-    def __ne__(self, other: object) -> bool:
-        return not (self == other)
-
-    def __str__(self) -> str:
-        return "CalculPointsTrajet(nb_points={})".format(self.nb_points)
-
-class RetraitCritereC2:
-    def __init__(self, criteres_sans_c2: List[Criteres]) -> None:
-        self.criteres_sans_c2 = criteres_sans_c2
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, RetraitCritereC2):
-            return (self.criteres_sans_c2 == other.criteres_sans_c2)
-        else:
-            return False
-
-    def __ne__(self, other: object) -> bool:
-        return not (self == other)
-
-    def __str__(self) -> str:
-        return "RetraitCritereC2(criteres_sans_c2={})".format(self.criteres_sans_c2)
-
-class CalculPointsAideScolarite:
-    def __init__(self, criteres_applicables: List[Criteres], nb_points: Decimal) -> None:
-        self.criteres_applicables = criteres_applicables
-        self.nb_points = nb_points
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, CalculPointsAideScolarite):
-            return (self.criteres_applicables == other.criteres_applicables and self.nb_points == other.nb_points)
-        else:
-            return False
-
-    def __ne__(self, other: object) -> bool:
-        return not (self == other)
-
-    def __str__(self) -> str:
-        return "CalculPointsAideScolarite(criteres_applicables={},nb_points={})".format(self.criteres_applicables, self.nb_points)
-
-class CalculQuotientFamilialAideScolariteIn:
-    def __init__(self, foyer_fiscal_agent_in: famille.Famille, etudiants_fiscalement_independants_in: List[personne.Personne]) -> None:
-        self.foyer_fiscal_agent_in = foyer_fiscal_agent_in
-        self.etudiants_fiscalement_independants_in = etudiants_fiscalement_independants_in
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, CalculQuotientFamilialAideScolariteIn):
-            return (self.foyer_fiscal_agent_in == other.foyer_fiscal_agent_in and self.etudiants_fiscalement_independants_in == other.etudiants_fiscalement_independants_in)
-        else:
-            return False
-
-    def __ne__(self, other: object) -> bool:
-        return not (self == other)
-
-    def __str__(self) -> str:
-        return "CalculQuotientFamilialAideScolariteIn(foyer_fiscal_agent_in={},etudiants_fiscalement_independants_in={})".format(self.foyer_fiscal_agent_in, self.etudiants_fiscalement_independants_in)
-
-class CalculAideScolariteIn:
-    def __init__(self, quotient_familial_in: Money, nb_points_in: Decimal) -> None:
-        self.quotient_familial_in = quotient_familial_in
-        self.nb_points_in = nb_points_in
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, CalculAideScolariteIn):
-            return (self.quotient_familial_in == other.quotient_familial_in and self.nb_points_in == other.nb_points_in)
-        else:
-            return False
-
-    def __ne__(self, other: object) -> bool:
-        return not (self == other)
-
-    def __str__(self) -> str:
-        return "CalculAideScolariteIn(quotient_familial_in={},nb_points_in={})".format(self.quotient_familial_in, self.nb_points_in)
-
-class CalculPointsAideScolariteIn:
-    def __init__(self, trajet_depuis_domicile_agent_in: trajet.Trajet, trajet_depuis_domicile_etudiant_in: Option[trajet.Trajet], montant_materiel_specifique_in: Money, valeur_point_in: Money, etudiant_en_filiere_post_bac_in: bool) -> None:
-        self.trajet_depuis_domicile_agent_in = trajet_depuis_domicile_agent_in
-        self.trajet_depuis_domicile_etudiant_in = trajet_depuis_domicile_etudiant_in
-        self.montant_materiel_specifique_in = montant_materiel_specifique_in
-        self.valeur_point_in = valeur_point_in
-        self.etudiant_en_filiere_post_bac_in = etudiant_en_filiere_post_bac_in
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, CalculPointsAideScolariteIn):
-            return (self.trajet_depuis_domicile_agent_in == other.trajet_depuis_domicile_agent_in and self.trajet_depuis_domicile_etudiant_in == other.trajet_depuis_domicile_etudiant_in and self.montant_materiel_specifique_in == other.montant_materiel_specifique_in and self.valeur_point_in == other.valeur_point_in and self.etudiant_en_filiere_post_bac_in == other.etudiant_en_filiere_post_bac_in)
-        else:
-            return False
-
-    def __ne__(self, other: object) -> bool:
-        return not (self == other)
-
-    def __str__(self) -> str:
-        return "CalculPointsAideScolariteIn(trajet_depuis_domicile_agent_in={},trajet_depuis_domicile_etudiant_in={},montant_materiel_specifique_in={},valeur_point_in={},etudiant_en_filiere_post_bac_in={})".format(self.trajet_depuis_domicile_agent_in, self.trajet_depuis_domicile_etudiant_in, self.montant_materiel_specifique_in, self.valeur_point_in, self.etudiant_en_filiere_post_bac_in)
-
-class CalculPointsTrajetIn:
-    def __init__(self, trajet_in: Option[trajet.Trajet]) -> None:
-        self.trajet_in = trajet_in
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, CalculPointsTrajetIn):
-            return (self.trajet_in == other.trajet_in)
-        else:
-            return False
-
-    def __ne__(self, other: object) -> bool:
-        return not (self == other)
-
-    def __str__(self) -> str:
-        return "CalculPointsTrajetIn(trajet_in={})".format(self.trajet_in)
-
-class RetraitCritereC2In:
-    def __init__(self, criteres_in: List[Criteres]) -> None:
-        self.criteres_in = criteres_in
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, RetraitCritereC2In):
-            return (self.criteres_in == other.criteres_in)
-        else:
-            return False
-
-    def __ne__(self, other: object) -> bool:
-        return not (self == other)
-
-    def __str__(self) -> str:
-        return "RetraitCritereC2In(criteres_in={})".format(self.criteres_in)
+class RetraitCritereC2In(CatalaStruct):
+    __slots__ = ('criteres_in')
+    criteres_in: List[Criteres]
+    name = 'RetraitCritèreC2_in'
+    fields = {
+        'criteres_in': 'critères_in', # content List[Criteres]
+    }
 
 
-def calcul_quotient_familial_aide_scolarite(calcul_quotient_familial_aide_scolarite_in:CalculQuotientFamilialAideScolariteIn):
+loc = (Array([SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=106, start_column=11, end_line=106, end_column=18, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=116, start_column=14, end_line=116, end_column=46, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=138, start_column=22, end_line=139, end_column=120, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=156, start_column=11, end_line=156, end_column=23, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=157, start_column=12, end_line=157, end_column=26, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=163, start_column=80, end_line=163, end_column=92, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=173, start_column=22, end_line=173, end_column=25, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=195, start_column=11, end_line=195, end_column=39, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=196, start_column=12, end_line=196, end_column=32, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=232, start_column=11, end_line=232, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=232, start_column=70, end_line=232, end_column=98, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=233, start_column=11, end_line=233, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=257, start_column=95, end_line=257, end_column=123, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=258, start_column=13, end_line=258, end_column=33, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=260, start_column=64, end_line=260, end_column=84, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=261, start_column=15, end_line=261, end_column=35, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=308, start_column=34, end_line=308, end_column=92, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=309, start_column=24, end_line=309, end_column=53, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=311, start_column=11, end_line=311, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=312, start_column=11, end_line=312, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=326, start_column=30, end_line=326, end_column=50, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=327, start_column=31, end_line=327, end_column=51, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=328, start_column=11, end_line=328, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=329, start_column=11, end_line=329, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"])]))
+
+def calcul_quotient_familial_aide_scolarite(calcul_quotient_familial_aide_scolarite_in:CalculQuotientFamilialAideScolariteIn) -> CalculQuotientFamilialAideScolarite:
     foyer_fiscal_agent = (calcul_quotient_familial_aide_scolarite_in.foyer_fiscal_agent_in)
     etudiants_fiscalement_independants = (calcul_quotient_familial_aide_scolarite_in.etudiants_fiscalement_independants_in)
-    if (list_length(etudiants_fiscalement_independants) > Integer(0)):
-        pos = (SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=138, start_column=22, end_line=139, end_column=120, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]))
-        famille__1 = ((famille.Famille(personne_ou_enfant_porteur_handicap = foyer_fiscal_agent.personne_ou_enfant_porteur_handicap, garde_alternee = foyer_fiscal_agent.garde_alternee, parent_isole = foyer_fiscal_agent.parent_isole, outre_mer = foyer_fiscal_agent.outre_mer, membres_du_foyer = (foyer_fiscal_agent.membres_du_foyer + etudiants_fiscalement_independants)), pos)[0])
+    if (etudiants_fiscalement_independants.length() > Integer(0)):
+        famille = (Option(CatalaTuple(menage.Menage(personne_ou_enfant_porteur_handicap = foyer_fiscal_agent.personne_ou_enfant_porteur_handicap, garde_alternee = foyer_fiscal_agent.garde_alternee, parent_isole = foyer_fiscal_agent.parent_isole, outre_mer = foyer_fiscal_agent.outre_mer, membres_du_foyer = (foyer_fiscal_agent.membres_du_foyer + etudiants_fiscalement_independants)), loc[2])))
     else:
-        pos = (SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=106, start_column=11, end_line=106, end_column=18, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]))
-        famille__1 = ((foyer_fiscal_agent, pos)[0])
-    result = (quotient_familial.calcul_quotient_familial(quotient_familial.CalculQuotientFamilialIn(famille_in = famille__1)))
+        famille = (Option(CatalaTuple(foyer_fiscal_agent, loc[0])))
+    if famille.value is not None:
+        result__1 = (famille.value[0])
+    else:
+        raise NoValue(loc[1])
+    result = (quotient_familial.calcul_quotient_familial(quotient_familial.CalculQuotientFamilialIn(famille_in = result__1)))
     calcul_quotient_familial = (quotient_familial.CalculQuotientFamilial(revenu_fiscal_reference = result.revenu_fiscal_reference, nombre_unites = result.nombre_unites, quotient_familial = result.quotient_familial))
-    quotient_familial__1 = (calcul_quotient_familial.quotient_familial)
-    nombre_unites = (calcul_quotient_familial.nombre_unites)
     revenu_fiscal_reference = (calcul_quotient_familial.revenu_fiscal_reference)
+    nombre_unites = (calcul_quotient_familial.nombre_unites)
+    quotient_familial__1 = (calcul_quotient_familial.quotient_familial)
     return CalculQuotientFamilialAideScolarite(revenu_fiscal_reference = revenu_fiscal_reference, nombre_unites = nombre_unites, quotient_familial = quotient_familial__1)
 
-def calcul_aide_scolarite(calcul_aide_scolarite_in:CalculAideScolariteIn):
+def calcul_aide_scolarite(calcul_aide_scolarite_in:CalculAideScolariteIn) -> CalculAideScolarite:
     quotient_familial__1 = (calcul_aide_scolarite_in.quotient_familial_in)
     nb_points = (calcul_aide_scolarite_in.nb_points_in)
-    valeur_point = (quotient_familial__1)
-    if (quotient_familial__1 > Money(Integer(109000))):
-        pos = (SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=173, start_column=22, end_line=173, end_column=25, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]))
-        aide_scolarite = ((Money(Integer(0)), pos)[0])
+    valeur_point = (Option(CatalaTuple(quotient_familial__1, loc[3])))
+    if (quotient_familial__1 > Money('1090.00')):
+        aide_scolarite = (CatalaTuple(Money('0.00'), loc[6])[0])
     else:
-        pos = (SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=157, start_column=12, end_line=157, end_column=26, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]))
-        aide_scolarite = (((valeur_point * nb_points), pos)[0])
+        if valeur_point.value is not None:
+            aide_scolarite__1 = (valeur_point.value[0])
+        else:
+            raise NoValue(loc[5])
+        aide_scolarite = (CatalaTuple((aide_scolarite__1 * nb_points), loc[4])[0])
     return CalculAideScolarite(aide_scolarite = aide_scolarite)
 
-def calcul_points_trajet(calcul_points_trajet_in:CalculPointsTrajetIn):
+def calcul_points_trajet(calcul_points_trajet_in:CalculPointsTrajetIn) -> CalculPointsTrajet:
     trajet__1 = (calcul_points_trajet_in.trajet_in)
     if trajet__1.value is not None:
         if (trajet__1.value.distance_km > Integer(100)):
-            nb_points = (decimal_of_string("4"))
+            nb_points = (Decimal('4'))
         elif ((trajet__1.value.distance_km > Integer(30)) or (trajet__1.value.duree_minutes > Integer(30))):
-            nb_points = (decimal_of_string("2"))
+            nb_points = (Decimal('2'))
         else:
-            nb_points = (decimal_of_string("0"))
+            nb_points = (Decimal('0'))
     else:
-        nb_points = (decimal_of_string("0"))
+        nb_points = (Decimal('0'))
     return CalculPointsTrajet(nb_points = nb_points)
 
-def retrait_critere_c2(retrait_critere_c2_in:RetraitCritereC2In):
+def retrait_critere_c2(retrait_critere_c2_in:RetraitCritereC2In) -> RetraitCritereC2:
     criteres = (retrait_critere_c2_in.criteres_in)
-    def criteres_sans_c2__1(c:Criteres):
-        if c.code == Criteres_Code.C2_domiciliation_separee:
-            criteres_sans_c2__2 = (True)
-        elif c.code == Criteres_Code.C3_eloignement_agent:
-            criteres_sans_c2__2 = (False)
-        elif c.code == Criteres_Code.C3_eloignement_etudiant:
-            criteres_sans_c2__2 = (False)
-        elif c.code == Criteres_Code.C4_materiel:
-            criteres_sans_c2__2 = (False)
-        elif c.code == Criteres_Code.C5_etudes_superieures:
-            criteres_sans_c2__2 = (False)
-        return not criteres_sans_c2__2
-    criteres_sans_c2 = (list_filter(criteres_sans_c2__1, criteres))
+    def _criteres_sans_c2__1(c:Criteres):
+        if c.code == Criteres.Code.C2_domiciliation_separee:
+            criteres_sans_c2__2 = (Bool(True))
+        elif c.code == Criteres.Code.C3_eloignement_agent:
+            criteres_sans_c2__2 = (Bool(False))
+        elif c.code == Criteres.Code.C3_eloignement_etudiant:
+            criteres_sans_c2__2 = (Bool(False))
+        elif c.code == Criteres.Code.C4_materiel:
+            criteres_sans_c2__2 = (Bool(False))
+        elif c.code == Criteres.Code.C5_etudes_superieures:
+            criteres_sans_c2__2 = (Bool(False))
+        return criteres_sans_c2__2.not_()
+    criteres_sans_c2__1 = Function(_criteres_sans_c2__1)
+    criteres_sans_c2 = (criteres.filter(criteres_sans_c2__1))
     return RetraitCritereC2(criteres_sans_c2 = criteres_sans_c2)
 
-def calcul_points_aide_scolarite(calcul_points_aide_scolarite_in:CalculPointsAideScolariteIn):
+def calcul_points_aide_scolarite(calcul_points_aide_scolarite_in:CalculPointsAideScolariteIn) -> CalculPointsAideScolarite:
     trajet_depuis_domicile_agent = (calcul_points_aide_scolarite_in.trajet_depuis_domicile_agent_in)
     trajet_depuis_domicile_etudiant = (calcul_points_aide_scolarite_in.trajet_depuis_domicile_etudiant_in)
     montant_materiel_specifique = (calcul_points_aide_scolarite_in.montant_materiel_specifique_in)
     valeur_point = (calcul_points_aide_scolarite_in.valeur_point_in)
     etudiant_en_filiere_post_bac = (calcul_points_aide_scolarite_in.etudiant_en_filiere_post_bac_in)
-    points_domiciliation_separee = (decimal_of_string("2"))
-    criteres_applicables_base = ([])
+    points_domiciliation_separee = (Option(CatalaTuple(Decimal('2'), loc[7])))
+    criteres_applicables_base = (Option(CatalaTuple(Array([]), loc[8])))
     if trajet_depuis_domicile_etudiant.value is not None:
-        criteres_applicables_domiciliation_separee__1 = (True)
+        criteres_applicables_domiciliation_separee__2 = (Bool(True))
     else:
-        criteres_applicables_domiciliation_separee__1 = (False)
-    if criteres_applicables_domiciliation_separee__1:
-        criteres_applicables_domiciliation_separee = ((criteres_applicables_base + [Criteres(Criteres_Code.C2_domiciliation_separee, points_domiciliation_separee)]))
+        criteres_applicables_domiciliation_separee__2 = (Bool(False))
+    if criteres_applicables_domiciliation_separee__2:
+        if criteres_applicables_base.value is not None:
+            criteres_applicables_domiciliation_separee__3 = (criteres_applicables_base.value[0])
+        else:
+            raise NoValue(loc[9])
+        if points_domiciliation_separee.value is not None:
+            criteres_applicables_domiciliation_separee__4 = (points_domiciliation_separee.value[0])
+        else:
+            raise NoValue(loc[10])
+        criteres_applicables_domiciliation_separee__1 = ((criteres_applicables_domiciliation_separee__3 + Array([Criteres(Criteres.Code.C2_domiciliation_separee,
+                                                                                                                 criteres_applicables_domiciliation_separee__4)])))
     else:
-        criteres_applicables_domiciliation_separee = (criteres_applicables_base)
+        if criteres_applicables_base.value is not None:
+            criteres_applicables_domiciliation_separee__1 = (criteres_applicables_base.value[0])
+        else:
+            raise NoValue(loc[11])
+    criteres_applicables_domiciliation_separee = (Option(CatalaTuple(criteres_applicables_domiciliation_separee__1, loc[8])))
     result = (calcul_points_trajet(CalculPointsTrajetIn(trajet_in = Option(trajet_depuis_domicile_agent))))
     points_domicile_agent = (CalculPointsTrajet(nb_points = result.nb_points).nb_points)
     result__1 = (calcul_points_trajet(CalculPointsTrajetIn(trajet_in = trajet_depuis_domicile_etudiant)))
     points_domicile_etudiant = (CalculPointsTrajet(nb_points = result__1.nb_points).nb_points)
-    if ((points_domicile_etudiant > decimal_of_string("0")) and (points_domicile_etudiant >= (points_domicile_agent - points_domiciliation_separee))):
-        criteres_applicables_eloignement = ((criteres_applicables_domiciliation_separee + [Criteres(Criteres_Code.C3_eloignement_etudiant, points_domicile_etudiant)]))
+    if points_domiciliation_separee.value is not None:
+        criteres_applicables_eloignement__2 = (points_domiciliation_separee.value[0])
+    else:
+        raise NoValue(loc[12])
+    if ((points_domicile_etudiant > Decimal('0')) and (points_domicile_etudiant >= (points_domicile_agent - criteres_applicables_eloignement__2))):
+        if criteres_applicables_domiciliation_separee.value is not None:
+            criteres_applicables_eloignement__3 = (criteres_applicables_domiciliation_separee.value[0])
+        else:
+            raise NoValue(loc[13])
+        criteres_applicables_eloignement__1 = ((criteres_applicables_eloignement__3 + Array([Criteres(Criteres.Code.C3_eloignement_etudiant,
+                                                                                             points_domicile_etudiant)])))
     else:
         if trajet_depuis_domicile_etudiant.value is not None:
-            criteres_applicables_eloignement__1 = (False)
+            criteres_applicables_eloignement__3 = (Bool(False))
         else:
-            criteres_applicables_eloignement__1 = (True)
-        if ((points_domicile_agent > decimal_of_string("2")) or (criteres_applicables_eloignement__1 and (points_domicile_agent > decimal_of_string("0")))):
-            result__2 = (retrait_critere_c2(RetraitCritereC2In(criteres_in = criteres_applicables_domiciliation_separee)))
-            criteres_applicables_eloignement = ((RetraitCritereC2(criteres_sans_c2 = result__2.criteres_sans_c2).criteres_sans_c2 + [Criteres(Criteres_Code.C3_eloignement_agent, points_domicile_agent)]))
+            criteres_applicables_eloignement__3 = ((points_domicile_agent > Decimal('0')))
+        if ((points_domicile_agent > Decimal('2')) or criteres_applicables_eloignement__3):
+            if criteres_applicables_domiciliation_separee.value is not None:
+                result__3 = (criteres_applicables_domiciliation_separee.value[0])
+            else:
+                raise NoValue(loc[14])
+            result__2 = (retrait_critere_c2(RetraitCritereC2In(criteres_in = result__3)))
+            criteres_applicables_eloignement__1 = ((RetraitCritereC2(criteres_sans_c2 = result__2.criteres_sans_c2).criteres_sans_c2 + Array([Criteres(Criteres.Code.C3_eloignement_agent,
+                                                                                                                                              points_domicile_agent)])))
         else:
-            criteres_applicables_eloignement = (criteres_applicables_domiciliation_separee)
-    def points__1(min1:Money, min2:Money):
-        if (min1 < min2):
-            return min1
+            if criteres_applicables_domiciliation_separee.value is not None:
+                criteres_applicables_eloignement__1 = (criteres_applicables_domiciliation_separee.value[0])
+            else:
+                raise NoValue(loc[15])
+    criteres_applicables_eloignement = (Option(CatalaTuple(criteres_applicables_eloignement__1, loc[8])))
+    def _points__2(x:Money, y:Money):
+        if (x < y):
+            return x
         else:
-            return min2
-    def points__2(_:Unit):
-        pos = (SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=308, start_column=34, end_line=308, end_column=41, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]))
-        raise ListEmpty(pos, None)
-    pos__1 = (SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=309, start_column=40, end_line=309, end_column=41, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]))
-    points = (div(pos__1, list_reduce(points__1, points__2, [(valeur_point * decimal_of_string("2")), montant_materiel_specifique]), valeur_point))
-    if (points > decimal_of_string("0")):
-        criteres_applicables_materiel_specifique = ((criteres_applicables_eloignement + [Criteres(Criteres_Code.C4_materiel, points)]))
+            return y
+    points__2 = Function(_points__2)
+    points__3 = (Array([(valeur_point * Decimal('2')),
+                        montant_materiel_specifique]).reduce(points__2))
+    if points__3.value is not None:
+        points__1 = (points__3.value)
     else:
-        criteres_applicables_materiel_specifique = (criteres_applicables_eloignement)
-    def criteres_applicables_etudes_superieures__1(acc:bool, critere:Criteres):
-        if critere.code == Criteres_Code.C2_domiciliation_separee:
-            criteres_applicables_etudes_superieures__2 = (True)
-        elif critere.code == Criteres_Code.C3_eloignement_agent:
-            criteres_applicables_etudes_superieures__2 = (False)
-        elif critere.code == Criteres_Code.C3_eloignement_etudiant:
-            criteres_applicables_etudes_superieures__2 = (False)
-        elif critere.code == Criteres_Code.C4_materiel:
-            criteres_applicables_etudes_superieures__2 = (False)
-        elif critere.code == Criteres_Code.C5_etudes_superieures:
-            criteres_applicables_etudes_superieures__2 = (False)
-        def criteres_applicables_etudes_superieures__3(acc__1:bool, critere__1:Criteres):
-            if critere__1.code == Criteres_Code.C2_domiciliation_separee:
-                criteres_applicables_etudes_superieures__4 = (False)
-            elif critere__1.code == Criteres_Code.C3_eloignement_agent:
-                criteres_applicables_etudes_superieures__4 = (True)
-            elif critere__1.code == Criteres_Code.C3_eloignement_etudiant:
-                criteres_applicables_etudes_superieures__4 = (False)
-            elif critere__1.code == Criteres_Code.C4_materiel:
-                criteres_applicables_etudes_superieures__4 = (False)
-            elif critere__1.code == Criteres_Code.C5_etudes_superieures:
-                criteres_applicables_etudes_superieures__4 = (False)
-            return (acc__1 or criteres_applicables_etudes_superieures__4)
-        return (acc or (criteres_applicables_etudes_superieures__2 or list_fold_left(criteres_applicables_etudes_superieures__3, False, criteres_applicables_materiel_specifique)))
-    if (etudiant_en_filiere_post_bac and list_fold_left(criteres_applicables_etudes_superieures__1, False, criteres_applicables_materiel_specifique)):
-        criteres_applicables_etudes_superieures = ((criteres_applicables_materiel_specifique + [Criteres(Criteres_Code.C5_etudes_superieures, decimal_of_string("1"))]))
+        raise ListEmpty(loc[16])
+    points = ((points__1).__truediv__(valeur_point, pos=loc[17]))
+    if (points > Decimal('0')):
+        if criteres_applicables_eloignement.value is not None:
+            criteres_applicables_materiel_specifique__2 = (criteres_applicables_eloignement.value[0])
+        else:
+            raise NoValue(loc[18])
+        criteres_applicables_materiel_specifique__1 = ((criteres_applicables_materiel_specifique__2 + Array([Criteres(Criteres.Code.C4_materiel,
+                                                                                                             points)])))
     else:
-        criteres_applicables_etudes_superieures = (criteres_applicables_materiel_specifique)
-    def nb_points__1(c:Criteres):
-        if c.code == Criteres_Code.C2_domiciliation_separee:
-            return c.value
-        elif c.code == Criteres_Code.C3_eloignement_agent:
-            return c.value
-        elif c.code == Criteres_Code.C3_eloignement_etudiant:
-            return c.value
-        elif c.code == Criteres_Code.C4_materiel:
-            return c.value
-        elif c.code == Criteres_Code.C5_etudes_superieures:
-            return c.value
-    nb_points = (decimal_fr.somme(list_map(nb_points__1, criteres_applicables_etudes_superieures)))
+        if criteres_applicables_eloignement.value is not None:
+            criteres_applicables_materiel_specifique__1 = (criteres_applicables_eloignement.value[0])
+        else:
+            raise NoValue(loc[19])
+    criteres_applicables_materiel_specifique = (Option(CatalaTuple(criteres_applicables_materiel_specifique__1, loc[8])))
+    def _criteres_applicables_etudes_superieures__1(critere:Criteres):
+        if critere.code == Criteres.Code.C2_domiciliation_separee:
+            criteres_applicables_etudes_superieures__2 = (Bool(True))
+        elif critere.code == Criteres.Code.C3_eloignement_agent:
+            criteres_applicables_etudes_superieures__2 = (Bool(False))
+        elif critere.code == Criteres.Code.C3_eloignement_etudiant:
+            criteres_applicables_etudes_superieures__2 = (Bool(False))
+        elif critere.code == Criteres.Code.C4_materiel:
+            criteres_applicables_etudes_superieures__2 = (Bool(False))
+        elif critere.code == Criteres.Code.C5_etudes_superieures:
+            criteres_applicables_etudes_superieures__2 = (Bool(False))
+        def _criteres_applicables_etudes_superieures__3(critere__1:Criteres):
+            if critere__1.code == Criteres.Code.C2_domiciliation_separee:
+                return Bool(False)
+            elif critere__1.code == Criteres.Code.C3_eloignement_agent:
+                return Bool(True)
+            elif critere__1.code == Criteres.Code.C3_eloignement_etudiant:
+                return Bool(False)
+            elif critere__1.code == Criteres.Code.C4_materiel:
+                return Bool(False)
+            elif critere__1.code == Criteres.Code.C5_etudes_superieures:
+                return Bool(False)
+        criteres_applicables_etudes_superieures__3 = Function(_criteres_applicables_etudes_superieures__3)
+        if criteres_applicables_materiel_specifique.value is not None:
+            criteres_applicables_etudes_superieures__4 = (criteres_applicables_materiel_specifique.value[0])
+        else:
+            raise NoValue(loc[21])
+        return (criteres_applicables_etudes_superieures__2 or Bool(criteres_applicables_etudes_superieures__4.find(criteres_applicables_etudes_superieures__3).value is not None))
+    criteres_applicables_etudes_superieures__1 = Function(_criteres_applicables_etudes_superieures__1)
+    if criteres_applicables_materiel_specifique.value is not None:
+        criteres_applicables_etudes_superieures__5 = (criteres_applicables_materiel_specifique.value[0])
+    else:
+        raise NoValue(loc[20])
+    if (etudiant_en_filiere_post_bac and Bool(criteres_applicables_etudes_superieures__5.find(criteres_applicables_etudes_superieures__1).value is not None)):
+        if criteres_applicables_materiel_specifique.value is not None:
+            criteres_applicables_etudes_superieures__6 = (criteres_applicables_materiel_specifique.value[0])
+        else:
+            raise NoValue(loc[22])
+        criteres_applicables_etudes_superieures = ((criteres_applicables_etudes_superieures__6 + Array([Criteres(Criteres.Code.C5_etudes_superieures,
+                                                                                                        Decimal('1'))])))
+    else:
+        if criteres_applicables_materiel_specifique.value is not None:
+            criteres_applicables_etudes_superieures = (criteres_applicables_materiel_specifique.value[0])
+        else:
+            raise NoValue(loc[23])
+    def _nb_points__1(c:Criteres):
+        if c.code == Criteres.Code.C2_domiciliation_separee:
+            return c.payload
+        elif c.code == Criteres.Code.C3_eloignement_agent:
+            return c.payload
+        elif c.code == Criteres.Code.C3_eloignement_etudiant:
+            return c.payload
+        elif c.code == Criteres.Code.C4_materiel:
+            return c.payload
+        elif c.code == Criteres.Code.C5_etudes_superieures:
+            return c.payload
+    nb_points__1 = Function(_nb_points__1)
+    nb_points = (decimal_fr.somme(criteres_applicables_etudes_superieures.map(nb_points__1)))
     return CalculPointsAideScolarite(criteres_applicables = criteres_applicables_etudes_superieures, nb_points = nb_points)

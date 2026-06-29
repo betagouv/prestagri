@@ -14,14 +14,14 @@ from . import Money_fr as money_fr
 from . import Integer_fr as integer_fr
 from . import Decimal_fr as decimal_fr
 
-class Trajet(CatalaStruct):
-    __slots__ = ('distance_km', 'duree_minutes')
-    distance_km: Integer
-    duree_minutes: Integer
-    name = 'Trajet'
+class FoyerFiscal(CatalaStruct):
+    __slots__ = ('revenu_fiscal_reference', 'nombre_personnes')
+    revenu_fiscal_reference: Money
+    nombre_personnes: Integer
+    name = 'Foyer_fiscal'
     fields = {
-        'distance_km': 'distance_km', # content Integer
-        'duree_minutes': 'durée_minutes', # content Integer
+        'revenu_fiscal_reference': 'revenu_fiscal_reference', # content Money
+        'nombre_personnes': 'nombre_personnes', # content Integer
     }
 
 

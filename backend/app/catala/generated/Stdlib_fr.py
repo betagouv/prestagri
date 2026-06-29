@@ -3,6 +3,7 @@
 from .catala_runtime import *
 from typing import Any, List, Callable, Tuple
 from enum import Enum
+from sys import stderr
 from . import Date_internal as date_internal
 from . import List_internal as list_internal
 from . import List_fr as list_fr
