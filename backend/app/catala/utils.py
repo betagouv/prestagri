@@ -20,11 +20,11 @@ def to_personne_cat_list(personnes: list[FoyerFiscal]) -> list[Foyer_fiscal_cat]
     return list(map(to_personne_cat, personnes))
 
 def to_personne_cat(personne: FoyerFiscal) -> Foyer_fiscal_cat:
-    return Foyer_fiscal_cat(revenu_fiscal_reference=to_money(personne.revenu),
+    return Foyer_fiscal_cat(revenu_fiscal_reference=to_money_cat(personne.revenu),
                             nombre_personnes=Integer(personne.personnes))
 
-def to_money(cents: Centimes) -> Money_cat:
-    return Money_cat(Integer(cents.valeur))
+def to_money_cat(cents: Centimes) -> Money_cat:
+    return Money_cat(cents.valeur/100)
 
 def to_trajet(trajet: Trajet) -> Trajet_cat:
     return Trajet_cat(distance_km=Integer(trajet.distance_km),duree_minutes=Integer(trajet.duree_minutes))

@@ -57,10 +57,7 @@ def arrondi_a_la_decimale(a:Money, nieme_decimale:Integer) -> Money:
     return money_internal.round_to_decimal(a, nieme_decimale)
 
 def somme(l:List[Money]) -> Money:
-    def _somme__1(total:Money, x:Money):
-        return (total + x)
-    somme__1 = Function(_somme__1)
-    return l.fold_left(somme__1, Money('0.00'))
+    return Money(sum(l))
 
 def en_exces(a:Money, reference:Money) -> Money:
     return max(Money('0.00'), (a - reference))

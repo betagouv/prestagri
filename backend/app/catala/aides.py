@@ -1,9 +1,9 @@
 
 from .generated.Quotient_familial import CalculQuotientFamilialIn, calcul_quotient_familial
 from .generated.Aide_scolarite import CalculQuotientFamilialAideScolariteIn, calcul_quotient_familial_aide_scolarite, CalculPointsAideScolariteIn, calcul_points_aide_scolarite, calcul_aide_scolarite, CalculAideScolariteIn, Integer
-from .generated.catala_runtime import Option, Decimal
+from .generated.catala_runtime import Option
 from ..model import Menage, FoyerFiscal, Trajet, Response, Centimes
-from .utils import to_menage_cat, to_personne_cat_list, to_money, to_trajet, to_float
+from .utils import to_menage_cat, to_personne_cat_list, to_money_cat, to_trajet
 
 
 def get_catala_quotient_familial(menage : Menage) -> Response[Centimes]:
@@ -11,11 +11,11 @@ def get_catala_quotient_familial(menage : Menage) -> Response[Centimes]:
     result = calcul_quotient_familial(CalculQuotientFamilialIn(menage_in=menage_cat))
     return Response (
         value=Centimes(valeur=result.quotient_familial),
-        explanation=str(result.revenu_fiscal_reference) + "/ (12 x " + str(result.nombre_unites) +")"
+        explanation=str(Centimes(valeur=result.revenu_fiscal_reference)) + "/ (12 x " + str(result.nombre_unites) +")"
     )
 
 def get_catala_aide_scolarite(quotient_familial: Centimes, nb_points: float ) -> Response[Centimes]:
-    result = calcul_aide_scolarite(CalculAideScolariteIn(quotient_familial_in=to_money(quotient_familial), nb_points_in=nb_points))
+    result = calcul_aide_scolarite(CalculAideScolariteIn(quotient_familial_in=to_money_cat(quotient_familial), nb_points_in=nb_points))
     value = Centimes(valeur=result.aide_scolarite)
     return Response(
         value=value,
@@ -45,8 +45,8 @@ def get_catala_criteres_eligibles_aide_scolarite(
         CalculPointsAideScolariteIn(
             trajet_depuis_domicile_agent_in=to_trajet(trajet_depuis_domicile_agent),
             trajet_depuis_domicile_etudiant_in=optionnel_trajet_depuis_domicile_etudiant,
-            montant_materiel_specifique_in=to_money(montant_materiel_specifique),
-            valeur_point_in=to_money(valeur_point),
+            montant_materiel_specifique_in=to_money_cat(montant_materiel_specifique),
+            valeur_point_in=to_money_cat(valeur_point),
             etudiant_en_filiere_post_bac_in=etudiant_en_filiere_post_bac))
     return Response(value= result.nb_points, explanation=str(list(map(str, result.criteres_applicables))))
 
