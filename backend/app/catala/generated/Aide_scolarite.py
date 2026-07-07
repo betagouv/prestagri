@@ -126,8 +126,8 @@ class RetraitCritereC2In(CatalaStruct):
     }
 
 
-loc = (Array([SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=106, start_column=11, end_line=106, end_column=18, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=116, start_column=14, end_line=116, end_column=46, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+loc = (Array([SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=106, start_column=11, end_line=106, end_column=17, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=116, start_column=14, end_line=116, end_column=45, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
               SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=138, start_column=22, end_line=139, end_column=120, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
               SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=156, start_column=11, end_line=156, end_column=23, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
               SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=157, start_column=12, end_line=157, end_column=26, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
@@ -155,11 +155,11 @@ def calcul_quotient_familial_aide_scolarite(calcul_quotient_familial_aide_scolar
     foyer_fiscal_agent = (calcul_quotient_familial_aide_scolarite_in.foyer_fiscal_agent_in)
     etudiants_fiscalement_independants = (calcul_quotient_familial_aide_scolarite_in.etudiants_fiscalement_independants_in)
     if (etudiants_fiscalement_independants.length() > Integer(0)):
-        menage = (Option(CatalaTuple(menage.Menage(beneficiaire_porteur_handicap = foyer_fiscal_agent.beneficiaire_porteur_handicap, garde_alternee = foyer_fiscal_agent.garde_alternee, parent_isole = foyer_fiscal_agent.parent_isole, outre_mer = foyer_fiscal_agent.outre_mer, membres_du_foyer = (foyer_fiscal_agent.membres_du_foyer + etudiants_fiscalement_independants)), loc[2])))
+        menage__1 = (Option(CatalaTuple(menage.Menage(beneficiaire_porteur_handicap = foyer_fiscal_agent.beneficiaire_porteur_handicap, garde_alternee = foyer_fiscal_agent.garde_alternee, parent_isole = foyer_fiscal_agent.parent_isole, outre_mer = foyer_fiscal_agent.outre_mer, membres_du_foyer = (foyer_fiscal_agent.membres_du_foyer + etudiants_fiscalement_independants)), loc[2])))
     else:
-        menage = (Option(CatalaTuple(foyer_fiscal_agent, loc[0])))
-    if menage.value is not None:
-        result__1 = (menage.value[0])
+        menage__1 = (Option(CatalaTuple(foyer_fiscal_agent, loc[0])))
+    if menage__1.value is not None:
+        result__1 = (menage__1.value[0])
     else:
         raise NoValue(loc[1])
     result = (quotient_familial.calcul_quotient_familial(quotient_familial.CalculQuotientFamilialIn(menage_in = result__1)))
