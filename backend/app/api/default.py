@@ -73,6 +73,7 @@ def read_quotient_familial_aide_scolarite(
         return Response(value=str(response.value) , explanation=response.explanation)
     except Exception as e:
         sentry_sdk.capture_exception(e)
+        logger.exception(e)
         return Response(value="Une erreur est survenue", explanation=properties.error_contact)
 
 

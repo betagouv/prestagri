@@ -154,7 +154,7 @@ loc = (Array([SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_
 def calcul_quotient_familial_aide_scolarite(calcul_quotient_familial_aide_scolarite_in:CalculQuotientFamilialAideScolariteIn) -> CalculQuotientFamilialAideScolarite:
     foyer_fiscal_agent = (calcul_quotient_familial_aide_scolarite_in.foyer_fiscal_agent_in)
     etudiants_fiscalement_independants = (calcul_quotient_familial_aide_scolarite_in.etudiants_fiscalement_independants_in)
-    if (etudiants_fiscalement_independants.length() > Integer(0)):
+    if (len(etudiants_fiscalement_independants) > 0):
         menage__1 = (Option(CatalaTuple(menage.Menage(beneficiaire_porteur_handicap = foyer_fiscal_agent.beneficiaire_porteur_handicap, garde_alternee = foyer_fiscal_agent.garde_alternee, parent_isole = foyer_fiscal_agent.parent_isole, outre_mer = foyer_fiscal_agent.outre_mer, membres_du_foyer = (foyer_fiscal_agent.membres_du_foyer + etudiants_fiscalement_independants)), loc[2])))
     else:
         menage__1 = (Option(CatalaTuple(foyer_fiscal_agent, loc[0])))

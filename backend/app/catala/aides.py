@@ -25,7 +25,7 @@ def get_catala_aide_scolarite(quotient_familial: Centimes, nb_points: float ) ->
 def get_catala_quotient_familial_aide_scolarite(menage: Menage, etudiants_fiscalement_independants: list[FoyerFiscal]) -> Response[Centimes]:
     menage_cat = to_menage_cat(menage)
     etudiants_cat = to_personne_cat_list(etudiants_fiscalement_independants)
-    result = calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(menage_in=menage_cat, etudiants_fiscalement_independants_in=etudiants_cat))
+    result = calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(foyer_fiscal_agent_in=menage_cat, etudiants_fiscalement_independants_in=etudiants_cat))
     value = Centimes(valeur=result.quotient_familial)
     return Response (
         value=value,
