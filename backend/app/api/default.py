@@ -37,7 +37,7 @@ def read_quotient_familial(
         return Response(value=str(response.value), explanation= response.explanation)
     except Exception as e:
         sentry_sdk.capture_exception(e)
-        logger.error(e)
+        logger.exception(e)
         return Response(value="Une erreur est survenue", explanation=properties.error_contact)
 
 @router.get("/aide_scolarite")
@@ -62,9 +62,9 @@ def read_quotient_familial_aide_scolarite(
         agent = FoyerFiscal(revenu=Centimes.from_euros_int(agent_revenu), personnes=agent_enfants)
         membres = [agent]
         if conjoint_revenu is not None:
-            conjoint = FoyerFiscal(revenu=Centimes.from_euros_int(conjoint_revenu), personnes=conjoint_enfants)
+            conjoint = FoyerFiscal(revenu=Centimes.from_euros_int(conjoint_revenu), personnes=conjoint_enfants or 0)
             membres.append(conjoint)
-        etudiant_independant = FoyerFiscal(revenu=Centimes.from_euros_int(etudiant_revenu), personnes=etudiant_enfants) if etudiant_revenu is not None else None
+        etudiant_independant = FoyerFiscal(revenu=Centimes.from_euros_int(etudiant_revenu), personnes=etudiant_enfants or 0) if etudiant_revenu is not None else None
         menage = Menage(beneficiaire_porteur_handicap=beneficiaire_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
         response = get_aide_scolarite(menage, etudiant_independant,
             adresse_agent, adresse_etablissement, adresse_etudiant,
@@ -83,6 +83,7 @@ async def trigger_error():
         division_by_zero = 1 / 0
     except Exception as e:
         sentry_sdk.capture_exception(e)
+        logger.exception(e)
         return Response(value="Une erreur est survenue", explanation=properties.error_contact)
 
 

@@ -8,15 +8,15 @@ from .utils import to_menage_cat, to_personne_cat_list, to_money, to_trajet, to_
 
 def get_catala_quotient_familial(menage : Menage) -> Response[Centimes]:
     menage_cat = to_menage_cat(menage)
-    result = calcul_quotient_familial(CalculQuotientFamilialIn(menage_cat))
+    result = calcul_quotient_familial(CalculQuotientFamilialIn(menage_in=menage_cat))
     return Response (
-        value=Centimes(valeur=result.quotient_familial.value.value),
+        value=Centimes(valeur=result.quotient_familial),
         explanation=str(result.revenu_fiscal_reference) + "/ (12 x " + str(result.nombre_unites) +")"
     )
 
 def get_catala_aide_scolarite(quotient_familial: Centimes, nb_points: float ) -> Response[Centimes]:
-    result = calcul_aide_scolarite(CalculAideScolariteIn(to_money(quotient_familial), Decimal(nb_points)))
-    value = Centimes(valeur=result.aide_scolarite.value.value)
+    result = calcul_aide_scolarite(CalculAideScolariteIn(quotient_familial_in=to_money(quotient_familial), nb_points_in=nb_points))
+    value = Centimes(valeur=result.aide_scolarite)
     return Response(
         value=value,
         explanation=str(quotient_familial) + " x " + str(nb_points) + " = " + str(value) )
@@ -25,8 +25,8 @@ def get_catala_aide_scolarite(quotient_familial: Centimes, nb_points: float ) ->
 def get_catala_quotient_familial_aide_scolarite(menage: Menage, etudiants_fiscalement_independants: list[FoyerFiscal]) -> Response[Centimes]:
     menage_cat = to_menage_cat(menage)
     etudiants_cat = to_personne_cat_list(etudiants_fiscalement_independants)
-    result = calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(menage_cat, etudiants_cat))
-    value = Centimes(valeur=result.quotient_familial.value.value)
+    result = calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(menage_in=menage_cat, etudiants_fiscalement_independants_in=etudiants_cat))
+    value = Centimes(valeur=result.quotient_familial)
     return Response (
         value=value,
         explanation=str(result.revenu_fiscal_reference) + "/ (12 x " + str(result.nombre_unites) +") = " + str(value)
@@ -43,10 +43,10 @@ def get_catala_criteres_eligibles_aide_scolarite(
     optionnel_trajet_depuis_domicile_etudiant = Option(to_trajet(trajet_depuis_domicile_etudiant)) if trajet_depuis_domicile_etudiant is not None else Option(None)
     result = calcul_points_aide_scolarite(
         CalculPointsAideScolariteIn(
-            to_trajet(trajet_depuis_domicile_agent),
-            optionnel_trajet_depuis_domicile_etudiant,
-            to_money(montant_materiel_specifique),
-            to_money(valeur_point),
-            etudiant_en_filiere_post_bac))
-    return Response(value= to_float(result.nb_points.value), explanation=str(list(map(str, result.criteres_applicables))))
+            trajet_depuis_domicile_agent_in=to_trajet(trajet_depuis_domicile_agent),
+            trajet_depuis_domicile_etudiant_in=optionnel_trajet_depuis_domicile_etudiant,
+            montant_materiel_specifique_in=to_money(montant_materiel_specifique),
+            valeur_point_in=to_money(valeur_point),
+            etudiant_en_filiere_post_bac_in=etudiant_en_filiere_post_bac))
+    return Response(value= result.nb_points, explanation=str(list(map(str, result.criteres_applicables))))
 
