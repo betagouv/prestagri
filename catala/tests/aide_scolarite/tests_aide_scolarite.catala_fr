@@ -36,7 +36,7 @@ champ d'application TestQuotientFamilialAideScolarite1:
       }
       -- étudiants_fiscalement_indépendants: [Foyer_fiscal {
         -- revenu_fiscal_reference: 10 000 €
-        -- nombre_personnes: 0
+        -- nombre_personnes: 1
       }]
     }
   assertion (calcul.quotient_familial = 710 €)

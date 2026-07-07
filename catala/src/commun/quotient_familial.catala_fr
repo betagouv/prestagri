@@ -11,7 +11,7 @@ QF = Revenu fiscal de référence / (12 x nombre de personnes vivant au foyer (a
 
 ```catala-metadata
 déclaration champ d'application CalculQuotientFamilial: # Can be used
-  entrée famille contenu Menage
+  entrée menage contenu Menage
   interne nombre_personnes_vivants_au_foyer contenu décimal
   interne revenu_total contenu argent
   résultat revenu_fiscal_reference contenu argent
@@ -20,9 +20,9 @@ déclaration champ d'application CalculQuotientFamilial: # Can be used
 ```
 ```catala
 champ d'application CalculQuotientFamilial:
-  définition nombre_personnes_vivants_au_foyer égal à décimal de Entier.somme de transforme chaque personne parmi famille.membres_du_foyer en (1 + personne.nombre_personnes)
+  définition nombre_personnes_vivants_au_foyer égal à décimal de Entier.somme de transforme chaque personne parmi menage.membres_du_foyer en personne.nombre_personnes
   étiquette nombre_unités_défaut définition nombre_unités égal à nombre_personnes_vivants_au_foyer
-  définition revenu_total égal à Argent.somme de transforme chaque personne parmi famille.membres_du_foyer en personne.revenu_fiscal_reference 
+  définition revenu_total égal à Argent.somme de transforme chaque personne parmi menage.membres_du_foyer en personne.revenu_fiscal_reference 
   étiquette revenu_fiscal_reference_défaut définition revenu_fiscal_reference égal à revenu_total
   définition quotient_familial égal à argent de (décimal de revenu_fiscal_reference / (décimal de 12 * nombre_unités))
 ```
@@ -41,7 +41,7 @@ d'imposition (ex : situation au 31/12/2024 pour l'imposition des revenus perçus
 champ d'application CalculQuotientFamilial:
   étiquette parent_isolé exception nombre_unités_défaut
   définition nombre_unités
-  sous condition famille.parent_isolé
+  sous condition menage.parent_isolé
   conséquence égal à nombre_personnes_vivants_au_foyer + 1,0
 ```
 
@@ -54,7 +54,7 @@ fiscale) bénéficie (sur présentation de justificatif-s) d’une demi-unité s
 champ d'application CalculQuotientFamilial:
   étiquette handicap exception parent_isolé
   définition nombre_unités
-  sous condition famille.beneficiaire_porteur_handicap
+  sous condition menage.beneficiaire_porteur_handicap
   conséquence égal à nombre_personnes_vivants_au_foyer + 0,5
 ```
 
@@ -66,7 +66,7 @@ par foyer.
 champ d'application CalculQuotientFamilial:
   étiquette garde_alternée exception handicap
   définition nombre_unités
-  sous condition famille.garde_alternée
+  sous condition menage.garde_alternée
   conséquence égal à nombre_personnes_vivants_au_foyer + 0,5
 ```
 
@@ -78,7 +78,7 @@ le revenu fiscal de référence.
 champ d'application CalculQuotientFamilial:
   étiquette revenu_fiscal_reference_outre_mer exception revenu_fiscal_reference_défaut
   définition revenu_fiscal_reference 
-  sous condition famille.outre_mer
+  sous condition menage.outre_mer
   conséquence égal à revenu_total * 80 %
 ```
 

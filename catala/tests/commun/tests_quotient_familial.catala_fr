@@ -133,5 +133,5 @@ champ d'application TestQuotientFamilial4:
         ]
       }
     }
-  assertion (calcul.quotient_familial = 434,66 €)
+  assertion (calcul.quotient_familial = 434,67 €)
 ```

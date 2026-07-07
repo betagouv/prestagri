@@ -7,12 +7,8 @@ tasks:
   setup:
     desc: install all the required dependencies
     cmds:
-      - opam init -c 4.14.2 --shell-setup
-      - eval $(opam env)
-      - opam update && opam install catala.1.2.0
-      - opam upgrade catala
-      - opam install catala-lsp.1.2.0
-      - opam install catala-format.1.2.0
+      - opam init -c 4.14.2 --shell-setup && eval $(opam env) && opam update && opam install catala.1.2.0 && opam install catala-lsp.1.2.0 && opam install catala-format.1.2.0
+
   build:
     desc: build targets
     cmds: 
