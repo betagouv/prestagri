@@ -142,6 +142,7 @@ déclaration champ d'application CalculQuotientFamilialAideScolarite:
   interne menage contenu Menage
   calcul_quotient_familial champ d'application Quotient_familial.CalculQuotientFamilial
   résultat revenu_fiscal_reference contenu argent
+  résultat nombre_personnes_vivants_au_foyer contenu décimal
   résultat nombre_unités contenu décimal
   résultat quotient_familial contenu argent
 ```
@@ -152,6 +153,7 @@ champ d'application CalculQuotientFamilialAideScolarite:
   définition calcul_quotient_familial.menage égal à menage
   définition revenu_fiscal_reference égal à calcul_quotient_familial.revenu_fiscal_reference
   définition nombre_unités égal à calcul_quotient_familial.nombre_unités
+  définition nombre_personnes_vivants_au_foyer égal à calcul_quotient_familial.nombre_personnes_vivants_au_foyer
   définition quotient_familial égal à calcul_quotient_familial.quotient_familial
 ```
 
