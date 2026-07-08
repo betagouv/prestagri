@@ -3,7 +3,7 @@ from .generated.Quotient_familial import CalculQuotientFamilialIn, calcul_quotie
 from .generated.Aide_scolarite import CalculQuotientFamilialAideScolariteIn, calcul_quotient_familial_aide_scolarite, CalculPointsAideScolariteIn, calcul_points_aide_scolarite, calcul_aide_scolarite, CalculAideScolariteIn, Integer
 from .generated.catala_runtime import Option
 from ..model import Menage, FoyerFiscal, Trajet, Response, Centimes
-from .utils import to_menage_cat, to_personne_cat_list, to_money_cat, to_trajet
+from .utils import to_menage_cat, to_personne_cat_list, to_money_cat, to_trajet, cat_enum_to_string
 
 
 def get_catala_quotient_familial(menage : Menage) -> Response[Centimes]:
@@ -11,16 +11,34 @@ def get_catala_quotient_familial(menage : Menage) -> Response[Centimes]:
     result = calcul_quotient_familial(CalculQuotientFamilialIn(menage_in=menage_cat))
     return Response (
         value=Centimes(valeur=result.quotient_familial),
-        explanation=str(Centimes(valeur=result.revenu_fiscal_reference)) + "/ (12 x " + str(result.nombre_unites) +")"
+        explanation= {
+            "criteres_applicables" : str(list(map(cat_enum_to_string, result.criteres_applicables))),
+            "calcul" : str(Centimes(valeur=result.revenu_fiscal_reference)) + "/ (12 x (" + str(result.nombre_personnes_vivants_au_foyer) + " + " + str(result.nombre_unites - result.nombre_personnes_vivants_au_foyer) +"))"
+        }
     )
 
-def get_catala_aide_scolarite(quotient_familial: Centimes, nb_points: float ) -> Response[Centimes]:
-    result = calcul_aide_scolarite(CalculAideScolariteIn(quotient_familial_in=to_money_cat(quotient_familial), nb_points_in=nb_points))
+def get_catala_aide_scolarite(quotient_familial: Centimes, trajet_depuis_domicile_agent: Trajet,
+        trajet_depuis_domicile_etudiant: None|Trajet, montant_materiel_specifique: Centimes,
+        valeur_point: Centimes, etudiant_en_filiere_post_bac: bool ) -> Response[Centimes]:
+
+    optionnel_trajet_depuis_domicile_etudiant = Option(to_trajet(trajet_depuis_domicile_etudiant)) if trajet_depuis_domicile_etudiant is not None else Option(None)
+    result = calcul_aide_scolarite(CalculAideScolariteIn(
+        quotient_familial_in=to_money_cat(quotient_familial),
+        trajet_depuis_domicile_agent_in=to_trajet(trajet_depuis_domicile_agent),
+        trajet_depuis_domicile_etudiant_in=optionnel_trajet_depuis_domicile_etudiant,
+        montant_materiel_specifique_in=to_money_cat(montant_materiel_specifique),
+        etudiant_en_filiere_post_bac_in=etudiant_en_filiere_post_bac
+    ))
     value = Centimes(valeur=result.aide_scolarite)
+    explanation = {
+        "critere_applicables": str(list(map(cat_enum_to_string, result.criteres_applicables))),
+        "calcul": str(Centimes(valeur=result.valeur_point)) + " x " + str(result.nb_points) + " = " + str(value)
+    }
+
     return Response(
         value=value,
-        explanation=str(quotient_familial) + " x " + str(nb_points) + " = " + str(value) )
-
+        explanation= explanation
+    )
 
 def get_catala_quotient_familial_aide_scolarite(menage: Menage, etudiants_fiscalement_independants: list[FoyerFiscal]) -> Response[Centimes]:
     menage_cat = to_menage_cat(menage)
@@ -29,24 +47,8 @@ def get_catala_quotient_familial_aide_scolarite(menage: Menage, etudiants_fiscal
     value = Centimes(valeur=result.quotient_familial)
     return Response (
         value=value,
-        explanation=str(result.revenu_fiscal_reference) + "/ (12 x " + str(result.nombre_unites) +") = " + str(value)
+        explanation= {
+            "criteres_applicables": str(list(map(cat_enum_to_string, result.criteres_applicables))),
+            "calcul" :str(Centimes(valeur=result.revenu_fiscal_reference)) + "/ (12 x (" + str(result.nombre_personnes_vivants_au_foyer) + " + " + str(result.nombre_unites - result.nombre_personnes_vivants_au_foyer) +"))"
+        }
     )
-
-def get_catala_criteres_eligibles_aide_scolarite(
-        trajet_depuis_domicile_agent: Trajet,
-        trajet_depuis_domicile_etudiant: None|Trajet,
-        montant_materiel_specifique: Centimes,
-        valeur_point: Centimes,
-        etudiant_en_filiere_post_bac: bool
-    ) -> Response[float]:
-
-    optionnel_trajet_depuis_domicile_etudiant = Option(to_trajet(trajet_depuis_domicile_etudiant)) if trajet_depuis_domicile_etudiant is not None else Option(None)
-    result = calcul_points_aide_scolarite(
-        CalculPointsAideScolariteIn(
-            trajet_depuis_domicile_agent_in=to_trajet(trajet_depuis_domicile_agent),
-            trajet_depuis_domicile_etudiant_in=optionnel_trajet_depuis_domicile_etudiant,
-            montant_materiel_specifique_in=to_money_cat(montant_materiel_specifique),
-            valeur_point_in=to_money_cat(valeur_point),
-            etudiant_en_filiere_post_bac_in=etudiant_en_filiere_post_bac))
-    return Response(value= result.nb_points, explanation=str(list(map(str, result.criteres_applicables))))
-

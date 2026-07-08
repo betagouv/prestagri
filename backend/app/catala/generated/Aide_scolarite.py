@@ -28,21 +28,31 @@ class Criteres(CatalaEnum):
         C5_etudes_superieures = 'C5_études_supérieures' # content Decimal
 
 class CalculAideScolarite(CatalaStruct):
-    __slots__ = ('aide_scolarite')
+    __slots__ = ('valeur_point', 'criteres_applicables', 'nb_points', 'aide_scolarite')
+    valeur_point: Money
+    criteres_applicables: List[Criteres]
+    nb_points: Decimal
     aide_scolarite: Money
     name = 'CalculAideScolarite'
     fields = {
+        'valeur_point': 'valeur_point', # content Money
+        'criteres_applicables': 'critères_applicables', # content List[Criteres]
+        'nb_points': 'nb_points', # content Decimal
         'aide_scolarite': 'aide_scolarite', # content Money
     }
 
 class CalculQuotientFamilialAideScolarite(CatalaStruct):
-    __slots__ = ('revenu_fiscal_reference', 'nombre_unites', 'quotient_familial')
+    __slots__ = ('revenu_fiscal_reference', 'criteres_applicables', 'nombre_personnes_vivants_au_foyer', 'nombre_unites', 'quotient_familial')
     revenu_fiscal_reference: Money
+    criteres_applicables: List[quotient_familial.Criteres]
+    nombre_personnes_vivants_au_foyer: Decimal
     nombre_unites: Decimal
     quotient_familial: Money
     name = 'CalculQuotientFamilialAideScolarite'
     fields = {
         'revenu_fiscal_reference': 'revenu_fiscal_reference', # content Money
+        'criteres_applicables': 'critères_applicables', # content List[quotient_familial.Criteres]
+        'nombre_personnes_vivants_au_foyer': 'nombre_personnes_vivants_au_foyer', # content Decimal
         'nombre_unites': 'nombre_unités', # content Decimal
         'quotient_familial': 'quotient_familial', # content Money
     }
@@ -74,13 +84,19 @@ class RetraitCritereC2(CatalaStruct):
     }
 
 class CalculAideScolariteIn(CatalaStruct):
-    __slots__ = ('quotient_familial_in', 'nb_points_in')
+    __slots__ = ('quotient_familial_in', 'trajet_depuis_domicile_agent_in', 'trajet_depuis_domicile_etudiant_in', 'montant_materiel_specifique_in', 'etudiant_en_filiere_post_bac_in')
     quotient_familial_in: Money
-    nb_points_in: Decimal
+    trajet_depuis_domicile_agent_in: trajet.Trajet
+    trajet_depuis_domicile_etudiant_in: Option[trajet.Trajet]
+    montant_materiel_specifique_in: Money
+    etudiant_en_filiere_post_bac_in: Bool
     name = 'CalculAideScolarite_in'
     fields = {
         'quotient_familial_in': 'quotient_familial_in', # content Money
-        'nb_points_in': 'nb_points_in', # content Decimal
+        'trajet_depuis_domicile_agent_in': 'trajet_depuis_domicile_agent_in', # content trajet.Trajet
+        'trajet_depuis_domicile_etudiant_in': 'trajet_depuis_domicile_étudiant_in', # content Option[trajet.Trajet]
+        'montant_materiel_specifique_in': 'montant_matériel_spécifique_in', # content Money
+        'etudiant_en_filiere_post_bac_in': 'étudiant_en_filière_post_bac_in', # content Bool
     }
 
 class CalculQuotientFamilialAideScolariteIn(CatalaStruct):
@@ -126,70 +142,48 @@ class RetraitCritereC2In(CatalaStruct):
     }
 
 
-loc = (Array([SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=59, start_column=11, end_line=59, end_column=23, law_headings=["Montant de l'aide :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=60, start_column=12, end_line=60, end_column=26, law_headings=["Montant de l'aide :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=128, start_column=11, end_line=128, end_column=17, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=138, start_column=14, end_line=138, end_column=45, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=160, start_column=22, end_line=161, end_column=120, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=176, start_column=80, end_line=176, end_column=92, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=186, start_column=22, end_line=186, end_column=25, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=208, start_column=11, end_line=208, end_column=39, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=209, start_column=12, end_line=209, end_column=32, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=245, start_column=11, end_line=245, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=245, start_column=70, end_line=245, end_column=98, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=246, start_column=11, end_line=246, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=270, start_column=95, end_line=270, end_column=123, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=271, start_column=13, end_line=271, end_column=33, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=273, start_column=64, end_line=273, end_column=84, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=274, start_column=15, end_line=274, end_column=35, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=321, start_column=34, end_line=321, end_column=92, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=322, start_column=24, end_line=322, end_column=53, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=324, start_column=11, end_line=324, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=325, start_column=11, end_line=325, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=339, start_column=30, end_line=339, end_column=50, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=340, start_column=31, end_line=340, end_column=51, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=341, start_column=11, end_line=341, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=342, start_column=11, end_line=342, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"])]))
-
-def calcul_aide_scolarite(calcul_aide_scolarite_in:CalculAideScolariteIn) -> CalculAideScolarite:
-    quotient_familial__1 = (calcul_aide_scolarite_in.quotient_familial_in)
-    nb_points = (calcul_aide_scolarite_in.nb_points_in)
-    if (quotient_familial__1 < Money('780.00')):
-        valeur_point__1 = (Money('100.00'))
-    elif (quotient_familial__1 < Money('930.00')):
-        valeur_point__1 = (Money('75.00'))
-    elif (quotient_familial__1 < Money('1090.00')):
-        valeur_point__1 = (Money('50.00'))
-    else:
-        valeur_point__1 = (Money('0.00'))
-    valeur_point = (Option(CatalaTuple(valeur_point__1, loc[0])))
-    if (quotient_familial__1 > Money('1090.00')):
-        aide_scolarite = (CatalaTuple(Money('0.00'), loc[6])[0])
-    else:
-        if valeur_point.value is not None:
-            aide_scolarite__1 = (valeur_point.value[0])
-        else:
-            raise NoValue(loc[5])
-        aide_scolarite = (CatalaTuple((aide_scolarite__1 * nb_points), loc[1])[0])
-    return CalculAideScolarite(aide_scolarite = aide_scolarite)
+loc = (Array([SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=66, start_column=12, end_line=66, end_column=26, law_headings=["Montant de l'aide :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=142, start_column=11, end_line=142, end_column=17, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=154, start_column=14, end_line=154, end_column=45, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=178, start_column=22, end_line=179, end_column=120, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=204, start_column=22, end_line=204, end_column=25, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=226, start_column=11, end_line=226, end_column=39, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=227, start_column=12, end_line=227, end_column=32, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=263, start_column=11, end_line=263, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=263, start_column=70, end_line=263, end_column=98, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=264, start_column=11, end_line=264, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=288, start_column=95, end_line=288, end_column=123, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=289, start_column=13, end_line=289, end_column=33, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=291, start_column=64, end_line=291, end_column=84, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=292, start_column=15, end_line=292, end_column=35, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=339, start_column=34, end_line=339, end_column=92, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=342, start_column=13, end_line=342, end_column=42, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=346, start_column=11, end_line=346, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=347, start_column=11, end_line=347, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=361, start_column=30, end_line=361, end_column=50, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=362, start_column=31, end_line=362, end_column=51, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=363, start_column=11, end_line=363, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=364, start_column=11, end_line=364, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"])]))
 
 def calcul_quotient_familial_aide_scolarite(calcul_quotient_familial_aide_scolarite_in:CalculQuotientFamilialAideScolariteIn) -> CalculQuotientFamilialAideScolarite:
     foyer_fiscal_agent = (calcul_quotient_familial_aide_scolarite_in.foyer_fiscal_agent_in)
     etudiants_fiscalement_independants = (calcul_quotient_familial_aide_scolarite_in.etudiants_fiscalement_independants_in)
-    if (etudiants_fiscalement_independants.length() > Integer(0)):
-        menage__1 = (Option(CatalaTuple(menage.Menage(beneficiaire_porteur_handicap = foyer_fiscal_agent.beneficiaire_porteur_handicap, garde_alternee = foyer_fiscal_agent.garde_alternee, parent_isole = foyer_fiscal_agent.parent_isole, outre_mer = foyer_fiscal_agent.outre_mer, membres_du_foyer = (foyer_fiscal_agent.membres_du_foyer + etudiants_fiscalement_independants)), loc[4])))
+    if (len(etudiants_fiscalement_independants) > 0):
+        menage__1 = (Option(CatalaTuple(menage.Menage(beneficiaire_porteur_handicap = foyer_fiscal_agent.beneficiaire_porteur_handicap, garde_alternee = foyer_fiscal_agent.garde_alternee, parent_isole = foyer_fiscal_agent.parent_isole, outre_mer = foyer_fiscal_agent.outre_mer, membres_du_foyer = (foyer_fiscal_agent.membres_du_foyer + etudiants_fiscalement_independants)), loc[3])))
     else:
-        menage__1 = (Option(CatalaTuple(foyer_fiscal_agent, loc[2])))
+        menage__1 = (Option(CatalaTuple(foyer_fiscal_agent, loc[1])))
     if menage__1.value is not None:
         result__1 = (menage__1.value[0])
     else:
-        raise NoValue(loc[3])
+        raise NoValue(loc[2])
     result = (quotient_familial.calcul_quotient_familial(quotient_familial.CalculQuotientFamilialIn(menage_in = result__1)))
-    calcul_quotient_familial = (quotient_familial.CalculQuotientFamilial(revenu_fiscal_reference = result.revenu_fiscal_reference, criteres_applicables = result.criteres_applicables, nombre_unites = result.nombre_unites, quotient_familial = result.quotient_familial))
+    calcul_quotient_familial = (quotient_familial.CalculQuotientFamilial(nombre_personnes_vivants_au_foyer = result.nombre_personnes_vivants_au_foyer, revenu_fiscal_reference = result.revenu_fiscal_reference, criteres_applicables = result.criteres_applicables, nombre_unites = result.nombre_unites, quotient_familial = result.quotient_familial))
     revenu_fiscal_reference = (calcul_quotient_familial.revenu_fiscal_reference)
+    criteres_applicables = (calcul_quotient_familial.criteres_applicables)
+    nombre_personnes_vivants_au_foyer = (calcul_quotient_familial.nombre_personnes_vivants_au_foyer)
     nombre_unites = (calcul_quotient_familial.nombre_unites)
     quotient_familial__1 = (calcul_quotient_familial.quotient_familial)
-    return CalculQuotientFamilialAideScolarite(revenu_fiscal_reference = revenu_fiscal_reference, nombre_unites = nombre_unites, quotient_familial = quotient_familial__1)
+    return CalculQuotientFamilialAideScolarite(revenu_fiscal_reference = revenu_fiscal_reference, criteres_applicables = criteres_applicables, nombre_personnes_vivants_au_foyer = nombre_personnes_vivants_au_foyer, nombre_unites = nombre_unites, quotient_familial = quotient_familial__1)
 
 def calcul_points_trajet(calcul_points_trajet_in:CalculPointsTrajetIn) -> CalculPointsTrajet:
     trajet__1 = (calcul_points_trajet_in.trajet_in)
@@ -228,8 +222,8 @@ def calcul_points_aide_scolarite(calcul_points_aide_scolarite_in:CalculPointsAid
     montant_materiel_specifique = (calcul_points_aide_scolarite_in.montant_materiel_specifique_in)
     valeur_point = (calcul_points_aide_scolarite_in.valeur_point_in)
     etudiant_en_filiere_post_bac = (calcul_points_aide_scolarite_in.etudiant_en_filiere_post_bac_in)
-    points_domiciliation_separee = (Option(CatalaTuple(Decimal('2'), loc[7])))
-    criteres_applicables_base = (Option(CatalaTuple(Array([]), loc[8])))
+    points_domiciliation_separee = (Option(CatalaTuple(Decimal('2'), loc[5])))
+    criteres_applicables_base = (Option(CatalaTuple(Array([]), loc[6])))
     if trajet_depuis_domicile_etudiant.value is not None:
         criteres_applicables_domiciliation_separee__2 = (Bool(True))
     else:
@@ -238,19 +232,19 @@ def calcul_points_aide_scolarite(calcul_points_aide_scolarite_in:CalculPointsAid
         if criteres_applicables_base.value is not None:
             criteres_applicables_domiciliation_separee__3 = (criteres_applicables_base.value[0])
         else:
-            raise NoValue(loc[9])
+            raise NoValue(loc[7])
         if points_domiciliation_separee.value is not None:
             criteres_applicables_domiciliation_separee__4 = (points_domiciliation_separee.value[0])
         else:
-            raise NoValue(loc[10])
+            raise NoValue(loc[8])
         criteres_applicables_domiciliation_separee__1 = ((criteres_applicables_domiciliation_separee__3 + Array([Criteres(Criteres.Code.C2_domiciliation_separee,
                                                                                                                  criteres_applicables_domiciliation_separee__4)])))
     else:
         if criteres_applicables_base.value is not None:
             criteres_applicables_domiciliation_separee__1 = (criteres_applicables_base.value[0])
         else:
-            raise NoValue(loc[11])
-    criteres_applicables_domiciliation_separee = (Option(CatalaTuple(criteres_applicables_domiciliation_separee__1, loc[8])))
+            raise NoValue(loc[9])
+    criteres_applicables_domiciliation_separee = (Option(CatalaTuple(criteres_applicables_domiciliation_separee__1, loc[6])))
     result = (calcul_points_trajet(CalculPointsTrajetIn(trajet_in = Option(trajet_depuis_domicile_agent))))
     points_domicile_agent = (CalculPointsTrajet(nb_points = result.nb_points).nb_points)
     result__1 = (calcul_points_trajet(CalculPointsTrajetIn(trajet_in = trajet_depuis_domicile_etudiant)))
@@ -258,12 +252,12 @@ def calcul_points_aide_scolarite(calcul_points_aide_scolarite_in:CalculPointsAid
     if points_domiciliation_separee.value is not None:
         criteres_applicables_eloignement__2 = (points_domiciliation_separee.value[0])
     else:
-        raise NoValue(loc[12])
+        raise NoValue(loc[10])
     if ((points_domicile_etudiant > Decimal('0')) and (points_domicile_etudiant >= (points_domicile_agent - criteres_applicables_eloignement__2))):
         if criteres_applicables_domiciliation_separee.value is not None:
             criteres_applicables_eloignement__3 = (criteres_applicables_domiciliation_separee.value[0])
         else:
-            raise NoValue(loc[13])
+            raise NoValue(loc[11])
         criteres_applicables_eloignement__1 = ((criteres_applicables_eloignement__3 + Array([Criteres(Criteres.Code.C3_eloignement_etudiant,
                                                                                              points_domicile_etudiant)])))
     else:
@@ -275,7 +269,7 @@ def calcul_points_aide_scolarite(calcul_points_aide_scolarite_in:CalculPointsAid
             if criteres_applicables_domiciliation_separee.value is not None:
                 result__3 = (criteres_applicables_domiciliation_separee.value[0])
             else:
-                raise NoValue(loc[14])
+                raise NoValue(loc[12])
             result__2 = (retrait_critere_c2(RetraitCritereC2In(criteres_in = result__3)))
             criteres_applicables_eloignement__1 = ((RetraitCritereC2(criteres_sans_c2 = result__2.criteres_sans_c2).criteres_sans_c2 + Array([Criteres(Criteres.Code.C3_eloignement_agent,
                                                                                                                                               points_domicile_agent)])))
@@ -283,34 +277,37 @@ def calcul_points_aide_scolarite(calcul_points_aide_scolarite_in:CalculPointsAid
             if criteres_applicables_domiciliation_separee.value is not None:
                 criteres_applicables_eloignement__1 = (criteres_applicables_domiciliation_separee.value[0])
             else:
-                raise NoValue(loc[15])
-    criteres_applicables_eloignement = (Option(CatalaTuple(criteres_applicables_eloignement__1, loc[8])))
-    def _points__2(x:Money, y:Money):
-        if (x < y):
-            return x
+                raise NoValue(loc[13])
+    criteres_applicables_eloignement = (Option(CatalaTuple(criteres_applicables_eloignement__1, loc[6])))
+    if (valeur_point > Money('0.00')):
+        def _points__2(x:Money, y:Money):
+            if (x < y):
+                return x
+            else:
+                return y
+        points__2 = Function(_points__2)
+        points__3 = (Array([(valeur_point * Decimal('2')),
+                            montant_materiel_specifique]).reduce(points__2))
+        if points__3.value is not None:
+            points__1 = (points__3.value)
         else:
-            return y
-    points__2 = Function(_points__2)
-    points__3 = (Array([(valeur_point * Decimal('2')),
-                        montant_materiel_specifique]).reduce(points__2))
-    if points__3.value is not None:
-        points__1 = (points__3.value)
+            raise ListEmpty(loc[14])
+        points = ((points__1).__truediv__(valeur_point, pos=loc[15]))
     else:
-        raise ListEmpty(loc[16])
-    points = ((points__1).__truediv__(valeur_point, pos=loc[17]))
+        points = (Decimal('0'))
     if (points > Decimal('0')):
         if criteres_applicables_eloignement.value is not None:
             criteres_applicables_materiel_specifique__2 = (criteres_applicables_eloignement.value[0])
         else:
-            raise NoValue(loc[18])
+            raise NoValue(loc[16])
         criteres_applicables_materiel_specifique__1 = ((criteres_applicables_materiel_specifique__2 + Array([Criteres(Criteres.Code.C4_materiel,
                                                                                                              points)])))
     else:
         if criteres_applicables_eloignement.value is not None:
             criteres_applicables_materiel_specifique__1 = (criteres_applicables_eloignement.value[0])
         else:
-            raise NoValue(loc[19])
-    criteres_applicables_materiel_specifique = (Option(CatalaTuple(criteres_applicables_materiel_specifique__1, loc[8])))
+            raise NoValue(loc[17])
+    criteres_applicables_materiel_specifique = (Option(CatalaTuple(criteres_applicables_materiel_specifique__1, loc[6])))
     def _criteres_applicables_etudes_superieures__1(critere:Criteres):
         if critere.code == Criteres.Code.C2_domiciliation_separee:
             criteres_applicables_etudes_superieures__2 = (Bool(True))
@@ -337,25 +334,25 @@ def calcul_points_aide_scolarite(calcul_points_aide_scolarite_in:CalculPointsAid
         if criteres_applicables_materiel_specifique.value is not None:
             criteres_applicables_etudes_superieures__4 = (criteres_applicables_materiel_specifique.value[0])
         else:
-            raise NoValue(loc[21])
+            raise NoValue(loc[19])
         return (criteres_applicables_etudes_superieures__2 or Bool(criteres_applicables_etudes_superieures__4.find(criteres_applicables_etudes_superieures__3).value is not None))
     criteres_applicables_etudes_superieures__1 = Function(_criteres_applicables_etudes_superieures__1)
     if criteres_applicables_materiel_specifique.value is not None:
         criteres_applicables_etudes_superieures__5 = (criteres_applicables_materiel_specifique.value[0])
     else:
-        raise NoValue(loc[20])
+        raise NoValue(loc[18])
     if (etudiant_en_filiere_post_bac and Bool(criteres_applicables_etudes_superieures__5.find(criteres_applicables_etudes_superieures__1).value is not None)):
         if criteres_applicables_materiel_specifique.value is not None:
             criteres_applicables_etudes_superieures__6 = (criteres_applicables_materiel_specifique.value[0])
         else:
-            raise NoValue(loc[22])
+            raise NoValue(loc[20])
         criteres_applicables_etudes_superieures = ((criteres_applicables_etudes_superieures__6 + Array([Criteres(Criteres.Code.C5_etudes_superieures,
                                                                                                         Decimal('1'))])))
     else:
         if criteres_applicables_materiel_specifique.value is not None:
             criteres_applicables_etudes_superieures = (criteres_applicables_materiel_specifique.value[0])
         else:
-            raise NoValue(loc[23])
+            raise NoValue(loc[21])
     def _nb_points__1(c:Criteres):
         if c.code == Criteres.Code.C2_domiciliation_separee:
             return c.payload
@@ -368,5 +365,29 @@ def calcul_points_aide_scolarite(calcul_points_aide_scolarite_in:CalculPointsAid
         elif c.code == Criteres.Code.C5_etudes_superieures:
             return c.payload
     nb_points__1 = Function(_nb_points__1)
-    nb_points = (decimal_fr.somme(criteres_applicables_etudes_superieures.map(nb_points__1)))
+    nb_points = (decimal_fr.somme(map(nb_points__1, criteres_applicables_etudes_superieures)))
     return CalculPointsAideScolarite(criteres_applicables = criteres_applicables_etudes_superieures, nb_points = nb_points)
+
+def calcul_aide_scolarite(calcul_aide_scolarite_in:CalculAideScolariteIn) -> CalculAideScolarite:
+    quotient_familial__1 = (calcul_aide_scolarite_in.quotient_familial_in)
+    trajet_depuis_domicile_agent = (calcul_aide_scolarite_in.trajet_depuis_domicile_agent_in)
+    trajet_depuis_domicile_etudiant = (calcul_aide_scolarite_in.trajet_depuis_domicile_etudiant_in)
+    montant_materiel_specifique = (calcul_aide_scolarite_in.montant_materiel_specifique_in)
+    etudiant_en_filiere_post_bac = (calcul_aide_scolarite_in.etudiant_en_filiere_post_bac_in)
+    if (quotient_familial__1 < Money('780.00')):
+        valeur_point = (Money('100.00'))
+    elif (quotient_familial__1 < Money('930.00')):
+        valeur_point = (Money('75.00'))
+    elif (quotient_familial__1 < Money('1090.00')):
+        valeur_point = (Money('50.00'))
+    else:
+        valeur_point = (Money('0.00'))
+    result = (calcul_points_aide_scolarite(CalculPointsAideScolariteIn(trajet_depuis_domicile_agent_in = trajet_depuis_domicile_agent, trajet_depuis_domicile_etudiant_in = trajet_depuis_domicile_etudiant, montant_materiel_specifique_in = montant_materiel_specifique, valeur_point_in = valeur_point, etudiant_en_filiere_post_bac_in = etudiant_en_filiere_post_bac)))
+    calcul_points = (CalculPointsAideScolarite(criteres_applicables = result.criteres_applicables, nb_points = result.nb_points))
+    criteres_applicables = (calcul_points.criteres_applicables)
+    nb_points = (calcul_points.nb_points)
+    if (quotient_familial__1 > Money('1090.00')):
+        aide_scolarite = (CatalaTuple(Money('0.00'), loc[4])[0])
+    else:
+        aide_scolarite = (CatalaTuple((valeur_point * nb_points), loc[0])[0])
+    return CalculAideScolarite(valeur_point = valeur_point, criteres_applicables = criteres_applicables, nb_points = nb_points, aide_scolarite = aide_scolarite)

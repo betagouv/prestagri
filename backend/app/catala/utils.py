@@ -1,4 +1,4 @@
-from .generated.catala_runtime import Money as Money_cat, Integer
+from .generated.catala_runtime import Money as Money_cat, Integer, CatalaEnum
 from .generated.Foyer_fiscal import FoyerFiscal as Foyer_fiscal_cat
 from .generated.Trajet import Trajet as Trajet_cat
 from .generated.Menage import Menage as Menage_cat
@@ -32,3 +32,6 @@ def to_trajet(trajet: Trajet) -> Trajet_cat:
 def to_float(_mpq: mpq):
     [a, b] = _mpq.as_integer_ratio()
     return float(round(a / b, 5))
+
+def cat_enum_to_string(enum: CatalaEnum) -> str :
+    return str(enum.code) + " : " + str(enum.payload)

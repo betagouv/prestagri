@@ -59,7 +59,13 @@ champ d'application TestAideScolarite1:
   définition calcul égal à
     résultat de Aide_scolarite.CalculAideScolarite avec {
       -- quotient_familial: 2500€
-      -- nb_points: 12,0
+      -- trajet_depuis_domicile_agent: Trajet {
+        -- distance_km: 100
+        --durée_minutes: 20
+      }
+      -- trajet_depuis_domicile_étudiant: Absent
+      -- montant_matériel_spécifique : 1000 €
+      -- étudiant_en_filière_post_bac : vrai
     }
   assertion (calcul.aide_scolarite = 0 €)
 ```

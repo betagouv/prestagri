@@ -55,8 +55,14 @@ explications pour le calcul des points à la fin de cette Fiche F16).
 ```catala-metadata
 déclaration champ d'application CalculAideScolarite:
   entrée quotient_familial contenu argent
-  entrée nb_points contenu décimal
-  interne valeur_point contenu argent
+  entrée trajet_depuis_domicile_agent contenu Trajet
+  entrée trajet_depuis_domicile_étudiant contenu optionnel de Trajet
+  entrée montant_matériel_spécifique contenu argent
+  entrée étudiant_en_filière_post_bac contenu booléen
+  calcul_points champ d'application CalculPointsAideScolarite
+  résultat valeur_point contenu argent
+  résultat critères_applicables contenu liste de Critères
+  résultat nb_points contenu décimal
   résultat aide_scolarite contenu argent
 ```
 
@@ -70,6 +76,14 @@ champ d'application CalculAideScolarite:
     sinon si quotient_familial < 1090 €
       alors 50 €
     sinon 0 €
+  définition calcul_points.valeur_point égal à valeur_point 
+  définition calcul_points.trajet_depuis_domicile_agent égal à trajet_depuis_domicile_agent 
+  définition calcul_points.trajet_depuis_domicile_étudiant égal à trajet_depuis_domicile_étudiant 
+  définition calcul_points.montant_matériel_spécifique égal à montant_matériel_spécifique 
+  définition calcul_points.étudiant_en_filière_post_bac égal à étudiant_en_filière_post_bac 
+  définition critères_applicables égal à calcul_points.critères_applicables
+  définition nb_points égal à calcul_points.nb_points
+
 ```
 
 ## Conditions d'attribution :
@@ -128,6 +142,8 @@ déclaration champ d'application CalculQuotientFamilialAideScolarite:
   interne menage contenu Menage
   calcul_quotient_familial champ d'application Quotient_familial.CalculQuotientFamilial
   résultat revenu_fiscal_reference contenu argent
+  résultat critères_applicables contenu liste de Quotient_familial.Critères
+  résultat nombre_personnes_vivants_au_foyer contenu décimal
   résultat nombre_unités contenu décimal
   résultat quotient_familial contenu argent
 ```
@@ -138,6 +154,8 @@ champ d'application CalculQuotientFamilialAideScolarite:
   définition calcul_quotient_familial.menage égal à menage
   définition revenu_fiscal_reference égal à calcul_quotient_familial.revenu_fiscal_reference
   définition nombre_unités égal à calcul_quotient_familial.nombre_unités
+  définition critères_applicables égal à calcul_quotient_familial.critères_applicables
+  définition nombre_personnes_vivants_au_foyer égal à calcul_quotient_familial.nombre_personnes_vivants_au_foyer
   définition quotient_familial égal à calcul_quotient_familial.quotient_familial
 ```
 
@@ -319,7 +337,11 @@ champ d'application CalculPointsAideScolarite:
   définition critères_applicables état matériel_spécifique
   égal à 
     soit montant_eligible égal à minimum de [2,0*valeur_point; montant_matériel_spécifique] dans
-    soit points égal à montant_eligible/valeur_point dans
+    soit points égal à 
+      si valeur_point > 0 €
+      alors montant_eligible/valeur_point
+      sinon 0,0
+    dans
     si points > 0,0 
     alors critères_applicables ++ [ C4_matériel contenu points]
     sinon critères_applicables 
