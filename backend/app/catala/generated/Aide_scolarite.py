@@ -27,6 +27,14 @@ class Criteres(CatalaEnum):
         C4_materiel = 'C4_matériel' # content Decimal
         C5_etudes_superieures = 'C5_études_supérieures' # content Decimal
 
+class CalculAideScolarite(CatalaStruct):
+    __slots__ = ('aide_scolarite')
+    aide_scolarite: Money
+    name = 'CalculAideScolarite'
+    fields = {
+        'aide_scolarite': 'aide_scolarite', # content Money
+    }
+
 class CalculQuotientFamilialAideScolarite(CatalaStruct):
     __slots__ = ('revenu_fiscal_reference', 'nombre_unites', 'quotient_familial')
     revenu_fiscal_reference: Money
@@ -37,14 +45,6 @@ class CalculQuotientFamilialAideScolarite(CatalaStruct):
         'revenu_fiscal_reference': 'revenu_fiscal_reference', # content Money
         'nombre_unites': 'nombre_unités', # content Decimal
         'quotient_familial': 'quotient_familial', # content Money
-    }
-
-class CalculAideScolarite(CatalaStruct):
-    __slots__ = ('aide_scolarite')
-    aide_scolarite: Money
-    name = 'CalculAideScolarite'
-    fields = {
-        'aide_scolarite': 'aide_scolarite', # content Money
     }
 
 class CalculPointsAideScolarite(CatalaStruct):
@@ -73,16 +73,6 @@ class RetraitCritereC2(CatalaStruct):
         'criteres_sans_c2': 'critères_sans_c2', # content List[Criteres]
     }
 
-class CalculQuotientFamilialAideScolariteIn(CatalaStruct):
-    __slots__ = ('foyer_fiscal_agent_in', 'etudiants_fiscalement_independants_in')
-    foyer_fiscal_agent_in: menage.Menage
-    etudiants_fiscalement_independants_in: List[foyer_fiscal.FoyerFiscal]
-    name = 'CalculQuotientFamilialAideScolarite_in'
-    fields = {
-        'foyer_fiscal_agent_in': 'foyer_fiscal_agent_in', # content menage.Menage
-        'etudiants_fiscalement_independants_in': 'étudiants_fiscalement_indépendants_in', # content List[foyer_fiscal.FoyerFiscal]
-    }
-
 class CalculAideScolariteIn(CatalaStruct):
     __slots__ = ('quotient_familial_in', 'nb_points_in')
     quotient_familial_in: Money
@@ -91,6 +81,16 @@ class CalculAideScolariteIn(CatalaStruct):
     fields = {
         'quotient_familial_in': 'quotient_familial_in', # content Money
         'nb_points_in': 'nb_points_in', # content Decimal
+    }
+
+class CalculQuotientFamilialAideScolariteIn(CatalaStruct):
+    __slots__ = ('foyer_fiscal_agent_in', 'etudiants_fiscalement_independants_in')
+    foyer_fiscal_agent_in: menage.Menage
+    etudiants_fiscalement_independants_in: List[foyer_fiscal.FoyerFiscal]
+    name = 'CalculQuotientFamilialAideScolarite_in'
+    fields = {
+        'foyer_fiscal_agent_in': 'foyer_fiscal_agent_in', # content menage.Menage
+        'etudiants_fiscalement_independants_in': 'étudiants_fiscalement_indépendants_in', # content List[foyer_fiscal.FoyerFiscal]
     }
 
 class CalculPointsAideScolariteIn(CatalaStruct):
@@ -126,53 +126,43 @@ class RetraitCritereC2In(CatalaStruct):
     }
 
 
-loc = (Array([SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=106, start_column=11, end_line=106, end_column=17, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=116, start_column=14, end_line=116, end_column=45, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=138, start_column=22, end_line=139, end_column=120, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=156, start_column=11, end_line=156, end_column=23, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=157, start_column=12, end_line=157, end_column=26, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=163, start_column=80, end_line=163, end_column=92, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=173, start_column=22, end_line=173, end_column=25, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=195, start_column=11, end_line=195, end_column=39, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=196, start_column=12, end_line=196, end_column=32, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=232, start_column=11, end_line=232, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=232, start_column=70, end_line=232, end_column=98, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=233, start_column=11, end_line=233, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=257, start_column=95, end_line=257, end_column=123, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=258, start_column=13, end_line=258, end_column=33, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=260, start_column=64, end_line=260, end_column=84, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=261, start_column=15, end_line=261, end_column=35, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=308, start_column=34, end_line=308, end_column=92, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=309, start_column=24, end_line=309, end_column=53, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=311, start_column=11, end_line=311, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=312, start_column=11, end_line=312, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=326, start_column=30, end_line=326, end_column=50, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=327, start_column=31, end_line=327, end_column=51, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=328, start_column=11, end_line=328, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=329, start_column=11, end_line=329, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"])]))
-
-def calcul_quotient_familial_aide_scolarite(calcul_quotient_familial_aide_scolarite_in:CalculQuotientFamilialAideScolariteIn) -> CalculQuotientFamilialAideScolarite:
-    foyer_fiscal_agent = (calcul_quotient_familial_aide_scolarite_in.foyer_fiscal_agent_in)
-    etudiants_fiscalement_independants = (calcul_quotient_familial_aide_scolarite_in.etudiants_fiscalement_independants_in)
-    if (len(etudiants_fiscalement_independants) > 0):
-        menage__1 = (Option(CatalaTuple(menage.Menage(beneficiaire_porteur_handicap = foyer_fiscal_agent.beneficiaire_porteur_handicap, garde_alternee = foyer_fiscal_agent.garde_alternee, parent_isole = foyer_fiscal_agent.parent_isole, outre_mer = foyer_fiscal_agent.outre_mer, membres_du_foyer = (foyer_fiscal_agent.membres_du_foyer + etudiants_fiscalement_independants)), loc[2])))
-    else:
-        menage__1 = (Option(CatalaTuple(foyer_fiscal_agent, loc[0])))
-    if menage__1.value is not None:
-        result__1 = (menage__1.value[0])
-    else:
-        raise NoValue(loc[1])
-    result = (quotient_familial.calcul_quotient_familial(quotient_familial.CalculQuotientFamilialIn(menage_in = result__1)))
-    calcul_quotient_familial = (quotient_familial.CalculQuotientFamilial(revenu_fiscal_reference = result.revenu_fiscal_reference, nombre_unites = result.nombre_unites, quotient_familial = result.quotient_familial))
-    revenu_fiscal_reference = (calcul_quotient_familial.revenu_fiscal_reference)
-    nombre_unites = (calcul_quotient_familial.nombre_unites)
-    quotient_familial__1 = (calcul_quotient_familial.quotient_familial)
-    return CalculQuotientFamilialAideScolarite(revenu_fiscal_reference = revenu_fiscal_reference, nombre_unites = nombre_unites, quotient_familial = quotient_familial__1)
+loc = (Array([SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=59, start_column=11, end_line=59, end_column=23, law_headings=["Montant de l'aide :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=60, start_column=12, end_line=60, end_column=26, law_headings=["Montant de l'aide :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=128, start_column=11, end_line=128, end_column=17, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=138, start_column=14, end_line=138, end_column=45, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=160, start_column=22, end_line=161, end_column=120, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=176, start_column=80, end_line=176, end_column=92, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=186, start_column=22, end_line=186, end_column=25, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=208, start_column=11, end_line=208, end_column=39, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=209, start_column=12, end_line=209, end_column=32, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=245, start_column=11, end_line=245, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=245, start_column=70, end_line=245, end_column=98, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=246, start_column=11, end_line=246, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=270, start_column=95, end_line=270, end_column=123, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=271, start_column=13, end_line=271, end_column=33, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=273, start_column=64, end_line=273, end_column=84, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=274, start_column=15, end_line=274, end_column=35, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=321, start_column=34, end_line=321, end_column=92, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=322, start_column=24, end_line=322, end_column=53, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=324, start_column=11, end_line=324, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=325, start_column=11, end_line=325, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=339, start_column=30, end_line=339, end_column=50, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=340, start_column=31, end_line=340, end_column=51, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=341, start_column=11, end_line=341, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=342, start_column=11, end_line=342, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"])]))
 
 def calcul_aide_scolarite(calcul_aide_scolarite_in:CalculAideScolariteIn) -> CalculAideScolarite:
     quotient_familial__1 = (calcul_aide_scolarite_in.quotient_familial_in)
     nb_points = (calcul_aide_scolarite_in.nb_points_in)
-    valeur_point = (Option(CatalaTuple(quotient_familial__1, loc[3])))
+    if (quotient_familial__1 < Money('780.00')):
+        valeur_point__1 = (Money('100.00'))
+    elif (quotient_familial__1 < Money('930.00')):
+        valeur_point__1 = (Money('75.00'))
+    elif (quotient_familial__1 < Money('1090.00')):
+        valeur_point__1 = (Money('50.00'))
+    else:
+        valeur_point__1 = (Money('0.00'))
+    valeur_point = (Option(CatalaTuple(valeur_point__1, loc[0])))
     if (quotient_familial__1 > Money('1090.00')):
         aide_scolarite = (CatalaTuple(Money('0.00'), loc[6])[0])
     else:
@@ -180,8 +170,26 @@ def calcul_aide_scolarite(calcul_aide_scolarite_in:CalculAideScolariteIn) -> Cal
             aide_scolarite__1 = (valeur_point.value[0])
         else:
             raise NoValue(loc[5])
-        aide_scolarite = (CatalaTuple((aide_scolarite__1 * nb_points), loc[4])[0])
+        aide_scolarite = (CatalaTuple((aide_scolarite__1 * nb_points), loc[1])[0])
     return CalculAideScolarite(aide_scolarite = aide_scolarite)
+
+def calcul_quotient_familial_aide_scolarite(calcul_quotient_familial_aide_scolarite_in:CalculQuotientFamilialAideScolariteIn) -> CalculQuotientFamilialAideScolarite:
+    foyer_fiscal_agent = (calcul_quotient_familial_aide_scolarite_in.foyer_fiscal_agent_in)
+    etudiants_fiscalement_independants = (calcul_quotient_familial_aide_scolarite_in.etudiants_fiscalement_independants_in)
+    if (etudiants_fiscalement_independants.length() > Integer(0)):
+        menage__1 = (Option(CatalaTuple(menage.Menage(beneficiaire_porteur_handicap = foyer_fiscal_agent.beneficiaire_porteur_handicap, garde_alternee = foyer_fiscal_agent.garde_alternee, parent_isole = foyer_fiscal_agent.parent_isole, outre_mer = foyer_fiscal_agent.outre_mer, membres_du_foyer = (foyer_fiscal_agent.membres_du_foyer + etudiants_fiscalement_independants)), loc[4])))
+    else:
+        menage__1 = (Option(CatalaTuple(foyer_fiscal_agent, loc[2])))
+    if menage__1.value is not None:
+        result__1 = (menage__1.value[0])
+    else:
+        raise NoValue(loc[3])
+    result = (quotient_familial.calcul_quotient_familial(quotient_familial.CalculQuotientFamilialIn(menage_in = result__1)))
+    calcul_quotient_familial = (quotient_familial.CalculQuotientFamilial(revenu_fiscal_reference = result.revenu_fiscal_reference, criteres_applicables = result.criteres_applicables, nombre_unites = result.nombre_unites, quotient_familial = result.quotient_familial))
+    revenu_fiscal_reference = (calcul_quotient_familial.revenu_fiscal_reference)
+    nombre_unites = (calcul_quotient_familial.nombre_unites)
+    quotient_familial__1 = (calcul_quotient_familial.quotient_familial)
+    return CalculQuotientFamilialAideScolarite(revenu_fiscal_reference = revenu_fiscal_reference, nombre_unites = nombre_unites, quotient_familial = quotient_familial__1)
 
 def calcul_points_trajet(calcul_points_trajet_in:CalculPointsTrajetIn) -> CalculPointsTrajet:
     trajet__1 = (calcul_points_trajet_in.trajet_in)
