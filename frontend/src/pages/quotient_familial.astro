@@ -99,7 +99,7 @@ import DsfrLayout from "../layouts/dsfrLayout.astro"
 <script>
     let calculForm = document.getElementById("calculForm");
     calculForm?.addEventListener("submit", (e) => {
-    let url = "http://localhost:8000/quotient_familial?" +
+    let url = "https://api.prest-agri.beta.gouv.fr/quotient_familial?" +
         "foyer_fiscal_agent_revenu="+ (document.getElementById('agent_revenu') as HTMLInputElement).value +"&"+
         "foyer_fiscal_agent_membres="+ (document.getElementById('agent_personnes') as HTMLInputElement).value +"&"+
         "foyer_fiscal_conjoint_revenu="+ ((document.getElementById('conjoint_revenu') as HTMLInputElement).value || 0) +"&"+
