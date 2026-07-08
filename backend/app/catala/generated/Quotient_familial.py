@@ -67,11 +67,11 @@ def calcul_quotient_familial(calcul_quotient_familial_in:CalculQuotientFamilialI
     def _nombre_personnes_vivants_au_foyer__1(personne:foyer_fiscal.FoyerFiscal):
         return personne.nombre_personnes
     nombre_personnes_vivants_au_foyer__1 = Function(_nombre_personnes_vivants_au_foyer__1)
-    nombre_personnes_vivants_au_foyer = (Option(CatalaTuple(Decimal(integer_fr.somme(menage__1.membres_du_foyer.map(nombre_personnes_vivants_au_foyer__1))), loc[0])))
+    nombre_personnes_vivants_au_foyer = (Option(CatalaTuple(Decimal(integer_fr.somme(map(nombre_personnes_vivants_au_foyer__1, menage__1.membres_du_foyer))), loc[0])))
     def _revenu_total__1(personne__1:foyer_fiscal.FoyerFiscal):
         return personne__1.revenu_fiscal_reference
     revenu_total__1 = Function(_revenu_total__1)
-    revenu_total = (Option(CatalaTuple(money_fr.somme(menage__1.membres_du_foyer.map(revenu_total__1)), loc[1])))
+    revenu_total = (Option(CatalaTuple(money_fr.somme(map(revenu_total__1, menage__1.membres_du_foyer)), loc[1])))
     if menage__1.outre_mer:
         if revenu_total.value is not None:
             revenu_fiscal_reference__1 = (revenu_total.value[0])
@@ -135,6 +135,6 @@ def calcul_quotient_familial(calcul_quotient_familial_in:CalculQuotientFamilialI
         nombre_unites__2 = (nombre_personnes_vivants_au_foyer.value[0])
     else:
         raise NoValue(loc[4])
-    nombre_unites = ((decimal_fr.somme(criteres_applicables_garde_alternee.map(nombre_unites__1)) + nombre_unites__2))
+    nombre_unites = ((decimal_fr.somme(map(nombre_unites__1, criteres_applicables_garde_alternee)) + nombre_unites__2))
     quotient_familial = (Money((Decimal(revenu_fiscal_reference)).__truediv__((Decimal(Integer(12)) * nombre_unites), pos=loc[6])))
     return CalculQuotientFamilial(revenu_fiscal_reference = revenu_fiscal_reference, criteres_applicables = criteres_applicables_garde_alternee, nombre_unites = nombre_unites, quotient_familial = quotient_familial)
