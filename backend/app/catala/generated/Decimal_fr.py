@@ -3,64 +3,66 @@
 from .catala_runtime import *
 from typing import Any, List, Callable, Tuple
 from enum import Enum
+from sys import stderr
 from . import Decimal_internal as decimal_internal
 
 
-def min(d1:Decimal, d2:Decimal):
+def min(d1:Decimal, d2:Decimal) -> Decimal:
     if (d1 > d2):
         min__1 = (d2)
     else:
         min__1 = (d1)
     return min__1
 
-def max(d1:Decimal, d2:Decimal):
+def max(d1:Decimal, d2:Decimal) -> Decimal:
     if (d1 > d2):
         max__1 = (d1)
     else:
         max__1 = (d2)
     return max__1
 
-def troncature(d:Decimal):
-    if (d == decimal_of_string("0")):
-        troncature__1 = (decimal_of_string("0"))
-    elif (d > decimal_of_string("0")):
-        troncature__1 = (decimal_round((d - decimal_of_string("1/2"))))
-    else:
-        troncature__1 = (decimal_round((d + decimal_of_string("1/2"))))
-    return troncature__1
-
-def arrondi_a_la_decimale(d:Decimal, nieme_decimale:Integer):
-    return decimal_internal.round_to_decimal(d, nieme_decimale)
-
-def somme(l:List[Decimal]):
-    def somme__1(total:Decimal, x:Decimal):
-        return (total + x)
-    return list_fold_left(somme__1, decimal_of_string("0"), l)
-
-def plafond(d:Decimal, valeur_max:Decimal):
+def plafond(d:Decimal, valeur_max:Decimal) -> Decimal:
     return min(d, valeur_max)
 
-def plancher(d:Decimal, valeur_min:Decimal):
+def plancher(d:Decimal, valeur_min:Decimal) -> Decimal:
     return max(d, valeur_min)
 
-def arrondi_par_defaut(d:Decimal):
-    if (d > decimal_of_string("0")):
+def positif(d:Decimal) -> Decimal:
+    return plancher(d, Decimal('0'))
+
+def troncature(d:Decimal) -> Decimal:
+    if (d == Decimal('0')):
+        troncature__1 = (Decimal('0'))
+    elif (d > Decimal('0')):
+        troncature__1 = (((d - Decimal('1/2'))).round())
+    else:
+        troncature__1 = (((d + Decimal('1/2'))).round())
+    return troncature__1
+
+def arrondi_par_exces(d:Decimal) -> Decimal:
+    if (d >= Decimal('0')):
+        if (troncature(d) == d):
+            arrondi_par_exces__1 = (d)
+        else:
+            arrondi_par_exces__1 = (troncature((d + Decimal('1'))))
+    else:
+        arrondi_par_exces__1 = (((d + Decimal('1/2'))).round())
+    return arrondi_par_exces__1
+
+def arrondi_par_defaut(d:Decimal) -> Decimal:
+    if (d > Decimal('0')):
         arrondi_par_defaut__1 = (troncature(d))
     elif (troncature(d) == d):
         arrondi_par_defaut__1 = (d)
     else:
-        arrondi_par_defaut__1 = (troncature((d - decimal_of_string("1"))))
+        arrondi_par_defaut__1 = (troncature((d - Decimal('1'))))
     return arrondi_par_defaut__1
 
-def arrondi_par_exces(d:Decimal):
-    if (d >= decimal_of_string("0")):
-        if (troncature(d) == d):
-            arrondi_par_exces__1 = (d)
-        else:
-            arrondi_par_exces__1 = (troncature((d + decimal_of_string("1"))))
-    else:
-        arrondi_par_exces__1 = (decimal_round((d + decimal_of_string("1/2"))))
-    return arrondi_par_exces__1
+def arrondi_a_la_decimale(d:Decimal, nieme_decimale:Integer) -> Decimal:
+    return decimal_internal.round_to_decimal(d, nieme_decimale)
 
-def positif(d:Decimal):
-    return plancher(d, decimal_of_string("0"))
+def somme(l:List[Decimal]) -> Decimal:
+    def _somme__1(total:Decimal, x:Decimal):
+        return (total + x)
+    somme__1 = Function(_somme__1)
+    return l.fold_left(somme__1, Decimal('0'))

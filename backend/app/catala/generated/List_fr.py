@@ -3,29 +3,30 @@
 from .catala_runtime import *
 from typing import Any, List, Callable, Tuple
 from enum import Enum
+from sys import stderr
 from . import List_internal as list_internal
 
 
-def sequence(debut:Integer, fin:Integer):
+def sequence(debut:Integer, fin:Integer) -> List[Integer]:
     return list_internal.sequence(debut, fin)
 
-def nieme_element(l:List[Any], index:Integer):
+def nieme_element(l:List[Any], index:Integer) -> Option[Any]:
     return list_internal.nth_element(l, index)
 
-def retire_nieme_element(l:List[Any], index:Integer):
+def premier_element(l:List[Any]) -> Option[Any]:
+    return nieme_element(l, Integer(1))
+
+def dernier_element(l:List[Any]) -> Option[Any]:
+    return nieme_element(l, l.length())
+
+def retire_nieme_element(l:List[Any], index:Integer) -> List[Any]:
     return list_internal.remove_nth_element(l, index)
 
-def retire_premier_element(l:List[Any]):
+def retire_premier_element(l:List[Any]) -> List[Any]:
     return list_internal.remove_nth_element(l, Integer(1))
 
-def retire_dernier_element(l:List[Any]):
-    return list_internal.remove_nth_element(l, list_length(l))
+def retire_dernier_element(l:List[Any]) -> List[Any]:
+    return list_internal.remove_nth_element(l, l.length())
 
-def inverse(l:List[Any]):
+def inverse(l:List[Any]) -> List[Any]:
     return list_internal.reverse(l)
-
-def dernier_element(l:List[Any]):
-    return nieme_element(l, list_length(l))
-
-def premier_element(l:List[Any]):
-    return nieme_element(l, Integer(1))

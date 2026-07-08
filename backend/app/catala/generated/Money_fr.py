@@ -3,65 +3,64 @@
 from .catala_runtime import *
 from typing import Any, List, Callable, Tuple
 from enum import Enum
+from sys import stderr
 from . import Money_internal as money_internal
 
 
-def min(m1:Money, m2:Money):
+def min(m1:Money, m2:Money) -> Money:
     if (m1 > m2):
         min__1 = (m2)
     else:
         min__1 = (m1)
     return min__1
 
-def max(m1:Money, m2:Money):
+def max(m1:Money, m2:Money) -> Money:
     if (m1 > m2):
         max__1 = (m1)
     else:
         max__1 = (m2)
     return max__1
 
-def troncature(a:Money):
-    if (a == Money(Integer(0))):
-        troncature__1 = (Money(Integer(0)))
-    elif (a > Money(Integer(0))):
-        troncature__1 = (money_round((a - Money(Integer(50)))))
-    else:
-        troncature__1 = (money_round((a + Money(Integer(50)))))
-    return troncature__1
-
-def arrondi_par_exces(a:Money):
-    if (a >= Money(Integer(0))):
-        arrondi_par_exces__1 = (money_round((a + Money(Integer(49)))))
-    else:
-        arrondi_par_exces__1 = (money_round((a + Money(Integer(50)))))
-    return arrondi_par_exces__1
-
-def arrondi_par_defaut(a:Money):
-    if (a > Money(Integer(0))):
-        arrondi_par_defaut__1 = (money_round((a - Money(Integer(50)))))
-    else:
-        arrondi_par_defaut__1 = (money_round((a - Money(Integer(49)))))
-    return arrondi_par_defaut__1
-
-def arrondi_a_la_decimale(a:Money, nieme_decimale:Integer):
-    return money_internal.round_to_decimal(a, nieme_decimale)
-
-def somme(l:List[Money]):
-    def somme__1(total:Money, x:Money):
-        return (total + x)
-    return list_fold_left(somme__1, Money(Integer(0)), l)
-
-def plafond(a:Money, valeur_max:Money):
+def plafond(a:Money, valeur_max:Money) -> Money:
     return min(a, valeur_max)
 
-def en_defaut(a:Money, reference:Money):
-    return max(Money(Integer(0)), (reference - a))
-
-def en_exces(a:Money, reference:Money):
-    return max(Money(Integer(0)), (a - reference))
-
-def plancher(a:Money, valeur_min:Money):
+def plancher(a:Money, valeur_min:Money) -> Money:
     return max(a, valeur_min)
 
-def positif(a:Money):
-    return plancher(a, Money(Integer(0)))
+def positif(a:Money) -> Money:
+    return plancher(a, Money('0.00'))
+
+def troncature(a:Money) -> Money:
+    if (a == Money('0.00')):
+        troncature__1 = (Money('0.00'))
+    elif (a > Money('0.00')):
+        troncature__1 = (((a - Money('0.50'))).round())
+    else:
+        troncature__1 = (((a + Money('0.50'))).round())
+    return troncature__1
+
+def arrondi_par_exces(a:Money) -> Money:
+    if (a >= Money('0.00')):
+        arrondi_par_exces__1 = (((a + Money('0.49'))).round())
+    else:
+        arrondi_par_exces__1 = (((a + Money('0.50'))).round())
+    return arrondi_par_exces__1
+
+def arrondi_par_defaut(a:Money) -> Money:
+    if (a > Money('0.00')):
+        arrondi_par_defaut__1 = (((a - Money('0.50'))).round())
+    else:
+        arrondi_par_defaut__1 = (((a - Money('0.49'))).round())
+    return arrondi_par_defaut__1
+
+def arrondi_a_la_decimale(a:Money, nieme_decimale:Integer) -> Money:
+    return money_internal.round_to_decimal(a, nieme_decimale)
+
+def somme(l:List[Money]) -> Money:
+    return Money(sum(l))
+
+def en_exces(a:Money, reference:Money) -> Money:
+    return max(Money('0.00'), (a - reference))
+
+def en_defaut(a:Money, reference:Money) -> Money:
+    return max(Money('0.00'), (reference - a))

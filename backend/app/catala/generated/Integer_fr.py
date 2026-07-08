@@ -3,32 +3,31 @@
 from .catala_runtime import *
 from typing import Any, List, Callable, Tuple
 from enum import Enum
+from sys import stderr
 
 
-def min(n1:Integer, n2:Integer):
+def min(n1:Integer, n2:Integer) -> Integer:
     if (n1 > n2):
         min__1 = (n2)
     else:
         min__1 = (n1)
     return min__1
 
-def max(n1:Integer, n2:Integer):
+def max(n1:Integer, n2:Integer) -> Integer:
     if (n1 > n2):
         max__1 = (n1)
     else:
         max__1 = (n2)
     return max__1
 
-def somme(l:List[Integer]):
-    def somme__1(total:Integer, x:Integer):
-        return (total + x)
-    return list_fold_left(somme__1, Integer(0), l)
-
-def plafond(variable:Integer, valeur_max:Integer):
+def plafond(variable:Integer, valeur_max:Integer) -> Integer:
     return min(variable, valeur_max)
 
-def plancher(variable:Integer, valeur_min:Integer):
+def plancher(variable:Integer, valeur_min:Integer) -> Integer:
     return max(variable, valeur_min)
 
-def positif(variable:Integer):
+def positif(variable:Integer) -> Integer:
     return plancher(variable, Integer(0))
+
+def somme(l:List[Integer]) -> Integer:
+    return Integer(sum(l))

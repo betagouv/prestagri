@@ -20,3 +20,5 @@ backend/app/api/__pycache__/
 backend/app/model/__pycache__/
 
 frontend/doc/
+
+backend/.idea/

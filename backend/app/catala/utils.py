@@ -1,29 +1,30 @@
 from .generated.catala_runtime import Money as Money_cat, Integer
-from .generated.Personne import Personne as Personne_cat
+from .generated.Foyer_fiscal import FoyerFiscal as Foyer_fiscal_cat
 from .generated.Trajet import Trajet as Trajet_cat
-from .generated.Famille import Famille as Famille_cat
-from ..model import Famille, Personne, Trajet, Centimes
+from .generated.Menage import Menage as Menage_cat
+from ..model import Menage, FoyerFiscal, Trajet, Centimes, centimes
 from gmpy2 import mpq
 
-def to_famille_cat(famille: Famille) -> Famille_cat:
-    membres_cat = to_personne_cat_list(famille.membres)
-    famille_cat = Famille_cat(
-        famille.personne_ou_enfant_porteur_handicap,
-        famille.garde_alternee,
-        famille.parent_isole,
-        famille.outre_mer,
-        membres_cat
+def to_menage_cat(menage: Menage) -> Menage_cat:
+    membres_cat = to_personne_cat_list(menage.membres)
+    menage_cat = Menage_cat(
+        beneficiaire_porteur_handicap=menage.beneficiaire_porteur_handicap,
+        garde_alternee=menage.garde_alternee,
+        parent_isole=menage.parent_isole,
+        outre_mer=menage.outre_mer,
+        membres_du_foyer=membres_cat
     )
-    return famille_cat
+    return menage_cat
 
-def to_personne_cat_list(personnes: list[Personne]) -> list[Personne_cat]:
+def to_personne_cat_list(personnes: list[FoyerFiscal]) -> list[Foyer_fiscal_cat]:
     return list(map(to_personne_cat, personnes))
 
-def to_personne_cat(personne: Personne) -> Personne_cat:
-    return Personne_cat(to_money(personne.revenu), Integer(personne.enfants))
+def to_personne_cat(personne: FoyerFiscal) -> Foyer_fiscal_cat:
+    return Foyer_fiscal_cat(revenu_fiscal_reference=to_money_cat(personne.revenu),
+                            nombre_personnes=Integer(personne.personnes))
 
-def to_money(centimes: Centimes) -> Money_cat:
-    return Money_cat(Integer(centimes.valeur))
+def to_money_cat(cents: Centimes) -> Money_cat:
+    return Money_cat(cents.valeur/100) ## the whole cents setup may seem overengineered now that we end up dividing again but for context the Money used to ask for cents
 
 def to_trajet(trajet: Trajet) -> Trajet_cat:
     return Trajet_cat(distance_km=Integer(trajet.distance_km),duree_minutes=Integer(trajet.duree_minutes))
