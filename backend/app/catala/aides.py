@@ -3,7 +3,8 @@ from .generated.Quotient_familial import CalculQuotientFamilialIn, calcul_quotie
 from .generated.Aide_scolarite import CalculQuotientFamilialAideScolariteIn, calcul_quotient_familial_aide_scolarite, CalculPointsAideScolariteIn, calcul_points_aide_scolarite, calcul_aide_scolarite, CalculAideScolariteIn, Integer
 from .generated.catala_runtime import Option
 from ..model import Menage, FoyerFiscal, Trajet, Response, Centimes
-from .utils import to_menage_cat, to_personne_cat_list, to_money_cat, to_trajet
+from .utils import to_menage_cat, to_personne_cat_list, to_money_cat, to_trajet, cat_enum_to_string
+
 
 def get_catala_quotient_familial(menage : Menage) -> Response[Centimes]:
     menage_cat = to_menage_cat(menage)
@@ -11,7 +12,7 @@ def get_catala_quotient_familial(menage : Menage) -> Response[Centimes]:
     return Response (
         value=Centimes(valeur=result.quotient_familial),
         explanation= {
-            "criteres_applicables" : str(list(map(str, result.criteres_applicables))),
+            "criteres_applicables" : str(list(map(cat_enum_to_string, result.criteres_applicables))),
             "calcul" : str(Centimes(valeur=result.revenu_fiscal_reference)) + "/ (12 x (" + str(result.nombre_personnes_vivants_au_foyer) + " + " + str(result.nombre_unites - result.nombre_personnes_vivants_au_foyer) +"))"
         }
     )
@@ -30,7 +31,7 @@ def get_catala_aide_scolarite(quotient_familial: Centimes, trajet_depuis_domicil
     ))
     value = Centimes(valeur=result.aide_scolarite)
     explanation = {
-        "critere_applicables": str(list(map(str, result.criteres_applicables))),
+        "critere_applicables": str(list(map(cat_enum_to_string, result.criteres_applicables))),
         "calcul": str(Centimes(valeur=result.valeur_point)) + " x " + str(result.nb_points) + " = " + str(value)
     }
 
@@ -47,7 +48,7 @@ def get_catala_quotient_familial_aide_scolarite(menage: Menage, etudiants_fiscal
     return Response (
         value=value,
         explanation= {
-            "criteres_applicables": str(list(map(str, result.criteres_applicables))),
+            "criteres_applicables": str(list(map(cat_enum_to_string, result.criteres_applicables))),
             "calcul" :str(Centimes(valeur=result.revenu_fiscal_reference)) + "/ (12 x (" + str(result.nombre_personnes_vivants_au_foyer) + " + " + str(result.nombre_unites - result.nombre_personnes_vivants_au_foyer) +"))"
         }
     )
