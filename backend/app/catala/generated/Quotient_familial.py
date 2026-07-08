@@ -16,14 +16,23 @@ from . import Decimal_fr as decimal_fr
 from . import Foyer_fiscal as foyer_fiscal
 from . import Menage as menage
 
+class Criteres(CatalaEnum):
+    name = 'Critères'
+    class Code(CatalaEnum.Code):
+        Parent_isole = 'Parent_isolé' # content Decimal
+        Handicap = 'Handicap' # content Decimal
+        Garde_alternee = 'Garde_alternée' # content Decimal
+
 class CalculQuotientFamilial(CatalaStruct):
-    __slots__ = ('revenu_fiscal_reference', 'nombre_unites', 'quotient_familial')
+    __slots__ = ('revenu_fiscal_reference', 'criteres_applicables', 'nombre_unites', 'quotient_familial')
     revenu_fiscal_reference: Money
+    criteres_applicables: List[Criteres]
     nombre_unites: Decimal
     quotient_familial: Money
     name = 'CalculQuotientFamilial'
     fields = {
         'revenu_fiscal_reference': 'revenu_fiscal_reference', # content Money
+        'criteres_applicables': 'critères_applicables', # content List[Criteres]
         'nombre_unites': 'nombre_unités', # content Decimal
         'quotient_familial': 'quotient_familial', # content Money
     }
@@ -37,32 +46,32 @@ class CalculQuotientFamilialIn(CatalaStruct):
     }
 
 
-loc = (Array([SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=15, start_column=11, end_line=15, end_column=44, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
-              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=16, start_column=11, end_line=16, end_column=23, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
-              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=17, start_column=12, end_line=17, end_column=35, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
-              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=18, start_column=12, end_line=18, end_column=25, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
-              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=24, start_column=66, end_line=24, end_column=99, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
-              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=26, start_column=86, end_line=26, end_column=98, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
-              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=27, start_column=49, end_line=27, end_column=119, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
-              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=45, start_column=22, end_line=45, end_column=55, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
-              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=45, start_column=22, end_line=45, end_column=61, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
-              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=58, start_column=22, end_line=58, end_column=55, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
-              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=58, start_column=22, end_line=58, end_column=61, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
-              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=70, start_column=22, end_line=70, end_column=55, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
-              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=70, start_column=22, end_line=70, end_column=61, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
-              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=82, start_column=22, end_line=82, end_column=34, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
-              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=82, start_column=22, end_line=82, end_column=41, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"])]))
+loc = (Array([SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=20, start_column=11, end_line=20, end_column=44, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
+              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=21, start_column=11, end_line=21, end_column=23, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
+              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=22, start_column=12, end_line=22, end_column=35, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
+              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=23, start_column=12, end_line=23, end_column=32, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
+              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=43, start_column=31, end_line=43, end_column=64, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
+              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=45, start_column=86, end_line=45, end_column=98, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
+              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=46, start_column=49, end_line=46, end_column=119, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
+              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=63, start_column=9, end_line=63, end_column=29, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
+              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=64, start_column=9, end_line=64, end_column=29, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
+              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=76, start_column=9, end_line=76, end_column=29, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
+              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=77, start_column=9, end_line=77, end_column=29, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
+              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=88, start_column=9, end_line=88, end_column=29, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
+              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=89, start_column=9, end_line=89, end_column=29, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
+              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=101, start_column=22, end_line=101, end_column=34, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"]),
+              SourcePosition(filename="src/commun/quotient_familial.catala_fr", start_line=101, start_column=22, end_line=101, end_column=41, law_headings=["Méthode de calcul du QUOTIENT FAMILIAL (QF)"])]))
 
 def calcul_quotient_familial(calcul_quotient_familial_in:CalculQuotientFamilialIn) -> CalculQuotientFamilial:
     menage__1 = (calcul_quotient_familial_in.menage_in)
     def _nombre_personnes_vivants_au_foyer__1(personne:foyer_fiscal.FoyerFiscal):
         return personne.nombre_personnes
     nombre_personnes_vivants_au_foyer__1 = Function(_nombre_personnes_vivants_au_foyer__1)
-    nombre_personnes_vivants_au_foyer = (Option(CatalaTuple(Decimal(integer_fr.somme(map(nombre_personnes_vivants_au_foyer__1, menage__1.membres_du_foyer))), loc[0])))
+    nombre_personnes_vivants_au_foyer = (Option(CatalaTuple(Decimal(integer_fr.somme(menage__1.membres_du_foyer.map(nombre_personnes_vivants_au_foyer__1))), loc[0])))
     def _revenu_total__1(personne__1:foyer_fiscal.FoyerFiscal):
         return personne__1.revenu_fiscal_reference
     revenu_total__1 = Function(_revenu_total__1)
-    revenu_total = (Option(CatalaTuple(money_fr.somme(map(revenu_total__1, menage__1.membres_du_foyer)), loc[1])))
+    revenu_total = (Option(CatalaTuple(money_fr.somme(menage__1.membres_du_foyer.map(revenu_total__1)), loc[1])))
     if menage__1.outre_mer:
         if revenu_total.value is not None:
             revenu_fiscal_reference__1 = (revenu_total.value[0])
@@ -75,29 +84,57 @@ def calcul_quotient_familial(calcul_quotient_familial_in:CalculQuotientFamilialI
         else:
             raise NoValue(loc[5])
         revenu_fiscal_reference = (CatalaTuple(revenu_fiscal_reference__1, loc[2])[0])
-    if menage__1.garde_alternee:
-        if nombre_personnes_vivants_au_foyer.value is not None:
-            nombre_unites__1 = (nombre_personnes_vivants_au_foyer.value[0])
-        else:
-            raise NoValue(loc[11])
-        nombre_unites = (CatalaTuple((nombre_unites__1 + Decimal('1/2')), loc[12])[0])
-    elif menage__1.beneficiaire_porteur_handicap:
-        if nombre_personnes_vivants_au_foyer.value is not None:
-            nombre_unites__1 = (nombre_personnes_vivants_au_foyer.value[0])
-        else:
-            raise NoValue(loc[9])
-        nombre_unites = (CatalaTuple((nombre_unites__1 + Decimal('1/2')), loc[10])[0])
-    elif menage__1.parent_isole:
-        if nombre_personnes_vivants_au_foyer.value is not None:
-            nombre_unites__1 = (nombre_personnes_vivants_au_foyer.value[0])
+    criteres_applicables_base = (Option(CatalaTuple(Array([]), loc[3])))
+    if menage__1.parent_isole:
+        if criteres_applicables_base.value is not None:
+            criteres_applicables_parent_isole__2 = (criteres_applicables_base.value[0])
         else:
             raise NoValue(loc[7])
-        nombre_unites = (CatalaTuple((nombre_unites__1 + Decimal('1')), loc[8])[0])
+        criteres_applicables_parent_isole__1 = ((criteres_applicables_parent_isole__2 + Array([Criteres(Criteres.Code.Parent_isole,
+                                                                                               Decimal('1'))])))
     else:
-        if nombre_personnes_vivants_au_foyer.value is not None:
-            nombre_unites__1 = (nombre_personnes_vivants_au_foyer.value[0])
+        if criteres_applicables_base.value is not None:
+            criteres_applicables_parent_isole__1 = (criteres_applicables_base.value[0])
         else:
-            raise NoValue(loc[4])
-        nombre_unites = (CatalaTuple(nombre_unites__1, loc[3])[0])
+            raise NoValue(loc[8])
+    criteres_applicables_parent_isole = (Option(CatalaTuple(criteres_applicables_parent_isole__1, loc[3])))
+    if menage__1.beneficiaire_porteur_handicap:
+        if criteres_applicables_parent_isole.value is not None:
+            criteres_applicables_handicap__2 = (criteres_applicables_parent_isole.value[0])
+        else:
+            raise NoValue(loc[9])
+        criteres_applicables_handicap__1 = ((criteres_applicables_handicap__2 + Array([Criteres(Criteres.Code.Handicap,
+                                                                                       Decimal('1/2'))])))
+    else:
+        if criteres_applicables_parent_isole.value is not None:
+            criteres_applicables_handicap__1 = (criteres_applicables_parent_isole.value[0])
+        else:
+            raise NoValue(loc[10])
+    criteres_applicables_handicap = (Option(CatalaTuple(criteres_applicables_handicap__1, loc[3])))
+    if menage__1.garde_alternee:
+        if criteres_applicables_handicap.value is not None:
+            criteres_applicables_garde_alternee__1 = (criteres_applicables_handicap.value[0])
+        else:
+            raise NoValue(loc[11])
+        criteres_applicables_garde_alternee = ((criteres_applicables_garde_alternee__1 + Array([Criteres(Criteres.Code.Garde_alternee,
+                                                                                                Decimal('1/2'))])))
+    else:
+        if criteres_applicables_handicap.value is not None:
+            criteres_applicables_garde_alternee = (criteres_applicables_handicap.value[0])
+        else:
+            raise NoValue(loc[12])
+    def _nombre_unites__1(c:Criteres):
+        if c.code == Criteres.Code.Parent_isole:
+            return c.payload
+        elif c.code == Criteres.Code.Handicap:
+            return c.payload
+        elif c.code == Criteres.Code.Garde_alternee:
+            return c.payload
+    nombre_unites__1 = Function(_nombre_unites__1)
+    if nombre_personnes_vivants_au_foyer.value is not None:
+        nombre_unites__2 = (nombre_personnes_vivants_au_foyer.value[0])
+    else:
+        raise NoValue(loc[4])
+    nombre_unites = ((decimal_fr.somme(criteres_applicables_garde_alternee.map(nombre_unites__1)) + nombre_unites__2))
     quotient_familial = (Money((Decimal(revenu_fiscal_reference)).__truediv__((Decimal(Integer(12)) * nombre_unites), pos=loc[6])))
-    return CalculQuotientFamilial(revenu_fiscal_reference = revenu_fiscal_reference, nombre_unites = nombre_unites, quotient_familial = quotient_familial)
+    return CalculQuotientFamilial(revenu_fiscal_reference = revenu_fiscal_reference, criteres_applicables = criteres_applicables_garde_alternee, nombre_unites = nombre_unites, quotient_familial = quotient_familial)
