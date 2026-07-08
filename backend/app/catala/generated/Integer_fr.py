@@ -30,7 +30,4 @@ def positif(variable:Integer) -> Integer:
     return plancher(variable, Integer(0))
 
 def somme(l:List[Integer]) -> Integer:
-    def _somme__1(total:Integer, x:Integer):
-        return (total + x)
-    somme__1 = Function(_somme__1)
-    return l.fold_left(somme__1, Integer(0))
+    return Integer(sum(l))
