@@ -17,8 +17,8 @@ déclaration énumération Critères:
 
 déclaration champ d'application CalculQuotientFamilial: # Can be used
   entrée menage contenu Menage
-  interne nombre_personnes_vivants_au_foyer contenu décimal
   interne revenu_total contenu argent
+  résultat nombre_personnes_vivants_au_foyer contenu décimal
   résultat revenu_fiscal_reference contenu argent
   résultat critères_applicables contenu liste de Critères
     état base

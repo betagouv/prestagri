@@ -5,7 +5,6 @@ from .generated.catala_runtime import Option
 from ..model import Menage, FoyerFiscal, Trajet, Response, Centimes
 from .utils import to_menage_cat, to_personne_cat_list, to_money_cat, to_trajet
 
-
 def get_catala_quotient_familial(menage : Menage) -> Response[Centimes]:
     menage_cat = to_menage_cat(menage)
     result = calcul_quotient_familial(CalculQuotientFamilialIn(menage_in=menage_cat))
@@ -20,7 +19,6 @@ def get_catala_aide_scolarite(quotient_familial: Centimes, nb_points: float ) ->
     return Response(
         value=value,
         explanation=str(quotient_familial) + " x " + str(nb_points) + " = " + str(value) )
-
 
 def get_catala_quotient_familial_aide_scolarite(menage: Menage, etudiants_fiscalement_independants: list[FoyerFiscal]) -> Response[Centimes]:
     menage_cat = to_menage_cat(menage)

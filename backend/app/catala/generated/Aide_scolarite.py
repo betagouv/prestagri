@@ -185,7 +185,7 @@ def calcul_quotient_familial_aide_scolarite(calcul_quotient_familial_aide_scolar
     else:
         raise NoValue(loc[3])
     result = (quotient_familial.calcul_quotient_familial(quotient_familial.CalculQuotientFamilialIn(menage_in = result__1)))
-    calcul_quotient_familial = (quotient_familial.CalculQuotientFamilial(revenu_fiscal_reference = result.revenu_fiscal_reference, criteres_applicables = result.criteres_applicables, nombre_unites = result.nombre_unites, quotient_familial = result.quotient_familial))
+    calcul_quotient_familial = (quotient_familial.CalculQuotientFamilial(nombre_personnes_vivants_au_foyer = result.nombre_personnes_vivants_au_foyer, revenu_fiscal_reference = result.revenu_fiscal_reference, criteres_applicables = result.criteres_applicables, nombre_unites = result.nombre_unites, quotient_familial = result.quotient_familial))
     revenu_fiscal_reference = (calcul_quotient_familial.revenu_fiscal_reference)
     nombre_unites = (calcul_quotient_familial.nombre_unites)
     quotient_familial__1 = (calcul_quotient_familial.quotient_familial)
