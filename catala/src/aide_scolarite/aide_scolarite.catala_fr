@@ -46,8 +46,30 @@ Son montant est calculé sur la base d'un nombre de points attribués en fonctio
 point (50 €, 75 € ou 100 €) varie selon le QF obtenu par l'agent demandeur (Cf. : barème en annexe F16a ainsi que les
 explications pour le calcul des points à la fin de cette Fiche F16).
 
+
+- QF < 780 : valeur du point = 100€
+- QF < 930 : valeur du point = 75€
+- QF < 1090 :  valeur du point = 50€
+- QF >= 1090 :  valeur du point = 0€
+
+```catala-metadata
+déclaration champ d'application CalculAideScolarite:
+  entrée quotient_familial contenu argent
+  entrée nb_points contenu décimal
+  interne valeur_point contenu argent
+  résultat aide_scolarite contenu argent
+```
+
 ```catala
-# QF : implemente dans commun/quotient_famillial.catala_fr
+champ d'application CalculAideScolarite:
+  définition valeur_point égal à 
+    si quotient_familial < 780 €
+      alors  100 €
+    sinon si quotient_familial < 930 €
+      alors 75 €
+    sinon si quotient_familial < 1090 €
+      alors 50 €
+    sinon 0 €
 ```
 
 ## Conditions d'attribution :
@@ -149,17 +171,8 @@ calcul du QF, que l'apprenti ait fait ou non sa propre déclaration fiscale.
 Le calcul du QF ainsi fait détermine ensuite la valeur du point à utiliser pour le calcul du montant de la prestation selon
 la formule suivante : montant de l'aide = nombre de points X valeur du point.
 
-```catala-metadata
-déclaration champ d'application CalculAideScolarite:
-  entrée quotient_familial contenu argent
-  entrée nb_points contenu décimal
-  interne valeur_point contenu argent
-  résultat aide_scolarite contenu argent
-```
-
 ```catala
 champ d'application CalculAideScolarite:
-  définition valeur_point égal à quotient_familial
   étiquette aide_scolarite_défaut définition aide_scolarite égal à nb_points * valeur_point
 ```
 
