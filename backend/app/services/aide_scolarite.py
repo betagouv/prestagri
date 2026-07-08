@@ -26,4 +26,4 @@ def get_aide_scolarite(
         "aide_scolarite": aide_scolarite.explanation
     }
 
-    return Response[Centimes](value=aide_scolarite.value, explanation=str(explanation))
+    return Response[Centimes](value=aide_scolarite.value, explanation=explanation)

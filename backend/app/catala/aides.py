@@ -10,7 +10,10 @@ def get_catala_quotient_familial(menage : Menage) -> Response[Centimes]:
     result = calcul_quotient_familial(CalculQuotientFamilialIn(menage_in=menage_cat))
     return Response (
         value=Centimes(valeur=result.quotient_familial),
-        explanation=str(Centimes(valeur=result.revenu_fiscal_reference)) + "/ (12 x (" + str(result.nombre_personnes_vivants_au_foyer) + " + " + str(result.nombre_unites - result.nombre_personnes_vivants_au_foyer) +"))"
+        explanation= {
+            "criteres_applicables" : str(list(map(str, result.criteres_applicables))),
+            "calcul" : str(Centimes(valeur=result.revenu_fiscal_reference)) + "/ (12 x (" + str(result.nombre_personnes_vivants_au_foyer) + " + " + str(result.nombre_unites - result.nombre_personnes_vivants_au_foyer) +"))"
+        }
     )
 
 def get_catala_aide_scolarite(quotient_familial: Centimes, trajet_depuis_domicile_agent: Trajet,
@@ -28,12 +31,12 @@ def get_catala_aide_scolarite(quotient_familial: Centimes, trajet_depuis_domicil
     value = Centimes(valeur=result.aide_scolarite)
     explanation = {
         "critere_applicables": str(list(map(str, result.criteres_applicables))),
-        "aide_scolarite": str(Centimes(valeur=result.valeur_point)) + " x " + str(result.nb_points) + " = " + str(value)
+        "calcul": str(Centimes(valeur=result.valeur_point)) + " x " + str(result.nb_points) + " = " + str(value)
     }
 
     return Response(
         value=value,
-        explanation= str(explanation)
+        explanation= explanation
     )
 
 def get_catala_quotient_familial_aide_scolarite(menage: Menage, etudiants_fiscalement_independants: list[FoyerFiscal]) -> Response[Centimes]:
@@ -43,5 +46,8 @@ def get_catala_quotient_familial_aide_scolarite(menage: Menage, etudiants_fiscal
     value = Centimes(valeur=result.quotient_familial)
     return Response (
         value=value,
-        explanation=str(Centimes(valeur=result.revenu_fiscal_reference)) + "/ (12 x (" + str(result.nombre_personnes_vivants_au_foyer) + " + " + str(result.nombre_unites - result.nombre_personnes_vivants_au_foyer) +"))"
+        explanation= {
+            "criteres_applicables": str(list(map(str, result.criteres_applicables))),
+            "calcul" :str(Centimes(valeur=result.revenu_fiscal_reference)) + "/ (12 x (" + str(result.nombre_personnes_vivants_au_foyer) + " + " + str(result.nombre_unites - result.nombre_personnes_vivants_au_foyer) +"))"
+        }
     )
