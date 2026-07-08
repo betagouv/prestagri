@@ -10,18 +10,37 @@ Applicable à tous les agents et pour toutes les prestations, HORS prestations i
 QF = Revenu fiscal de référence / (12 x nombre de personnes vivant au foyer (a))
 
 ```catala-metadata
+déclaration énumération Critères:
+  -- Parent_isolé contenu décimal
+  -- Handicap contenu décimal
+  -- Garde_alternée contenu décimal
+
 déclaration champ d'application CalculQuotientFamilial: # Can be used
   entrée menage contenu Menage
   interne nombre_personnes_vivants_au_foyer contenu décimal
   interne revenu_total contenu argent
   résultat revenu_fiscal_reference contenu argent
+  résultat critères_applicables contenu liste de Critères
+    état base
+    état parent_isolé
+    état handicap
+    état garde_alternée
   résultat nombre_unités contenu décimal
   résultat quotient_familial contenu argent
 ```
 ```catala
 champ d'application CalculQuotientFamilial:
   définition nombre_personnes_vivants_au_foyer égal à décimal de Entier.somme de transforme chaque personne parmi menage.membres_du_foyer en personne.nombre_personnes
-  étiquette nombre_unités_défaut définition nombre_unités égal à nombre_personnes_vivants_au_foyer
+  définition critères_applicables état base égal à []
+  définition nombre_unités égal à
+    soit points égal à 
+      transforme chaque c parmi critères_applicables en 
+        selon c sous forme 
+        -- Parent_isolé contenu c_points: c_points
+        -- Handicap contenu c_points: c_points 
+        -- Garde_alternée contenu c_points: c_points 
+    dans
+    Décimal.somme de points + nombre_personnes_vivants_au_foyer
   définition revenu_total égal à Argent.somme de transforme chaque personne parmi menage.membres_du_foyer en personne.revenu_fiscal_reference 
   étiquette revenu_fiscal_reference_défaut définition revenu_fiscal_reference égal à revenu_total
   définition quotient_familial égal à argent de (décimal de revenu_fiscal_reference / (décimal de 12 * nombre_unités))
@@ -39,10 +58,10 @@ d'imposition (ex : situation au 31/12/2024 pour l'imposition des revenus perçus
 ```catala
 # TODO Question s'il y a plusieurs adultes dans le foyer, est ce un parent isole ? 
 champ d'application CalculQuotientFamilial:
-  étiquette parent_isolé exception nombre_unités_défaut
-  définition nombre_unités
-  sous condition menage.parent_isolé
-  conséquence égal à nombre_personnes_vivants_au_foyer + 1,0
+  définition critères_applicables état parent_isolé égal à 
+  si menage.parent_isolé
+  alors critères_applicables ++ [ Parent_isolé contenu 1,0 ]
+  sinon critères_applicables
 ```
 
 - L’agent demandeur, l’enfant ou la personne à charge porteur de handicap, titulaire d’une carte d’invalidité et/ou
@@ -52,10 +71,10 @@ fiscale) bénéficie (sur présentation de justificatif-s) d’une demi-unité s
 ```catala
 # TODO Applicable pour la famille quelque soit la demande meme si elle n'est pas liee au porteur de handicap lui meme n'est ce pas ?
 champ d'application CalculQuotientFamilial:
-  étiquette handicap exception parent_isolé
-  définition nombre_unités
-  sous condition menage.beneficiaire_porteur_handicap
-  conséquence égal à nombre_personnes_vivants_au_foyer + 0,5
+  définition critères_applicables état handicap égal à
+  si menage.beneficiaire_porteur_handicap
+  alors critères_applicables ++ [ Handicap contenu 0,5 ]
+  sinon critères_applicables
 ```
 
 - En cas de garde alternée, chaque parent qui a à charge fiscalement son ou ses enfants peut bénéficier de la prestation, dès
@@ -64,10 +83,10 @@ par foyer.
 
 ```catala
 champ d'application CalculQuotientFamilial:
-  étiquette garde_alternée exception handicap
-  définition nombre_unités
-  sous condition menage.garde_alternée
-  conséquence égal à nombre_personnes_vivants_au_foyer + 0,5
+définition critères_applicables état garde_alternée égal à
+  si menage.garde_alternée
+  alors critères_applicables ++ [ Garde_alternée contenu 0,5 ]
+  sinon critères_applicables
 ```
 
 - Cas des agents affectés en outre-mer : afin de prendre en compte la spécificité ultramarine, il convient de calculer
