@@ -1,9 +1,10 @@
 import sentry_sdk
 from fastapi import APIRouter
 
+from ..services.gps import get_trajet
 from ..services.properties import Properties
 from ..utils import logger
-from ..model import Menage, FoyerFiscal, Response, Centimes
+from ..model import Menage, FoyerFiscal, Response, Centimes, Trajet
 from ..services.quotient_familial import get_quotient_familial
 from ..services.aide_scolarite import get_aide_scolarite
 
@@ -29,15 +30,11 @@ def read_quotient_familial(
     outre_mer: bool = False
     ) -> Response :
     try : 
-        agent = FoyerFiscal(revenu=Centimes.from_euros_int(foyer_fiscal_agent_revenu), personnes=foyer_fiscal_agent_membres)
-        membres = [agent]
-        if foyer_fiscal_conjoint_revenu is not None and foyer_fiscal_conjoint_membres is not None:
-            conjoint = FoyerFiscal(revenu=Centimes.from_euros_int(foyer_fiscal_conjoint_revenu), personnes=foyer_fiscal_conjoint_membres)
-            membres.append(conjoint)
-        if foyer_fiscal_etudiant_revenu is not None and foyer_fiscal_etudiant_membres is not None:
-            etudiant = FoyerFiscal(revenu=Centimes.from_euros_int(foyer_fiscal_etudiant_revenu), personnes=foyer_fiscal_etudiant_membres)
-            membres.append(etudiant)
-        menage = Menage(beneficiaire_porteur_handicap=beneficiaire_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
+        menage = Menage.create_menage(foyer_fiscal_agent_revenu, foyer_fiscal_agent_membres,
+            foyer_fiscal_conjoint_revenu, foyer_fiscal_conjoint_membres,
+            foyer_fiscal_etudiant_revenu, foyer_fiscal_etudiant_membres,
+            beneficiaire_porteur_handicap, garde_alternee, parent_isole, outre_mer)
+
         response = get_quotient_familial(menage)
         return Response(value=str(response.value), explanation= response.explanation)
     except Exception as e:
@@ -45,7 +42,7 @@ def read_quotient_familial(
         logger.exception(e)
         return Response(value="Une erreur est survenue", explanation=properties.error_contact)
 
-@router.get("/aide_scolarite")
+@router.get("/aide_scolarite/adresse")
 def read_quotient_familial_aide_scolarite(
     foyer_fiscal_agent_revenu: int,
     foyer_fiscal_agent_membres: int,
@@ -64,22 +61,58 @@ def read_quotient_familial_aide_scolarite(
     etudiant_post_bac: bool = False,
     ) -> Response:
     try:
-        agent = FoyerFiscal(revenu=Centimes.from_euros_int(foyer_fiscal_agent_revenu), personnes=foyer_fiscal_agent_membres)
-        membres = [agent]
-        if foyer_fiscal_conjoint_revenu is not None:
-            conjoint = FoyerFiscal(revenu=Centimes.from_euros_int(foyer_fiscal_conjoint_revenu), personnes=foyer_fiscal_conjoint_membres or 0)
-            membres.append(conjoint)
+        menage = Menage.create_menage(foyer_fiscal_agent_revenu, foyer_fiscal_agent_membres,
+                                      foyer_fiscal_conjoint_revenu, foyer_fiscal_conjoint_membres,
+                                      None, None,
+                                      beneficiaire_porteur_handicap, garde_alternee, parent_isole, outre_mer)
         etudiant_independant = FoyerFiscal(revenu=Centimes.from_euros_int(foyer_fiscal_etudiant_revenu), personnes=foyer_fiscal_etudiant_membres or 0) if foyer_fiscal_etudiant_revenu is not None else None
-        menage = Menage(beneficiaire_porteur_handicap=beneficiaire_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
-        response = get_aide_scolarite(menage, etudiant_independant,
-            adresse_agent, adresse_etablissement, adresse_etudiant,
-            Centimes.from_euros_int(montant_materiel_specifique) if montant_materiel_specifique is not None else None,
-            etudiant_post_bac)
+        trajet_etudiant =  get_trajet(adresse_depart=adresse_etudiant, adresse_arrivee=adresse_etablissement)  if (adresse_etudiant is not None ) else None
+        trajet_agent = get_trajet(adresse_depart=adresse_agent, adresse_arrivee=adresse_etablissement)
+        montant_materiel = Centimes.from_euros_int(montant_materiel_specifique) if montant_materiel_specifique is not None else None
+
+        response = get_aide_scolarite(menage, etudiant_independant, trajet_agent, trajet_etudiant ,montant_materiel,etudiant_post_bac)
         return Response(value=str(response.value) , explanation=response.explanation)
     except Exception as e:
         sentry_sdk.capture_exception(e)
         logger.exception(e)
         return Response(value="Une erreur est survenue", explanation=properties.error_contact)
+
+@router.get("/aide_scolarite/trajet")
+def read_quotient_familial_aide_scolarite(
+    foyer_fiscal_agent_revenu: int,
+    foyer_fiscal_agent_membres: int,
+    trajet_agent_km: int,
+    trajet_agent_min: int,
+    foyer_fiscal_conjoint_revenu: int | None = None,
+    foyer_fiscal_conjoint_membres: int | None = None,
+    foyer_fiscal_etudiant_revenu: int | None = None,
+    foyer_fiscal_etudiant_membres: int | None = None,
+    beneficiaire_porteur_handicap: bool = False,
+    garde_alternee: bool = False,
+    parent_isole: bool = False,
+    outre_mer: bool = False,
+    trajet_etudiant_km: int | None = None,
+    trajet_etudiant_min: int | None = None,
+    montant_materiel_specifique: int | None = None,
+    etudiant_post_bac: bool = False,
+    ) -> Response:
+    try:
+        menage = Menage.create_menage(foyer_fiscal_agent_revenu, foyer_fiscal_agent_membres,
+                                      foyer_fiscal_conjoint_revenu, foyer_fiscal_conjoint_membres,
+                                      None, None,
+                                      beneficiaire_porteur_handicap, garde_alternee, parent_isole, outre_mer)
+        etudiant_independant = FoyerFiscal(revenu=Centimes.from_euros_int(foyer_fiscal_etudiant_revenu), personnes=foyer_fiscal_etudiant_membres or 0) if foyer_fiscal_etudiant_revenu is not None else None
+        trajet_etudiant = Trajet(trajet_etudiant_km, trajet_etudiant_min) if (trajet_etudiant_km is not None and trajet_etudiant_min is not None) else None
+        trajet_agent = Trajet(trajet_agent_km, trajet_agent_min)
+        montant_materiel = Centimes.from_euros_int(montant_materiel_specifique) if montant_materiel_specifique is not None else None
+
+        response = get_aide_scolarite(menage, etudiant_independant, trajet_agent, trajet_etudiant ,montant_materiel,etudiant_post_bac)
+        return Response(value=str(response.value) , explanation=response.explanation)
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
+        logger.exception(e)
+        return Response(value="Une erreur est survenue", explanation=properties.error_contact)
+
 
 
 @router.get("/error-simulator")

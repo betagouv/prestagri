@@ -37,3 +37,15 @@ tasks:
       - find backend/app/catala/generated/*.py -type f -exec sed -i 's/catala_runtime/\.catala_runtime/g' {} +
       - sed -i 's/import dates/from .dates import */g' backend/app/catala/generated/catala_runtime.py
       - sed -i 's/dates\.//g' backend/app/catala/generated/catala_runtime.py
+  setup_commit:
+    desc: use production url when commiting
+    cmds:
+      - sed -i 's/http:\/\/localhost:8000/https:\/\/api.prest-agri.beta.gouv.fr/g' frontend/src/pages/aide_scolarite.astro
+      - sed -i 's/http:\/\/localhost:8000/https:\/\/api.prest-agri.beta.gouv.fr/g' frontend/src/pages/quotient_familial.astro
+  setup_local:
+    desc: use localhost url when dev
+    cmds:
+      - sed -i 's/https:\/\/api.prest-agri.beta.gouv.fr/http:\/\/localhost:8000/g' frontend/src/pages/aide_scolarite.astro
+      - sed -i 's/https:\/\/api.prest-agri.beta.gouv.fr/http:\/\/localhost:8000/g' frontend/src/pages/quotient_familial.astro
+
+
