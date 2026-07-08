@@ -24,7 +24,7 @@ def to_personne_cat(personne: FoyerFiscal) -> Foyer_fiscal_cat:
                             nombre_personnes=Integer(personne.personnes))
 
 def to_money_cat(cents: Centimes) -> Money_cat:
-    return Money_cat(cents.valeur/100)
+    return Money_cat(cents.valeur/100) ## the whole cents setup may seem overengineered now that we end up dividing again but for context the Money used to ask for cents
 
 def to_trajet(trajet: Trajet) -> Trajet_cat:
     return Trajet_cat(distance_km=Integer(trajet.distance_km),duree_minutes=Integer(trajet.duree_minutes))

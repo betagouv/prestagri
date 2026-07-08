@@ -17,21 +17,26 @@ def read_root():
 
 @router.get("/quotient_familial")
 def read_quotient_familial(
-    agent_revenu: int,
-    agent_enfants: int,
-    conjoint_revenu: int | None = None,
-    conjoint_enfants: int | None = None,
+    foyer_fiscal_agent_revenu: int,
+    foyer_fiscal_agent_membres: int,
+    foyer_fiscal_conjoint_revenu: int | None = None,
+    foyer_fiscal_conjoint_membres: int | None = None,
+    foyer_fiscal_etudiant_revenu: int | None = None,
+    foyer_fiscal_etudiant_membres: int | None = None,
     beneficiaire_porteur_handicap: bool = False,
     garde_alternee: bool = False,
     parent_isole: bool = False,
     outre_mer: bool = False
     ) -> Response :
     try : 
-        agent = FoyerFiscal(revenu=Centimes.from_euros_int(agent_revenu), personnes=agent_enfants)
+        agent = FoyerFiscal(revenu=Centimes.from_euros_int(foyer_fiscal_agent_revenu), personnes=foyer_fiscal_agent_membres)
         membres = [agent]
-        if conjoint_revenu is not None and conjoint_enfants is not None:
-            conjoint = FoyerFiscal(revenu=Centimes.from_euros_int(conjoint_revenu), personnes=conjoint_enfants)
+        if foyer_fiscal_conjoint_revenu is not None and foyer_fiscal_conjoint_membres is not None:
+            conjoint = FoyerFiscal(revenu=Centimes.from_euros_int(foyer_fiscal_conjoint_revenu), personnes=foyer_fiscal_conjoint_membres)
             membres.append(conjoint)
+        if foyer_fiscal_etudiant_revenu is not None and foyer_fiscal_etudiant_membres is not None:
+            etudiant = FoyerFiscal(revenu=Centimes.from_euros_int(foyer_fiscal_etudiant_revenu), personnes=foyer_fiscal_etudiant_membres)
+            membres.append(etudiant)
         menage = Menage(beneficiaire_porteur_handicap=beneficiaire_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
         response = get_quotient_familial(menage)
         return Response(value=str(response.value), explanation= response.explanation)
@@ -42,14 +47,14 @@ def read_quotient_familial(
 
 @router.get("/aide_scolarite")
 def read_quotient_familial_aide_scolarite(
-    agent_revenu: int,
-    agent_enfants: int,
+    foyer_fiscal_agent_revenu: int,
+    foyer_fiscal_agent_membres: int,
     adresse_agent: str,
     adresse_etablissement: str,
-    conjoint_revenu: int | None = None,
-    conjoint_enfants: int | None = None,
-    etudiant_revenu: int  | None = None,
-    etudiant_enfants: int | None = None,
+    foyer_fiscal_conjoint_revenu: int | None = None,
+    foyer_fiscal_conjoint_membres: int | None = None,
+    foyer_fiscal_etudiant_revenu: int | None = None,
+    foyer_fiscal_etudiant_membres: int | None = None,
     beneficiaire_porteur_handicap: bool = False,
     garde_alternee: bool = False,
     parent_isole: bool = False,
@@ -59,12 +64,12 @@ def read_quotient_familial_aide_scolarite(
     etudiant_post_bac: bool = False,
     ) -> Response:
     try:
-        agent = FoyerFiscal(revenu=Centimes.from_euros_int(agent_revenu), personnes=agent_enfants)
+        agent = FoyerFiscal(revenu=Centimes.from_euros_int(foyer_fiscal_agent_revenu), personnes=foyer_fiscal_agent_membres)
         membres = [agent]
-        if conjoint_revenu is not None:
-            conjoint = FoyerFiscal(revenu=Centimes.from_euros_int(conjoint_revenu), personnes=conjoint_enfants or 0)
+        if foyer_fiscal_conjoint_revenu is not None:
+            conjoint = FoyerFiscal(revenu=Centimes.from_euros_int(foyer_fiscal_conjoint_revenu), personnes=foyer_fiscal_conjoint_membres or 0)
             membres.append(conjoint)
-        etudiant_independant = FoyerFiscal(revenu=Centimes.from_euros_int(etudiant_revenu), personnes=etudiant_enfants or 0) if etudiant_revenu is not None else None
+        etudiant_independant = FoyerFiscal(revenu=Centimes.from_euros_int(foyer_fiscal_etudiant_revenu), personnes=foyer_fiscal_etudiant_membres or 0) if foyer_fiscal_etudiant_revenu is not None else None
         menage = Menage(beneficiaire_porteur_handicap=beneficiaire_porteur_handicap, garde_alternee=garde_alternee, parent_isole=parent_isole, outre_mer=outre_mer, membres=membres)
         response = get_aide_scolarite(menage, etudiant_independant,
             adresse_agent, adresse_etablissement, adresse_etudiant,

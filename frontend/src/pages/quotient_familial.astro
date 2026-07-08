@@ -22,26 +22,37 @@ import DsfrLayout from "../layouts/dsfrLayout.astro"
                                     <fieldset class="fr-fieldset" aria-labelledby="text-legend text-messages">
                                         <div class="fr-fieldset__element">
                                             <div class="fr-input-group">
-                                                <label class="fr-label" for="agent_revenu">Quels sont les revenus déclarés par l'agent ? </label>
+                                                <label class="fr-label" for="agent_revenu">Quels sont les revenus déclarés sur l'avis d'imposition de l'agent ? * </label>
                                                 <input class="fr-input" type="number" name="agent_revenu" id="agent_revenu" required />
                                             </div>
                                         </div>
                                         <div class="fr-fieldset__element">
                                         <div class="fr-input-group">
-                                            <label class="fr-label" for="agent_enfants">Combien d'enfants sont déclarés par l'agent ? </label>
-                                            <input class="fr-input" type="number" name="agent_enfants" id="agent_enfants" required />
+                                            <label class="fr-label" for="agent_personnes">Combien de personnes sont déclarées sur l'avis d'imposition de l'agent ? * </label>
+                                            <input class="fr-input" type="number" name="agent_personnes" id="agent_personnes" required />
                                         </div>
                                         </div>
                                         <div class="fr-fieldset__element">
                                         <div class="fr-input-group">
-                                            <label class="fr-label" for="conjoint_revenu">En cas d'avis d'imposition distinct, quels sont les revenus déclarés par le conjoint.e de l'agent ? </label>
+                                            <label class="fr-label" for="conjoint_revenu">En cas d'avis d'imposition distinct, quels sont les revenus déclarés sur l'avis d'imposition du conjoint.e de l'agent ? </label>
                                             <input class="fr-input" type="number" name="conjoint_revenu" id="conjoint_revenu"/>
                                         </div>
                                         </div>
                                         <div class="fr-fieldset__element">
                                         <div class="fr-input-group">
-                                            <label class="fr-label" for="conjoint_enfants">En cas d'avis d'imposition distinct, combien d'enfants sont déclarés par le conjoint.e de l'agent ? </label>
-                                            <input class="fr-input" type="number" name="conjoint_enfants" id="conjoint_enfants"/>
+                                            <label class="fr-label" for="conjoint_personnes">En cas d'avis d'imposition distinct, combien de personnes sont déclarées sur l'avis d'imposition du conjoint.e de l'agent ? </label>
+                                            <input class="fr-input" type="number" name="conjoint_personnes" id="conjoint_personnes"/>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                        <div class="fr-input-group">
+                                            <label class="fr-label" for="etudiant_revenu">Si pertinent, quels sont les revenus déclarés sur l'avis d'imposition de l'étudiant ? </label>
+                                            <input class="fr-input" type="number" name="etudiant_revenu" id="etudiant_revenu"/>
+                                        </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                        <div class="fr-input-group">
+                                            <label class="fr-label" for="etudiant_personnes">Si pertinent, combien de personnes sont déclarées sur l'avis d'imposition de l'étudiant ? </label>
+                                            <input class="fr-input" type="number" name="etudiant_personnes" id="etudiant_personnes"/>
                                         </div>
                                         </div>
                                         <div class="fr-fieldset__element">
@@ -88,20 +99,20 @@ import DsfrLayout from "../layouts/dsfrLayout.astro"
 <script>
     let calculForm = document.getElementById("calculForm");
     calculForm?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    fetch(
-        "https://api.prest-agri.beta.gouv.fr/quotient_familial?" +
-        "agent_revenu="+ (document.getElementById('agent_revenu') as HTMLInputElement).value +"&"+
-        "agent_enfants="+ (document.getElementById('agent_enfants') as HTMLInputElement).value +"&"+
-        "conjoint_revenu="+ (document.getElementById('conjoint_revenu') as HTMLInputElement).value +"&"+
-        "conjoint_enfants="+ (document.getElementById('conjoint_enfants') as HTMLInputElement).value +"&"+
-        "etudiant_revenu=0&"+
-        "etudiant_enfants=0&"+
+    let url = "http://localhost:8000/quotient_familial?" +
+        "foyer_fiscal_agent_revenu="+ (document.getElementById('agent_revenu') as HTMLInputElement).value +"&"+
+        "foyer_fiscal_agent_membres="+ (document.getElementById('agent_personnes') as HTMLInputElement).value +"&"+
+        "foyer_fiscal_conjoint_revenu="+ ((document.getElementById('conjoint_revenu') as HTMLInputElement).value || 0) +"&"+
+        "foyer_fiscal_conjoint_membres="+ ((document.getElementById('conjoint_personnes') as HTMLInputElement).value || 0) +"&"+
+        "foyer_fiscal_etudiant_revenu="+ ((document.getElementById('conjoint_revenu') as HTMLInputElement).value || 0) +"&"+
+        "foyer_fiscal_etudiant_membres="+ ((document.getElementById('conjoint_revenu') as HTMLInputElement).value || 0) +"&"+
         "beneficiaire_porteur_handicap="+ (document.getElementById('beneficiaire_porteur_handicap') as HTMLInputElement).checked +"&"+
         "garde_alternee="+ (document.getElementById('garde_alternee') as HTMLInputElement).checked +"&"+
         "parent_isole="+ (document.getElementById('parent_isole') as HTMLInputElement).checked +"&"+
         "outre_mer="+ (document.getElementById('outre_mer') as HTMLInputElement).checked
-    )
+    console.log(url)
+    e.preventDefault();
+    fetch(url)
     .then((response) => {
         if (!response.ok) {
             throw new Error(`On a un souci, contactez le support`);
