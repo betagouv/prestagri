@@ -1,15 +1,23 @@
 from typing import Any
 import yaml
 from pydantic import BaseModel
+import os
 
 class Properties (BaseModel):
     error_contact: str
+    sentry_dsn: str
+    dn_pilotage_token: str
 
     @classmethod
     def import_properties(cls):
         yaml_data = cls.get_yaml_prop()
         varenv_data = cls.get_var_env_prop()
-        return cls(error_contact=yaml_data["error_contact"])
+        return cls(
+            error_contact=yaml_data["error_contact"],
+            sentry_dsn=varenv_data["sentry_dsn"],
+            dn_pilotage_token=varenv_data["dn_pilotage_token"]
+
+        )
 
     @staticmethod
     def get_yaml_prop() :
@@ -21,4 +29,9 @@ class Properties (BaseModel):
 
     @staticmethod
     def get_var_env_prop():
-        return {"info": "no env var"}
+        return {
+            "sentry_dsn" : os.environ['SENTRY_DSN'],
+            "dn_pilotage_token" : os.environ['DN_PILOTAGE_TOKEN']
+        }
+
+properties = Properties.import_properties()

@@ -8,4 +8,5 @@ dependencies = [
     "fastapi[standard]>=0.136.1",
     "gmpy2>=2.3.0",
     "pyyaml>=6.0.3,<7.0.0",
+    "requests>=2.34.2",
 ]

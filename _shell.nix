@@ -12,6 +12,7 @@ buildInputs = [
 ];
 shellHook = ''
         export SENTRY_DSN="variable value"
+        export DN_PILOTAGE_TOKEN="token fourni par DN"
         eval $(opam env)
     '';
 

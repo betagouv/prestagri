@@ -1,11 +1,11 @@
 import os
+from .services.properties import properties
 import sentry_sdk
 
-SENTRY_DSN = os.environ['SENTRY_DSN']
-
 def setup_sentry():
+
     sentry_sdk.init(
-        dsn=SENTRY_DSN,
+        dsn=properties.sentry_dsn,
         environment="staging",
         # Add data like request headers and IP for users,
         # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
