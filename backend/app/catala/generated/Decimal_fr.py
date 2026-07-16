@@ -63,4 +63,3 @@ def arrondi_a_la_decimale(d:Decimal, nieme_decimale:Integer) -> Decimal:
 
 def somme(l:List[Decimal]) -> Decimal:
     return Decimal(sum(l))
-

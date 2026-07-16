@@ -19,7 +19,7 @@
 
 from __future__ import annotations
 from collections import namedtuple
-from functools import total_ordering, partial 
+from functools import total_ordering, partial
 from enum import Enum
 from copy import deepcopy
 import re
@@ -77,7 +77,7 @@ class Infix(object):
 
 # this decorator will automatically create the other comparison methods based
 # on the implementation of < and ==
-@total_ordering 
+@total_ordering
 class Date:
     def __init__(self, *, year, month, day):
         self.year = year
@@ -205,7 +205,7 @@ class Date:
                                                                     months = -1)
             # We warp to the last day of the previous month.
             # What remains to be substracted (as [days] is negative) has to be
-            # diminished by the number of days of the date in the current month. 
+            # diminished by the number of days of the date in the current month.
             return Date(year = new_year,
                         month = new_month,
                         day = days_in_month(month = new_month,
@@ -357,4 +357,3 @@ class Period:
     @property
     def ymds(self):
         return self.years, self.months, self.days
-

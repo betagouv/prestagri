@@ -29,7 +29,7 @@ def read_quotient_familial(
     parent_isole: bool = False,
     outre_mer: bool = False
     ) -> Response :
-    try : 
+    try :
         menage = Menage.create_menage(foyer_fiscal_agent_revenu, foyer_fiscal_agent_membres,
             foyer_fiscal_conjoint_revenu, foyer_fiscal_conjoint_membres,
             foyer_fiscal_etudiant_revenu, foyer_fiscal_etudiant_membres,
@@ -124,6 +124,3 @@ async def trigger_error():
         sentry_sdk.capture_exception(e)
         logger.exception(e)
         return Response(value="Une erreur est survenue", explanation=properties.error_contact)
-
-
-

@@ -22,3 +22,5 @@ backend/app/model/__pycache__/
 frontend/doc/
 
 backend/.idea/
+
+.idea/

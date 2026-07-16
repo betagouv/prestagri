@@ -1,9 +1,9 @@
 [project]
-include_dirs = [ 
+include_dirs = [
     "src/aide_scolarite",
     "src/commun",
     "src/commun/structures"
-] 
+]
 build_dir    = "_build"    # Définit où sortir les fichiers compilés générés.
 target_dir   = "_target"   # Définit où sortir les fichiers finaux des cibles.
 

@@ -7,6 +7,7 @@ tasks:
   setup:
     desc: install all the required dependencies for prestagri
     cmds:
+      - pre-commit install
       - cd backend && uv install
       - cd frontend && npm install
   serve_api:
@@ -17,12 +18,16 @@ tasks:
   scalingo:
     desc: serve as scalingo would
     dir: backend
-    cmds: 
+    cmds:
       - uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
   serve_front:
     desc: run the doc locally
     cmds:
       - cd frontend && npm run start
+  check:
+    desc: run pre-commit hook
+    cmds:
+      - pre-commit run --all-files
   doc_read:
     desc: serve the doc locally with the search option
     cmds:
@@ -47,5 +52,3 @@ tasks:
     cmds:
       - sed -i 's/https:\/\/api.prest-agri.beta.gouv.fr/http:\/\/localhost:8000/g' frontend/src/pages/aide_scolarite.astro
       - sed -i 's/https:\/\/api.prest-agri.beta.gouv.fr/http:\/\/localhost:8000/g' frontend/src/pages/quotient_familial.astro
-
-

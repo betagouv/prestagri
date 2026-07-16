@@ -1,6 +1,6 @@
 ---
 title: Environnement de test
-description: Presentation du serveur et des outils 
+description: Presentation du serveur et des outils
 ---
 
 L'environnement de test est deploye par la Ruche sur [Scaligo](https://dashboard.scalingo.com/apps/osc-fr1/prestagri-staging)

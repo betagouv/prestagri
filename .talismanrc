@@ -1,0 +1,10 @@
+fileignoreconfig:
+- filename: frontend/dist/pagefind/pagefind.js
+  checksum: f3f2ec7a49bc78a8abd0d87c71c776f60889b7703b4ca8d1bbc23c6f9f4749fe
+- filename: frontend/src/assets/style/dsfr.min.css
+  checksum: 92d07dbc5a7e0df5f50469a90d6e2fd3a32acb3ac4c104367bf21abd76ffe74f
+- filename: frontend/src/assets/style/utility/utility.min.css
+  checksum: 7ad2177d062cf869b3f9e45ba34002591adc896489b45c907c5940312971a572
+- filename: .idea/workspace.xml
+  checksum: b300be1e4d213e5faa40c4dcc9251a3cdb3c633744c4893b125056eca23d2a72
+version: "1.0"

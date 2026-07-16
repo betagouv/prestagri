@@ -87,7 +87,7 @@ import DsfrLayout from "../layouts/dsfrLayout.astro"
                                             </div>
                                         </div>
                                         <div class="fr-fieldset__element">
-                                            <div class="fr-checkbox-group">        
+                                            <div class="fr-checkbox-group">
                                                 <input type="checkbox" name="beneficiaire_porteur_handicap" id="beneficiaire_porteur_handicap" />
                                                 <label class="fr-label" for="beneficiaire_porteur_handicap">L'agent ou l'enfant concerné par la demande est porteur de handicap</label>
                                             </div>
@@ -169,7 +169,7 @@ import DsfrLayout from "../layouts/dsfrLayout.astro"
     .then((data) => {
         document.getElementById("answer")!.style.display="block";
         document.getElementById('value')!.textContent = "Le quotient famillial est de " + data.value + "€"
-        document.getElementById('explanation')!.textContent = data.explanation 
+        document.getElementById('explanation')!.textContent = data.explanation
     })
     });
 </script>

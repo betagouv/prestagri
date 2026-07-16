@@ -17,5 +17,3 @@ from . import Money_fr as money_fr
 from . import Integer_fr as integer_fr
 from . import Decimal_internal as decimal_internal
 from . import Decimal_fr as decimal_fr
-
-

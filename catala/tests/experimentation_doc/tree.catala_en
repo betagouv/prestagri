@@ -8,7 +8,7 @@ declaration structure Arbre:
 
 #[test]
 declaration scope EatTest1:
-  output food content boolean 
+  output food content boolean
 
 scope EatTest1:
   definition food equals
@@ -16,6 +16,6 @@ scope EatTest1:
     if arbre.fruit with pattern Present content fruit_présent and fruit_présent.edible
     then true
     else false
-        
+
   assertion (food = true)
 ```

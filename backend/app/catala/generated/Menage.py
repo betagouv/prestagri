@@ -30,5 +30,3 @@ class Menage(CatalaStruct):
         'outre_mer': 'outre_mer', # content Bool
         'membres_du_foyer': 'membres_du_foyer', # content List[foyer_fiscal.FoyerFiscal]
     }
-
-
