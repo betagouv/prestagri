@@ -23,5 +23,3 @@ class Trajet(CatalaStruct):
         'distance_km': 'distance_km', # content Integer
         'duree_minutes': 'durée_minutes', # content Integer
     }
-
-

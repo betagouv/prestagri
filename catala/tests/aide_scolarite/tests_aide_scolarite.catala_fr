@@ -146,9 +146,9 @@ champ d'application TestCalculPointsTrajet4:
   assertion (calcul.nb_points = 2,0)
 ```
 
-## Test Calcul point Aide Scolarite : 
+## Test Calcul point Aide Scolarite :
 
-### Trajets : 
+### Trajets :
 # Cas N°1 : logement separe mais proche de l'ecole
 ```catala
 #[test]
@@ -174,7 +174,7 @@ champ d'application TestCalculPointsAideScolarite1:
   assertion (calcul.nb_points = 2,0)
 ```
 
-# Cas N°2 : sans logement separe 
+# Cas N°2 : sans logement separe
 ```catala
 #[test]
 déclaration champ d'application TestCalculPointsAideScolarite2:
@@ -196,7 +196,7 @@ champ d'application TestCalculPointsAideScolarite2:
   assertion (calcul.nb_points = 0,0)
 ```
 
-# Cas Intermediaire: Retrait du critere C2 
+# Cas Intermediaire: Retrait du critere C2
 ```catala
 #[test]
 déclaration champ d'application TestCalculRetraitCritere:
@@ -314,7 +314,7 @@ champ d'application TestCalculPointsAideScolarite6:
   assertion (calcul.nb_points = 2,0)
 ```
 
-### matériel spécifique 
+### matériel spécifique
 
 # Cas N°1 : pas de matériel specifique
 ```catala

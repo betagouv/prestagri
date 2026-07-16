@@ -23,5 +23,3 @@ class FoyerFiscal(CatalaStruct):
         'revenu_fiscal_reference': 'revenu_fiscal_reference', # content Money
         'nombre_personnes': 'nombre_personnes', # content Integer
     }
-
-

@@ -2,7 +2,7 @@
 > Usage de Menage
 > Usage de Foyer_fiscal
 
-## Méthode de calcul du QUOTIENT FAMILIAL (QF) 
+## Méthode de calcul du QUOTIENT FAMILIAL (QF)
 
 Note de  service p.8
 
@@ -33,15 +33,15 @@ champ d'application CalculQuotientFamilial:
   définition nombre_personnes_vivants_au_foyer égal à décimal de Entier.somme de transforme chaque personne parmi menage.membres_du_foyer en personne.nombre_personnes
   définition critères_applicables état base égal à []
   définition nombre_unités égal à
-    soit points égal à 
-      transforme chaque c parmi critères_applicables en 
-        selon c sous forme 
+    soit points égal à
+      transforme chaque c parmi critères_applicables en
+        selon c sous forme
         -- Parent_isolé contenu c_points: c_points
-        -- Handicap contenu c_points: c_points 
-        -- Garde_alternée contenu c_points: c_points 
+        -- Handicap contenu c_points: c_points
+        -- Garde_alternée contenu c_points: c_points
     dans
     Décimal.somme de points + nombre_personnes_vivants_au_foyer
-  définition revenu_total égal à Argent.somme de transforme chaque personne parmi menage.membres_du_foyer en personne.revenu_fiscal_reference 
+  définition revenu_total égal à Argent.somme de transforme chaque personne parmi menage.membres_du_foyer en personne.revenu_fiscal_reference
   étiquette revenu_fiscal_reference_défaut définition revenu_fiscal_reference égal à revenu_total
   définition quotient_familial égal à argent de (décimal de revenu_fiscal_reference / (décimal de 12 * nombre_unités))
 ```
@@ -56,9 +56,9 @@ séparation ou rupture d'un PACS est calculé d'après la situation familiale de
 d'imposition (ex : situation au 31/12/2024 pour l'imposition des revenus perçus en 2024 à déclarer en 2025).
 
 ```catala
-# TODO Question s'il y a plusieurs adultes dans le foyer, est ce un parent isole ? 
+# TODO Question s'il y a plusieurs adultes dans le foyer, est ce un parent isole ?
 champ d'application CalculQuotientFamilial:
-  définition critères_applicables état parent_isolé égal à 
+  définition critères_applicables état parent_isolé égal à
   si menage.parent_isolé
   alors critères_applicables ++ [ Parent_isolé contenu 1,0 ]
   sinon critères_applicables
@@ -96,7 +96,7 @@ le revenu fiscal de référence.
 ```catala
 champ d'application CalculQuotientFamilial:
   étiquette revenu_fiscal_reference_outre_mer exception revenu_fiscal_reference_défaut
-  définition revenu_fiscal_reference 
+  définition revenu_fiscal_reference
   sous condition menage.outre_mer
   conséquence égal à revenu_total * 80 %
 ```

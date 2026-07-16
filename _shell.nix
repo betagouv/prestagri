@@ -4,6 +4,7 @@ with pkgs;
 
 mkShell {
 buildInputs = [
+    pre-commit ruff #security
     python313 uv #python
     go-task # alternative to make
     nodejs_24 #for the doc

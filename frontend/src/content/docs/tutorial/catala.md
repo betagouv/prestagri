@@ -5,11 +5,11 @@ description: How catala is included in python
 
 Catala 1.2 :
 
-necessary fix : 
+necessary fix :
 
 - list.map(function) => map(function, list)
 - fold_left
-    
+
 
     def somme(l:List[Money]) -> Money:
     def _somme__1(total:Money, x:Money):

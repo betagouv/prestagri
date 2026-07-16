@@ -8,7 +8,7 @@ déclaration structure Arbre:
 
 #[test]
 déclaration champ d'application MangerTest1:
-  résultat nourriture contenu booléen 
+  résultat nourriture contenu booléen
 
 champ d'application MangerTest1:
   définition nourriture égal à
@@ -17,7 +17,7 @@ champ d'application MangerTest1:
     alors vrai
     sinon faux
 
-  
-    
+
+
   assertion (nourriture = vrai)
 ```

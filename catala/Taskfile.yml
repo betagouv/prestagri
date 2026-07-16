@@ -11,25 +11,22 @@ tasks:
 
   build:
     desc: build targets
-    cmds: 
+    cmds:
       - clerk build
   exception:
     desc: display exception tree
-    cmds: 
+    cmds:
       - clerk exceptions src/commun/quotient_familial.catala_fr --scope=CalculQuotientFamilial --variable=nombre_unités
-  trace: 
+  trace:
     desc: display json trace for explicability
     cmds:
       - clerk run exec/executable_test.catala_fr  -c--trace=exec/trace.json -c--trace-format=json --scope TestQuotientFamilialAideScolarite1
       - clerk run exec/executable_aide_scolarite.catala_fr  -c--trace=exec/trace_aide_scolarite.json -c--trace-format=json --scope TestCalculPointsAideScolarite4
   type_check:
     desc: run type checking
-    cmds: 
-      - clerk typecheck 
+    cmds:
+      - clerk typecheck
   test:
     desc: run all test in folder
-    cmds: 
+    cmds:
       - clerk test
-
-
-
