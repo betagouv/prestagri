@@ -7,7 +7,6 @@ from typing import Any
 ## Bash
 # curl \
 #-H 'Content-Type: application/json' \
-#-H 'Authorization: Bearer MWQ2MTUwNjItOGYzZC00MWY0LTk3YmMtOWI2MmFkNDQzMjg0O1B0YThzRmpNdEJoVFo2amdTY2hYN3JZYg==' \
 #--data '{ "query": "{ demarche(number: 146454) { title dossiers { nodes {id champs { label stringValue } annotations {label stringValue } } } } }" }' \
 #'https://demarche.numerique.gouv.fr/api/v2/graphql'
 
