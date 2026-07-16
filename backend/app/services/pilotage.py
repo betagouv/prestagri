@@ -22,4 +22,3 @@ def get_dn_dossiers() -> Any:
     data = '{ "query": "{ demarche(number: 146454) { title dossiers { nodes {id champs { label stringValue } annotations {label stringValue } } } } }" }'
     r = requests.post(url, headers=headers, data=data)
     return r.json()
-
