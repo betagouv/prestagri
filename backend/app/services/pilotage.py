@@ -18,6 +18,6 @@ def get_dn_dossiers() -> Any:
         'Content-Type' : 'application/json',
         'Authorization' : 'Bearer ' + properties.dn_pilotage_token
     }
-    data = '{ "query": "{ demarche(number: 146454) { title dossiers { nodes {id champs { label stringValue } annotations {label stringValue } } } } }" }'
+    data = '{ "query": "{ demarche(number: 146454) { title dossiers { nodes {id champs { label stringValue ... on RepetitionChamp { rows { champs {label stringValue} } } } annotations {label stringValue ... on RepetitionChamp { rows { champs {label stringValue} } } } } } } }"}'
     r = requests.post(url, headers=headers, data=data)
     return r.json()
