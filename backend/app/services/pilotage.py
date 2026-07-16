@@ -7,9 +7,9 @@ from typing import Any
 ## Bash
 # curl \
 #-H 'Content-Type: application/json' \
+#-H 'Authorization: Bearer **see key in shell.nix or var env' \
 #--data '{ "query": "{ demarche(number: 146454) { title dossiers { nodes {id champs { label stringValue } annotations {label stringValue } } } } }" }' \
 #'https://demarche.numerique.gouv.fr/api/v2/graphql'
-
 
 def get_dn_dossiers() -> Any:
 
