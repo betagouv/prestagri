@@ -1,6 +1,9 @@
 import requests
+from enum import Enum
 import json
-from ..services.properties import properties
+
+from .blurring import blur_birthdate
+from backend.app.services.properties import properties
 from typing import Any
 
 
@@ -9,8 +12,8 @@ def upload_pilotage_data() -> Any:
     parsed_data = parse_dn_data(dn_data)
     uploaded = send_data_to_grist(parsed_data)
     return {
-       # "dn": dn_data,
-       # "parsed_data": parsed_data,
+        "dn": dn_data,
+        "parsed_data": parsed_data,
         "uploaded": uploaded
     }
 
@@ -31,7 +34,7 @@ def get_dn_dossiers() -> Any:
         'Content-Type' : 'application/json',
         'Authorization' : 'Bearer ' + properties.dn_pilotage_token
     }
-    data = '{ "query": "{ demarche(number: 146454) { title dossiers { nodes {id champs { label stringValue ... on RepetitionChamp { rows { champs {label stringValue} } } } annotations {label stringValue ... on RepetitionChamp { rows { champs {label stringValue} } } } } } } }"}'
+    data = '{ "query": "{ demarche(number: 146454) { title dossiers { nodes {id champs { id label stringValue ... on RepetitionChamp { rows { champs {label stringValue} } } } annotations {label stringValue ... on RepetitionChamp { rows { champs {label stringValue} } } } } } } }"}'
     r = requests.post(url, headers=headers, data=data)
     return r.json()
 
@@ -45,28 +48,34 @@ def get_dn_dossiers() -> Any:
 #  -d ''
 
 def parse_dn_data(data: Any) -> Any:
-    return {
-        "records": [
-            {
+    parsed = []
+    for dossier in data["data"]["demarche"]["dossiers"]["nodes"]:
+        parsed_dossier = {
             "require": {
-                "pet": "cat"
+                "dossier_id": dossier["id"]
             },
             "fields": {
-                "popularity": 67
+                "matricule": get_by_champ(dossier, Champ.MATRICULE),
+                "affectation": get_by_champ(dossier, Champ.AFFECTATION),
+                "décennie": blur_birthdate(get_by_champ(dossier, Champ.AFFECTATION))
             }
-            },
-            {
-            "require": {
-                "pet": "dog"
-            },
-            "fields": {
-                "popularity": 95
-            }
-            }
-        ]
-    }
+        }
+        parsed.append(parsed_dossier)
+
+    return {"records": parsed}
+
+class Champ(Enum):
+    MATRICULE= "Q2hhbXAtNjYyNTkyOA=="
+    AFFECTATION= "Q2hhbXAtNjM2MDYzMg=="
+    BIRTHDATE= "Q2hhbXAtNjQyMDQwMA=="
 
 
+
+def get_by_champ(dossier: Any, champ_id: Champ) -> str :
+    for champ in dossier["champs"]:
+        if champ["id"] == champ_id.value:
+            return champ["stringValue"]
+    return "information manquante"
 
 def send_data_to_grist(parsed_data: Any) -> Any :
 
