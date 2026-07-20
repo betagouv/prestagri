@@ -10,6 +10,11 @@ tasks:
       - pre-commit install
       - cd backend && uv install
       - cd frontend && npm install
+  test:
+    desc: run backend unit test
+    dir: backend
+    cmds:
+      - python -m pytest
   serve_api:
     desc: serve
     dir: backend
