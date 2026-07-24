@@ -2,14 +2,13 @@ import sentry_sdk
 from fastapi import APIRouter
 
 from app.services.gps import get_trajet
-from app.services.properties import Properties
+from app.services.properties import properties
 from app.utils import logger
 from app.model import Menage, FoyerFiscal, Response, Centimes, Trajet
 from app.services.quotient_familial import get_quotient_familial
 from app.services.aide_scolarite import get_aide_scolarite
 
 router = APIRouter()
-properties = Properties.import_properties()
 
 @router.get("/")
 def read_root():

@@ -2,7 +2,7 @@ from .generated.catala_runtime import Money as Money_cat, Integer, CatalaEnum
 from .generated.Foyer_fiscal import FoyerFiscal as Foyer_fiscal_cat
 from .generated.Trajet import Trajet as Trajet_cat
 from .generated.Menage import Menage as Menage_cat
-from ..model import Menage, FoyerFiscal, Trajet, Centimes, centimes
+from app.model import Menage, FoyerFiscal, Trajet, Centimes, centimes
 from gmpy2 import mpq
 
 def to_menage_cat(menage: Menage) -> Menage_cat:

@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
-from .utils import logger
 from .config import setup_sentry
-from .api import default
+from .api import calculatrice
+from .api import pilotage
 from fastapi.middleware.cors import CORSMiddleware
 
 setup_sentry()
@@ -20,7 +20,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(default.router)
+app.include_router(calculatrice.router)
+app.include_router(pilotage.router)
 
 def custom_openapi():
     if app.openapi_schema:

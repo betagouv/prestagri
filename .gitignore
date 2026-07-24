@@ -24,3 +24,5 @@ frontend/doc/
 backend/.idea/
 
 .idea/
+
+backend/tests/services/__pycache__/

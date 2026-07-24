@@ -1,9 +1,9 @@
 
-from .generated.Quotient_familial import CalculQuotientFamilialIn, calcul_quotient_familial
-from .generated.Aide_scolarite import CalculQuotientFamilialAideScolariteIn, calcul_quotient_familial_aide_scolarite, CalculPointsAideScolariteIn, calcul_points_aide_scolarite, calcul_aide_scolarite, CalculAideScolariteIn, Integer
-from .generated.catala_runtime import Option
-from ..model import Menage, FoyerFiscal, Trajet, Response, Centimes
-from .utils import to_menage_cat, to_personne_cat_list, to_money_cat, to_trajet, cat_enum_to_string
+from app.catala.generated.Quotient_familial import CalculQuotientFamilialIn, calcul_quotient_familial
+from app.catala.generated.Aide_scolarite import CalculQuotientFamilialAideScolariteIn, calcul_quotient_familial_aide_scolarite, CalculPointsAideScolariteIn, calcul_points_aide_scolarite, calcul_aide_scolarite, CalculAideScolariteIn, Integer
+from app.catala.generated.catala_runtime import Option
+from app.model import Menage, FoyerFiscal, Trajet, Response, Centimes
+from app.catala.utils import to_menage_cat, to_personne_cat_list, to_money_cat, to_trajet, cat_enum_to_string
 
 
 def get_catala_quotient_familial(menage : Menage) -> Response[Centimes]:
