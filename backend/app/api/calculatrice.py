@@ -10,11 +10,6 @@ from app.services.aide_scolarite import get_aide_scolarite
 
 router = APIRouter()
 
-@router.get("/")
-def read_root():
-    logger.info('Bienvenu')
-    return {"Quelle belle journee pour les abeilles"}
-
 @router.get("/quotient_familial")
 def read_quotient_familial(
     foyer_fiscal_agent_revenu: int,
