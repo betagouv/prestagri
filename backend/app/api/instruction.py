@@ -9,4 +9,5 @@ router = APIRouter()
 @router.get("/instruction/{dossier_number}")
 def read_root(dossier_number: str):
     logger.info('instruction ' + dossier_number)
-    return upload_dossier_data(dossier_number)
+    return "instructed"
+    #return upload_dossier_data(dossier_number)
