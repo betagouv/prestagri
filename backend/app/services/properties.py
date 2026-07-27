@@ -7,6 +7,7 @@ class Properties (BaseModel):
     error_contact: str
     sentry_dsn: str
     dn_pilotage_token: str
+    dn_demarche_id: str
     grist_pilotage_token: str
     grist_doc_id: str
 
@@ -18,6 +19,7 @@ class Properties (BaseModel):
             error_contact=yaml_data["error_contact"],
             sentry_dsn=varenv_data["sentry_dsn"],
             dn_pilotage_token=varenv_data["dn_pilotage_token"],
+            dn_demarche_id=varenv_data["dn_demarche_id"],
             grist_pilotage_token=varenv_data["grist_pilotage_token"],
             grist_doc_id=varenv_data["grist_doc_id"],
         )
@@ -35,6 +37,7 @@ class Properties (BaseModel):
         return {
             "sentry_dsn" : os.environ['SENTRY_DSN'],
             "dn_pilotage_token" : os.environ['DN_PILOTAGE_TOKEN'],
+            "dn_demarche_id" : os.environ['DN_DEMARCHE_ID'],
             "grist_pilotage_token" : os.environ['GRIST_API_KEY'],
             "grist_doc_id" : os.environ['GRIST_DOC_ID'],
         }
