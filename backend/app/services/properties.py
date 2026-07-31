@@ -10,6 +10,7 @@ class Properties (BaseModel):
     dn_demarche_id: str
     grist_pilotage_token: str
     grist_doc_id: str
+    dn_instructeurice_id: str
 
     @classmethod
     def import_properties(cls):
@@ -22,6 +23,7 @@ class Properties (BaseModel):
             dn_demarche_id=varenv_data["dn_demarche_id"],
             grist_pilotage_token=varenv_data["grist_pilotage_token"],
             grist_doc_id=varenv_data["grist_doc_id"],
+            dn_instructeurice_id=varenv_data["dn_instructeurice_id"],
         )
 
     @staticmethod
@@ -40,6 +42,8 @@ class Properties (BaseModel):
             "dn_demarche_id" : os.environ['DN_DEMARCHE_ID'],
             "grist_pilotage_token" : os.environ['GRIST_API_KEY'],
             "grist_doc_id" : os.environ['GRIST_DOC_ID'],
+            "dn_instructeurice_id": os.environ['DN_INSTRUCTEURICE_ID'],
+
         }
 
 properties = Properties.import_properties()

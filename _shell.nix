@@ -16,6 +16,9 @@ shellHook = ''
         export DN_PILOTAGE_TOKEN="token fourni par DN"
         export GRIST_API_KEY="api key"
         export GRIST_DOC_ID="doc id"
+        export BLURRING_SALT="any_salt"
+        export BLURRING_KEY="any_key"
+        export DN_INSTRUCTEURICE_ID="id of instructor that will be displayed as author for the simulation"
         eval $(opam env)
     '';
 

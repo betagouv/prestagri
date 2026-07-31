@@ -3,7 +3,7 @@ import json
 from typing import Any
 
 from app.services.properties import properties
-from app.services.demarche_numerique import get_pilotage_data, get_by_champ, Champ
+from app.services.demarche_numerique import get_pilotage_data, get_by_champ_id, Champ
 from app.services.blurring import blur_birthdate, blur_id
 
 def upload_pilotage_data() -> Any:
@@ -27,9 +27,9 @@ def parse_pilotage_data(data: Any) -> Any:
                 "dossier_id": blur_id(dossier["id"])
             },
             "fields": {
-                "matricule": blur_id(get_by_champ(dossier, Champ.MATRICULE)),
-                "affectation": get_by_champ(dossier, Champ.AFFECTATION),
-                "decennie": blur_birthdate(get_by_champ(dossier, Champ.BIRTHDATE))
+                "matricule": blur_id(get_by_champ_id(dossier["champs"], Champ.MATRICULE)),
+                "affectation": get_by_champ_id(dossier["champs"], Champ.AFFECTATION),
+                "decennie": blur_birthdate(get_by_champ_id(dossier["champs"], Champ.BIRTHDATE))
             }
         }
         parsed.append(parsed_dossier)

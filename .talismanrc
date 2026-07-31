@@ -5,9 +5,8 @@ fileignoreconfig:
   checksum: 92d07dbc5a7e0df5f50469a90d6e2fd3a32acb3ac4c104367bf21abd76ffe74f
 - filename: frontend/src/assets/style/utility/utility.min.css
   checksum: 7ad2177d062cf869b3f9e45ba34002591adc896489b45c907c5940312971a572
-- filename: _shell.nix
-  checksum: 1b3a21d430dc13942bd130126b0c5aa5307eb007eb39aadcc166db2981de9408
 - filename: backend/uv.lock
   checksum: 5cbf5e3ef148e272cd9d28168d100cb606dc9cc31680455cf7684d35fa0f8798
-
+- filename: _shell.nix
+  checksum: f5825506f3c6e7924339217bbded474bb77b826f8e1dd5f8a9d0ea72f4aaac19
 version: "1.0"
