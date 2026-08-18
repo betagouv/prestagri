@@ -9,9 +9,6 @@ from app.services.properties import properties
 url= "https://demarche.numerique.gouv.fr/api/v2/graphql"
 
 def get_pilotage_data() -> Any:
-    return get_dn_dossiers()
-
-def get_dn_dossiers() -> Any:
     headers = {
         'Content-Type' : 'application/json',
         'Authorization' : 'Bearer ' + properties.dn_pilotage_token
@@ -20,11 +17,7 @@ def get_dn_dossiers() -> Any:
     r = requests.post(url, headers=headers, data=data)
     return r.json()
 
-def get_dn_dossier(dossier_number: str) -> Any :
-    raw_data = retrieve_dn_dossier(dossier_number)
-    return parse_dn_dossier(raw_data)
-
-def retrieve_dn_dossier(dossier_number: str) -> Any:
+def get_dn_dossier(dossier_number: str) -> Any:
     headers = {
         'Content-Type' : 'application/json',
         'Authorization' : 'Bearer ' + properties.dn_pilotage_token
@@ -33,29 +26,41 @@ def retrieve_dn_dossier(dossier_number: str) -> Any:
 
 
     r = requests.post(url, headers=headers, data=data)
-    return r.json()
+    return parse_dn_dossier(r.json())
 
 def parse_dn_dossier(dn_data: Any) -> Any:
     dossier = dn_data["data"]["dossier"]
-    prestations = get_by_champ_id(dossier["champs"], Champ.PRESTATIONS, stringValue=False)["rows"]
-    annotations = get_by_champ_id(dossier["annotations"], Champ.ANNOTATION_PRESTATION, stringValue=False)["rows"]
+    prestations = get_by_champ_id(dossier["champs"], Champ.PRESTATIONS)["rows"]
+    annotations = get_by_champ_id(dossier["annotations"], Champ.ANNOTATION_PRESTATION)["rows"]
 
     return {
         "id": dossier["id"],
         "prestations": get_prestation_type_and_beneficiary(prestations),
-        #"prestations-data": prestations,
-        "annotations": get_prestation_type_and_beneficiary(annotations),
-        #"annotations-data": annotations
+        "annotations": get_prestation_type_and_beneficiary(annotations, True),
         "raw": dn_data
     }
 
-def get_prestation_type_and_beneficiary(prestations: List[Any]) -> Any:
+def get_prestation_type_and_beneficiary(prestations: List[Any], is_annotation: bool = False) -> Any:
     result = []
     for p in prestations:
-        result.append({
+        parsed = {
+            #"raw": p,
+            "id": {
+                        "id": "non relevant information",
+                        "value": get_by_champ_label(p["champs"], Champ.LABEL_TYPE_PRESTATION)["id"],
+                    },
+
             "type": get_by_champ_label(p["champs"], Champ.LABEL_TYPE_PRESTATION),
-            "enfant": get_by_champ_label(p["champs"], Champ.LABEL_ENFANT_CONCERNE)
-        })
+            "enfant": get_by_champ_label(p["champs"], Champ.LABEL_ENFANT_CONCERNE),
+            "beneficiaire": get_by_champ_label(p["champs"], Champ.LABEL_BENEFICIAIRE),
+        }
+        if is_annotation:
+            parsed["associated_prestation"] = get_by_champ_label(p["champs"], Champ.LABEL_ASSOCIATED_PRESTATION)
+            parsed["simulation_montant"] = get_by_champ_label(p["champs"], Champ.LABEL_SIMULATION_AMOUNT)
+            parsed["simulation_explication"] = get_by_champ_label(p["champs"], Champ.LABEL_SIMULATION_EXPLANATION)
+
+
+        result.append(parsed)
     return result
 
 def create_dn_annotations(dossier_id: str, number: int) -> Any:
@@ -78,11 +83,42 @@ def create_dn_annotations(dossier_id: str, number: int) -> Any:
             }
         }
     }
+    r = requests.post(url, headers=headers, data=json.dumps(data))
+    raw = r.json()
+    annotations = get_by_champ_id(raw["data"]["dossierModifierAnnotations"]["annotations"], Champ.ANNOTATION_PRESTATION)["rows"]
+    return get_prestation_type_and_beneficiary(annotations, True)
 
+def fill_dn_text(dossier_id: str, field_id: str, value: str) -> Any:
+    return fill_dn_field(dossier_id, field_id, {"text" : value})
+
+def fill_dn_simple_choice(dossier_id: str, field_id: str, value: str) -> Any:
+    return fill_dn_field(dossier_id, field_id, {"dropDownList" : value})
+
+def fill_dn_field(dossier_id: str, field_id: str, value: Any) -> Any:
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + properties.dn_pilotage_token
+    }
+    data = {
+        "query": "mutation dossierModifierAnnotations($input: DossierModifierAnnotationsInput!) { dossierModifierAnnotations(input: $input) { annotations { id label stringValue ... on RepetitionChamp { rows { champs { id label stringValue} } } } errors { message } clientMutationId } }",
+        "variables": {
+            "input": {
+                "instructeurId": properties.dn_instructeurice_id,
+                "dossierId": dossier_id,
+                "annotations": [
+                    {
+                        "id": field_id,
+                        "value": value
+                    }
+                ]
+            }
+        }
+    }
     r = requests.post(url, headers=headers, data=json.dumps(data))
     return r.json()
 
 class Champ(Enum):
+    ID="id"
     MATRICULE= "Q2hhbXAtNjYyNTkyOA=="
     AFFECTATION= "Q2hhbXAtNjM2MDYzMg=="
     BIRTHDATE= "Q2hhbXAtNjQyMDQwMA=="
@@ -90,25 +126,28 @@ class Champ(Enum):
     ANNOTATION_PRESTATION= "Q2hhbXAtNjc3NjI1Mg=="
     LABEL_TYPE_PRESTATION="Prestation demandée"
     LABEL_ENFANT_CONCERNE="Nom et prénom de l'enfant concerné"
+    LABEL_BENEFICIAIRE="Bénéficiaire"
     LABEL_ANNOTATION_TYPE_ENFANT="Commentaire"
+    LABEL_ASSOCIATED_PRESTATION="Id de la prestation correspondante"
+    LABEL_SIMULATION_AMOUNT="Montant calculé par simulation"
+    LABEL_SIMULATION_EXPLANATION="Explication de la simulation"
 
 
-def get_by_champ_id(dossier: Any, champ_id: Champ, stringValue:bool=True) -> Any :
+
+def get_by_champ_id(dossier: Any, champ_id: Champ) -> Any :
     for champ in dossier:
         if champ["id"] == champ_id.value:
-            if stringValue:
-                return champ["stringValue"]
-            else:
-                return champ
-    return "information manquante"
+            return champ
+    return {"id": "information manquante", "value" : "information manquante"}
 
 def get_by_champ_label(dossier: Any, label: Champ, stringValue:bool=True) -> Any:
-    print(dossier)
     for champ in dossier:
-        print(champ)
         if champ["label"] == label.value:
             if stringValue:
-                return champ["stringValue"]
+                return {
+                    "id": champ["id"],
+                    "value" : champ["stringValue"]
+                }
             else:
                 return champ
-    return "information manquante"
+    return {"id": "information manquante", "value" : "information manquante"}
