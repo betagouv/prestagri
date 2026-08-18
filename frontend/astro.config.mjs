@@ -7,13 +7,10 @@ export default defineConfig({
     integrations: [
         starlight({
             title: 'Prest\'Agri-DOC',
-            social: {
-                github: 'https://github.com/withastro/starlight',
-            },
             sidebar: [
                 {
                     label: 'Tutoriels',
-                    autogenerate: { directory: 'tutorial' },
+                    items: [{autogenerate: { directory: 'tutorial' }}],
 
                     // items: [
                         // Each item here is one entry in the navigation menu.
@@ -22,7 +19,7 @@ export default defineConfig({
                 },
                 {
                     label: 'Guides',
-                    autogenerate: { directory: 'guide' },
+                    items: [{autogenerate: { directory: 'guide' }}],
 
                     // items: [
                         // Each item here is one entry in the navigation menu.
@@ -31,11 +28,11 @@ export default defineConfig({
                 },
                 {
                     label: 'Références',
-                    autogenerate: { directory: 'reference' },
+                    items: [{autogenerate: { directory: 'reference' }}],
                 },
                 {
                     label: 'Explications',
-                    autogenerate: { directory: 'explanation' },
+                    items: [{autogenerate: { directory: 'explanation' }}],
                 },
             ],
         }),

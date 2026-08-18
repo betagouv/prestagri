@@ -1,0 +1,61 @@
+---
+import DsfrLayout from "../layouts/dsfrLayout.astro"
+---
+
+<DsfrLayout>
+    <div class="fr-container fr-mt-8v fr-mt-md-14v fr-mb-2v fr-mb-md-8v">
+        <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--center">
+            <div class="fr-col-12 fr-col-md-10 fr-col-lg-8">
+                <h2>Déclencher la pré-instruction du dossier</h2>
+                <p class="fr-text--lead">Ceci vous permettra de pré-remplir automatiquement la section instruction de votre dossier (informations pour chaque prestation, simulation etc...)</p>
+            </div>
+        </div>
+    </div>
+    <div class="fr-container fr-container--fluid fr-mb-md-14v">
+        <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
+            <div class="fr-col-12 fr-col-md-10 fr-col-lg-8">
+                <div class="fr-container fr-background-alt--grey fr-px-md-0 fr-py-10v fr-py-md-14v">
+                    <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
+                        <div class="fr-col-12 fr-col-md-10 fr-col-lg-9">
+                            <div class="fr-mb-6v">
+                                <form id="calculForm" action="" method="get" class="form-example">
+                                    <fieldset class="fr-fieldset" aria-labelledby="text-legend text-messages">
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="dossier_id">Quel est le numéro du dossier ? * </label>
+                                                <input class="fr-input" type="number" name="dossier_id" id="dossier_id" required />
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <button class="fr-btn" type="submit">Pré-remplir l'instruction du dossier</button>
+                                </form>
+                            </div>
+                            <div class="fr-callout" id="answer" style = "display:none">
+                                <p id="value" class="fr-callout__text">...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</DsfrLayout>
+<script>
+    let calculForm = document.getElementById("calculForm");
+    calculForm?.addEventListener("submit", (e) => {
+    let url = "https://api.prest-agri.beta.gouv.fr/instruction/" + (document.getElementById('dossier_id') as HTMLInputElement).value
+    console.log(url)
+    e.preventDefault();
+    fetch(url)
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(`On a un souci, contactez le support`);
+        }
+        return response.json()
+    })
+    .then((data) => {
+        document.getElementById("answer")!.style.display="block";
+        document.getElementById('value')!.textContent = data
+    })
+    });
+</script>
