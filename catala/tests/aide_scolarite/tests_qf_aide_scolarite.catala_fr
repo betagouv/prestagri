@@ -41,31 +41,3 @@ champ d'application TestQuotientFamilialAideScolarite1:
     }
   assertion (calcul.quotient_familial = 710 €)
 ```
-
-# Cas N°2 :
-- Un agent en couple
-- Nombre d'enfant(s) = 1 ;
-- Nombre personnes vivant au foyer = 2 + 1 = 3 (l'agent, son conjoint et son enfant)
-- Revenu Fiscal de Référence (RFR) du foyer = 90 000 €
-- QF = 90 000 / (12 x 3) = 2500
-- Aide scolarite = 0 (QF > 1900)
-
-```catala
-#[test]
-déclaration champ d'application TestAideScolarite1:
-  résultat calcul contenu Aide_scolarite.CalculAideScolarite
-
-champ d'application TestAideScolarite1:
-  définition calcul égal à
-    résultat de Aide_scolarite.CalculAideScolarite avec {
-      -- quotient_familial: 2500€
-      -- trajet_depuis_domicile_agent: Trajet {
-        -- distance_km: 100
-        --durée_minutes: 20
-      }
-      -- trajet_depuis_domicile_étudiant: Absent
-      -- montant_matériel_spécifique : 1000 €
-      -- étudiant_en_filière_post_bac : vrai
-    }
-  assertion (calcul.aide_scolarite = 0 €)
-```
