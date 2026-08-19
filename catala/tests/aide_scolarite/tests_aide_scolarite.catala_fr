@@ -163,3 +163,51 @@ champ d'application TestCalculAideScolarite3:
   assertion (calcul.nb_points = 3,0)
   assertion (calcul.aide_scolarite = 0 €)
 ```
+
+# Cas N°4 : Test python
+
+```catala
+#[test]
+déclaration champ d'application TestCalculAideScolarite4:
+  résultat calcul contenu Aide_scolarite.CalculAideScolarite
+
+champ d'application TestCalculAideScolarite4:
+  définition calcul égal à
+    résultat de Aide_scolarite.CalculAideScolarite avec {
+      -- foyer_fiscal_agent: Menage {
+        -- beneficiaire_porteur_handicap: vrai
+        -- garde_alternée: faux
+        -- parent_isolé: faux
+        -- outre_mer: faux
+        -- membres_du_foyer: [
+          Foyer_fiscal {
+            -- revenu_fiscal_reference: 12 000 €
+            -- nombre_personnes: 1
+          } ;
+          Foyer_fiscal {
+            -- revenu_fiscal_reference: 20 600 €
+            -- nombre_personnes: 3
+          } ]
+      }
+      -- étudiants_fiscalement_indépendants: [Foyer_fiscal {
+        -- revenu_fiscal_reference: 10 000 €
+        -- nombre_personnes: 1
+      }]
+      -- trajet_depuis_domicile_agent: Trajet {
+        -- distance_km: 100
+        --durée_minutes: 20
+      }
+      -- trajet_depuis_domicile_étudiant: Absent
+      -- montant_matériel_spécifique : 1000 €
+      -- étudiant_en_filière_post_bac : faux
+    }
+  assertion (calcul.revenu_fiscal_reference = 42 600,00 €)
+  assertion (calcul.nombre_personnes_vivants_au_foyer = 5,0)
+  assertion (calcul.nombre_unités = 5,5)
+  assertion (calcul.critères_applicables_quotient_familial = [Handicap contenu 0,5;])
+  assertion (calcul.quotient_familial = 645,45€)
+  assertion (calcul.valeur_point = 100,00 €)
+  assertion (calcul.critères_applicables = [ C3_éloignement_agent contenu 2,0; C4_matériel contenu 2,0 ])
+  assertion (calcul.nb_points = 4,0)
+  assertion (calcul.aide_scolarite = 400,00 €)
+```

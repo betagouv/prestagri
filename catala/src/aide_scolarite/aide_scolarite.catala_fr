@@ -60,8 +60,8 @@ déclaration champ d'application CalculAideScolarite:
   entrée trajet_depuis_domicile_étudiant contenu optionnel de Trajet
   entrée montant_matériel_spécifique contenu argent
   entrée étudiant_en_filière_post_bac contenu booléen
-  calcul_points champ d'application CalculPointsAideScolarite
   calcul_quotient_familial_aide_scolarite champ d'application CalculQuotientFamilialAideScolarite
+  calcul_points champ d'application CalculPointsAideScolarite
   résultat revenu_fiscal_reference contenu argent
   résultat nombre_personnes_vivants_au_foyer contenu décimal
   résultat nombre_unités contenu décimal
