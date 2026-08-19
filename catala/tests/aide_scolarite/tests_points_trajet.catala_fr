@@ -1,0 +1,78 @@
+> Usage de Aide_scolarite
+> Usage de Menage
+> Usage de Foyer_fiscal
+> Usage de Trajet
+
+# Tests du calcul intermediaire des points pour un trajet
+
+
+## Cas N°1 : le trajet fait plus de 30km
+```catala
+#[test]
+déclaration champ d'application TestCalculPointsTrajet1:
+  résultat calcul contenu Aide_scolarite.CalculPointsTrajet
+
+champ d'application TestCalculPointsTrajet1:
+  définition calcul égal à
+    résultat de Aide_scolarite.CalculPointsTrajet avec {
+      -- trajet: Présent contenu Trajet {
+        -- distance_km: 60
+        -- durée_minutes: 20
+      }
+    }
+  assertion (calcul.nb_points = 2,0)
+```
+
+## Cas N°2 : le trajet fait plus de 100km
+
+```catala
+#[test]
+déclaration champ d'application TestCalculPointsTrajet2:
+  résultat calcul contenu Aide_scolarite.CalculPointsTrajet
+
+champ d'application TestCalculPointsTrajet2:
+  définition calcul égal à
+    résultat de Aide_scolarite.CalculPointsTrajet avec {
+      -- trajet: Présent contenu Trajet {
+        -- distance_km: 101
+        -- durée_minutes: 20
+      }
+    }
+  assertion (calcul.nb_points = 4,0)
+```
+
+## Cas N°3 : le trajet fait moins de 30 min et 30km
+
+```catala
+#[test]
+déclaration champ d'application TestCalculPointsTrajet3:
+  résultat calcul contenu Aide_scolarite.CalculPointsTrajet
+
+champ d'application TestCalculPointsTrajet3:
+  définition calcul égal à
+    résultat de Aide_scolarite.CalculPointsTrajet avec {
+      -- trajet: Présent contenu Trajet {
+        -- distance_km: 20
+        -- durée_minutes: 20
+      }
+    }
+  assertion (calcul.nb_points = 0,0)
+```
+
+## Cas N°3 : le trajet fait plus de 30 min
+
+```catala
+#[test]
+déclaration champ d'application TestCalculPointsTrajet4:
+  résultat calcul contenu Aide_scolarite.CalculPointsTrajet
+
+champ d'application TestCalculPointsTrajet4:
+  définition calcul égal à
+    résultat de Aide_scolarite.CalculPointsTrajet avec {
+      -- trajet: Présent contenu Trajet {
+        -- distance_km: 20
+        -- durée_minutes: 40
+      }
+    }
+  assertion (calcul.nb_points = 2,0)
+```
