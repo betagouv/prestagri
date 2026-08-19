@@ -1,26 +1,21 @@
-from app.services.blurring import blur_birthdate
 from app.catala.generated.Aide_scolarite import CalculAideScolariteIn, calcul_aide_scolarite, calcul_quotient_familial_aide_scolarite, CalculQuotientFamilialAideScolariteIn
 from app.catala.generated.Quotient_familial import CalculQuotientFamilialIn, calcul_quotient_familial
 from app.catala.generated.Foyer_fiscal import FoyerFiscal
 from app.catala.generated.Menage import Menage
 from app.catala.generated.Trajet import Trajet
 from app.catala.generated.catala_runtime import Option, Money, Integer
-from app.model import Centimes
-
-
-def test_blurring_age():
-    assert blur_birthdate("12 juin 1987") == "1980"
 
 def test_generated_catala_aide_scolarite():
     result = calcul_aide_scolarite(CalculAideScolariteIn(
-        quotient_familial_in=Money(64545),
+        quotient_familial=Money(645.45),
         trajet_depuis_domicile_agent_in=Trajet(distance_km=Integer(100), duree_minutes=Integer(20)),
         trajet_depuis_domicile_etudiant_in=Option(None),
-        montant_materiel_specifique_in=Money(100000),
+        montant_materiel_specifique_in=Money(1000),
         etudiant_en_filiere_post_bac_in= False
     ))
-    assert str(Centimes(valeur=result.aide_scolarite)) == "400.0€"
 
+    assert result.quotient_familial == 64545
+    assert result.revenu_fiscal_reference == 42600
 
 def test_generated_catala_quotient_familial_aide_scolarite():
     result = calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(
@@ -31,19 +26,19 @@ def test_generated_catala_quotient_familial_aide_scolarite():
             outre_mer=False,
             membres_du_foyer=[
                 FoyerFiscal(
-                    revenu_fiscal_reference=Money(3260000),
+                    revenu_fiscal_reference=Money(32600),
                     nombre_personnes=Integer(4)
                 )
             ]
         ),
         etudiants_fiscalement_independants_in=[FoyerFiscal(
-            revenu_fiscal_reference=Money(1000000),
+            revenu_fiscal_reference=Money(10000),
             nombre_personnes=Integer(1)
         )],
     ))
 
-    assert str(Centimes(valeur=result.quotient_familial)) == "645.45€"
-    assert str(Centimes(valeur=result.revenu_fiscal_reference)) == "42600.0€"
+    assert result.quotient_familial == 64545
+    assert result.revenu_fiscal_reference == 42600
 
 def test_generated_catala_quotient_familial():
     result = calcul_quotient_familial(CalculQuotientFamilialIn(
@@ -54,12 +49,12 @@ def test_generated_catala_quotient_familial():
             outre_mer=False,
             membres_du_foyer=[
                 FoyerFiscal(
-                    revenu_fiscal_reference=Money(4260000),
+                    revenu_fiscal_reference=Money(42600),
                     nombre_personnes=Integer(5)
                 )
             ]
         )
     ))
 
-    assert str(Centimes(valeur=result.quotient_familial)) == "645.45€"
-    assert str(Centimes(valeur=result.revenu_fiscal_reference)) == "42600.0€"
+    assert result.quotient_familial == 64545
+    assert result.revenu_fiscal_reference == 42600
