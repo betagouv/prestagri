@@ -19,7 +19,7 @@ déclaration champ d'application TestQuotientFamilialAideScolarite1:
 champ d'application TestQuotientFamilialAideScolarite1:
   définition calcul égal à
     résultat de Aide_scolarite.CalculQuotientFamilialAideScolarite avec {
-      -- foyer_fiscal_agent: Menage {
+      -- menage_agent: Menage {
         -- beneficiaire_porteur_handicap: faux
         -- garde_alternée: faux
         -- parent_isolé: faux
@@ -52,7 +52,7 @@ déclaration champ d'application TestQuotientFamilialAideScolarite2:
 champ d'application TestQuotientFamilialAideScolarite2:
   définition calcul égal à
     résultat de Aide_scolarite.CalculQuotientFamilialAideScolarite avec {
-      -- foyer_fiscal_agent: Menage {
+      -- menage_agent: Menage {
         -- beneficiaire_porteur_handicap: vrai
         -- garde_alternée: faux
         -- parent_isolé: faux

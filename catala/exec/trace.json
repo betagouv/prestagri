@@ -5,7 +5,7 @@
          "event": "VariableDefinition",
          "name": "CalculQuotientFamilialAideScolarite.direct.input",
          "io": {"io_input":"OnlyInput","io_output":false},
-         "value": {"foyer_fiscal_agent_in": {"beneficiaire_porteur_handicap": false, "garde_alternée": false, "parent_isolé": false, "outre_mer": false, "membres_du_foyer": [{"revenu_fiscal_reference": 12000.00, "nombre_personnes": "0"}, {"revenu_fiscal_reference": 20600.00, "nombre_personnes": "2"}]}, "étudiants_fiscalement_indépendants_in": [{"revenu_fiscal_reference": 10000.00, "nombre_personnes": "0"}]}
+         "value": {"menage_agent_in": {"beneficiaire_porteur_handicap": false, "garde_alternée": false, "parent_isolé": false, "outre_mer": false, "membres_du_foyer": [{"revenu_fiscal_reference": 12000.00, "nombre_personnes": "0"}, {"revenu_fiscal_reference": 20600.00, "nombre_personnes": "2"}]}, "étudiants_fiscalement_indépendants_in": [{"revenu_fiscal_reference": 10000.00, "nombre_personnes": "0"}]}
          },
   {"event": "DecisionTaken", "pos": {"filename":"src/aide_scolarite/aide_scolarite.catala_fr","start_line":137,"start_column":18,"end_line":137,"end_column":66,"law_headings":["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]}},
   {
