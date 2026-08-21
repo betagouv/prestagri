@@ -46,3 +46,82 @@ champ d'application TestAideHandicapMoins20Ans2:
   assertion (calcul.aide_handicap = 0,00€)
   assertion (calcul.alerte_dernière_année = faux)
 ```
+
+# Cas N°3 : 20 ans au cours de l'année
+- Enfant de 19 ans
+- 100% dans sa famille
+- handicap 70%
+
+```catala
+#[test]
+déclaration champ d'application TestAideHandicapMoins20Ans3:
+  résultat calcul contenu Handicap_moins_20_ans.CalculAideHandicapMoins20Ans
+
+champ d'application TestAideHandicapMoins20Ans3:
+  définition calcul égal à
+    résultat de Handicap_moins_20_ans.CalculAideHandicapMoins20Ans avec {
+      -- année_demandée: 2026
+      -- date_naissance_enfant: |2006-09-12|
+      -- pourcentage_incapacite_permanente: 60
+      -- perçoit_AEEH: vrai
+      -- pourcentage_temps_hors_internat_avec_prise_en_charge: 100
+    }
+  assertion (calcul.aide_handicap = 183,00€)
+  assertion (calcul.alerte_dernière_année = vrai)
+  assertion (calcul.versements = [
+    Versement { -- montant: 549,00 € -- date_versement: |2026-06-01|};
+    Versement { -- montant: 549,00 € -- date_versement: |2026-09-01|};
+    Versement { -- montant: 183,00 € -- date_versement: |2026-10-01|};
+  ])
+```
+
+# Cas N°4 : en partie dans un internat spécialisé
+- Enfant de 17 ans
+- 30% dans sa famille
+- handicap 70%
+```catala
+#[test]
+déclaration champ d'application TestAideHandicapMoins20Ans4:
+  résultat calcul contenu Handicap_moins_20_ans.CalculAideHandicapMoins20Ans
+
+champ d'application TestAideHandicapMoins20Ans4:
+  définition calcul égal à
+    résultat de Handicap_moins_20_ans.CalculAideHandicapMoins20Ans avec {
+      -- année_demandée: 2026
+      -- date_naissance_enfant: |2009-09-12|
+      -- pourcentage_incapacite_permanente: 60
+      -- perçoit_AEEH: vrai
+      -- pourcentage_temps_hors_internat_avec_prise_en_charge: 70
+    }
+  assertion (calcul.aide_handicap = 128,10€)
+  assertion (calcul.alerte_dernière_année = faux)
+  assertion (calcul.versements = [
+    Versement { -- montant: 384,30 € -- date_versement: |2026-06-01|};
+    Versement { -- montant: 384,30 € -- date_versement: |2026-09-01|};
+    Versement { -- montant: 384,30 € -- date_versement: |2026-12-01|};
+    Versement { -- montant: 384,30 € -- date_versement: |2027-03-01|};
+  ])
+```
+
+# Cas N°4 : ne reçoit pas toute les mensualités de l'AEEH
+- Enfant de 17 ans
+- 70% dans sa famille
+- handicap 70%
+```catala
+#[test]
+déclaration champ d'application TestAideHandicapMoins20Ans5:
+  résultat calcul contenu Handicap_moins_20_ans.CalculAideHandicapMoins20Ans
+
+champ d'application TestAideHandicapMoins20Ans5:
+  définition calcul égal à
+    résultat de Handicap_moins_20_ans.CalculAideHandicapMoins20Ans avec {
+      -- année_demandée: 2026
+      -- date_naissance_enfant: |2009-09-12|
+      -- pourcentage_incapacite_permanente: 60
+      -- perçoit_AEEH: vrai
+      -- pourcentage_temps_hors_internat_avec_prise_en_charge: 70
+    }
+  assertion (calcul.aide_handicap = 128,10€)
+  assertion (calcul.alerte_dernière_année = faux)
+  assertion (faux = vrai)
+```
