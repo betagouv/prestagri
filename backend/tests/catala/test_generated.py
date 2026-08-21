@@ -7,7 +7,7 @@ from app.catala.generated.catala_runtime import Option, Money, Integer
 
 def test_generated_catala_aide_scolarite():
     result = calcul_aide_scolarite(CalculAideScolariteIn(
-        foyer_fiscal_agent_in= Menage(
+        menage_agent_in= Menage(
             beneficiaire_porteur_handicap= True,
             garde_alternee= False,
             parent_isole= False,
@@ -34,7 +34,7 @@ def test_generated_catala_aide_scolarite():
 
 def test_generated_catala_quotient_familial_aide_scolarite():
     result = calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(
-        foyer_fiscal_agent_in=Menage(
+        menage_agent_in=Menage(
             beneficiaire_porteur_handicap=True,
             garde_alternee=False,
             parent_isole=False,

@@ -9,8 +9,8 @@ class Menage (BaseModel):
     membres: list[FoyerFiscal]
 
     @classmethod
-    def create_menage(cls, foyer_fiscal_agent_revenu: int,
-        foyer_fiscal_agent_membres: int,
+    def create_menage(cls, menage_agent_revenu: int,
+        menage_agent_membres: int,
         foyer_fiscal_conjoint_revenu: int | None = None,
         foyer_fiscal_conjoint_membres: int | None = None,
         foyer_fiscal_etudiant_revenu: int | None = None,
@@ -20,8 +20,8 @@ class Menage (BaseModel):
         parent_isole: bool = False,
         outre_mer: bool = False) :
 
-        agent = FoyerFiscal(revenu=Centimes.from_euros_int(foyer_fiscal_agent_revenu),
-                            personnes=foyer_fiscal_agent_membres)
+        agent = FoyerFiscal(revenu=Centimes.from_euros_int(menage_agent_revenu),
+                            personnes=menage_agent_membres)
         membres = [agent]
         if foyer_fiscal_conjoint_revenu is not None and foyer_fiscal_conjoint_membres is not None:
             conjoint = FoyerFiscal(revenu=Centimes.from_euros_int(foyer_fiscal_conjoint_revenu),

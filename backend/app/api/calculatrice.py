@@ -12,8 +12,8 @@ router = APIRouter()
 
 @router.get("/quotient_familial")
 def read_quotient_familial(
-    foyer_fiscal_agent_revenu: int,
-    foyer_fiscal_agent_membres: int,
+    menage_agent_revenu: int,
+    menage_agent_membres: int,
     foyer_fiscal_conjoint_revenu: int | None = None,
     foyer_fiscal_conjoint_membres: int | None = None,
     foyer_fiscal_etudiant_revenu: int | None = None,
@@ -24,7 +24,7 @@ def read_quotient_familial(
     outre_mer: bool = False
     ) -> Response :
     try :
-        menage = Menage.create_menage(foyer_fiscal_agent_revenu, foyer_fiscal_agent_membres,
+        menage = Menage.create_menage(menage_agent_revenu, menage_agent_membres,
             foyer_fiscal_conjoint_revenu, foyer_fiscal_conjoint_membres,
             foyer_fiscal_etudiant_revenu, foyer_fiscal_etudiant_membres,
             beneficiaire_porteur_handicap, garde_alternee, parent_isole, outre_mer)
@@ -38,8 +38,8 @@ def read_quotient_familial(
 
 @router.get("/aide_scolarite/adresse")
 def read_quotient_familial_aide_scolarite(
-    foyer_fiscal_agent_revenu: int,
-    foyer_fiscal_agent_membres: int,
+    menage_agent_revenu: int,
+    menage_agent_membres: int,
     adresse_agent: str,
     adresse_etablissement: str,
     foyer_fiscal_conjoint_revenu: int | None = None,
@@ -55,7 +55,7 @@ def read_quotient_familial_aide_scolarite(
     etudiant_post_bac: bool = False,
     ) -> Response:
     try:
-        menage = Menage.create_menage(foyer_fiscal_agent_revenu, foyer_fiscal_agent_membres,
+        menage = Menage.create_menage(menage_agent_revenu, menage_agent_membres,
                                       foyer_fiscal_conjoint_revenu, foyer_fiscal_conjoint_membres,
                                       None, None,
                                       beneficiaire_porteur_handicap, garde_alternee, parent_isole, outre_mer)
@@ -73,8 +73,8 @@ def read_quotient_familial_aide_scolarite(
 
 @router.get("/aide_scolarite/trajet")
 def read_quotient_familial_aide_scolarite(
-    foyer_fiscal_agent_revenu: int,
-    foyer_fiscal_agent_membres: int,
+    menage_agent_revenu: int,
+    menage_agent_membres: int,
     trajet_agent_km: int,
     trajet_agent_min: int,
     foyer_fiscal_conjoint_revenu: int | None = None,
@@ -91,7 +91,7 @@ def read_quotient_familial_aide_scolarite(
     etudiant_post_bac: bool = False,
     ) -> Response:
     try:
-        menage = Menage.create_menage(foyer_fiscal_agent_revenu, foyer_fiscal_agent_membres,
+        menage = Menage.create_menage(menage_agent_revenu, menage_agent_membres,
                                       foyer_fiscal_conjoint_revenu, foyer_fiscal_conjoint_membres,
                                       None, None,
                                       beneficiaire_porteur_handicap, garde_alternee, parent_isole, outre_mer)

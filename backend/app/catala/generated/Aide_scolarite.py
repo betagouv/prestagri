@@ -94,8 +94,8 @@ class RetraitCritereC2(CatalaStruct):
     }
 
 class CalculAideScolariteIn(CatalaStruct):
-    __slots__ = ('foyer_fiscal_agent_in', 'etudiants_fiscalement_independants_in', 'trajet_depuis_domicile_agent_in', 'trajet_depuis_domicile_etudiant_in', 'montant_materiel_specifique_in', 'etudiant_en_filiere_post_bac_in')
-    foyer_fiscal_agent_in: menage.Menage
+    __slots__ = ('menage_agent_in', 'etudiants_fiscalement_independants_in', 'trajet_depuis_domicile_agent_in', 'trajet_depuis_domicile_etudiant_in', 'montant_materiel_specifique_in', 'etudiant_en_filiere_post_bac_in')
+    menage_agent_in: menage.Menage
     etudiants_fiscalement_independants_in: List[foyer_fiscal.FoyerFiscal]
     trajet_depuis_domicile_agent_in: trajet.Trajet
     trajet_depuis_domicile_etudiant_in: Option[trajet.Trajet]
@@ -103,7 +103,7 @@ class CalculAideScolariteIn(CatalaStruct):
     etudiant_en_filiere_post_bac_in: Bool
     name = 'CalculAideScolarite_in'
     fields = {
-        'foyer_fiscal_agent_in': 'foyer_fiscal_agent_in', # content menage.Menage
+        'menage_agent_in': 'menage_agent_in', # content menage.Menage
         'etudiants_fiscalement_independants_in': 'étudiants_fiscalement_indépendants_in', # content List[foyer_fiscal.FoyerFiscal]
         'trajet_depuis_domicile_agent_in': 'trajet_depuis_domicile_agent_in', # content trajet.Trajet
         'trajet_depuis_domicile_etudiant_in': 'trajet_depuis_domicile_étudiant_in', # content Option[trajet.Trajet]
@@ -112,12 +112,12 @@ class CalculAideScolariteIn(CatalaStruct):
     }
 
 class CalculQuotientFamilialAideScolariteIn(CatalaStruct):
-    __slots__ = ('foyer_fiscal_agent_in', 'etudiants_fiscalement_independants_in')
-    foyer_fiscal_agent_in: menage.Menage
+    __slots__ = ('menage_agent_in', 'etudiants_fiscalement_independants_in')
+    menage_agent_in: menage.Menage
     etudiants_fiscalement_independants_in: List[foyer_fiscal.FoyerFiscal]
     name = 'CalculQuotientFamilialAideScolarite_in'
     fields = {
-        'foyer_fiscal_agent_in': 'foyer_fiscal_agent_in', # content menage.Menage
+        'menage_agent_in': 'menage_agent_in', # content menage.Menage
         'etudiants_fiscalement_independants_in': 'étudiants_fiscalement_indépendants_in', # content List[foyer_fiscal.FoyerFiscal]
     }
 
@@ -178,12 +178,12 @@ loc = (Array([SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_
               SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=378, start_column=11, end_line=378, end_column=31, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"])]))
 
 def calcul_quotient_familial_aide_scolarite(calcul_quotient_familial_aide_scolarite_in:CalculQuotientFamilialAideScolariteIn) -> CalculQuotientFamilialAideScolarite:
-    foyer_fiscal_agent = (calcul_quotient_familial_aide_scolarite_in.foyer_fiscal_agent_in)
+    menage_agent = (calcul_quotient_familial_aide_scolarite_in.menage_agent_in)
     etudiants_fiscalement_independants = (calcul_quotient_familial_aide_scolarite_in.etudiants_fiscalement_independants_in)
     if (len(etudiants_fiscalement_independants) > 0):
-        menage__1 = (Option(CatalaTuple(menage.Menage(beneficiaire_porteur_handicap = foyer_fiscal_agent.beneficiaire_porteur_handicap, garde_alternee = foyer_fiscal_agent.garde_alternee, parent_isole = foyer_fiscal_agent.parent_isole, outre_mer = foyer_fiscal_agent.outre_mer, membres_du_foyer = (foyer_fiscal_agent.membres_du_foyer + etudiants_fiscalement_independants)), loc[3])))
+        menage__1 = (Option(CatalaTuple(menage.Menage(beneficiaire_porteur_handicap = menage_agent.beneficiaire_porteur_handicap, garde_alternee = menage_agent.garde_alternee, parent_isole = menage_agent.parent_isole, outre_mer = menage_agent.outre_mer, membres_du_foyer = (menage_agent.membres_du_foyer + etudiants_fiscalement_independants)), loc[3])))
     else:
-        menage__1 = (Option(CatalaTuple(foyer_fiscal_agent, loc[1])))
+        menage__1 = (Option(CatalaTuple(menage_agent, loc[1])))
     if menage__1.value is not None:
         result__1 = (menage__1.value[0])
     else:
@@ -381,13 +381,13 @@ def calcul_points_aide_scolarite(calcul_points_aide_scolarite_in:CalculPointsAid
     return CalculPointsAideScolarite(criteres_applicables = criteres_applicables_etudes_superieures, nb_points = nb_points)
 
 def calcul_aide_scolarite(calcul_aide_scolarite_in:CalculAideScolariteIn) -> CalculAideScolarite:
-    foyer_fiscal_agent = (calcul_aide_scolarite_in.foyer_fiscal_agent_in)
+    menage_agent = (calcul_aide_scolarite_in.menage_agent_in)
     etudiants_fiscalement_independants = (calcul_aide_scolarite_in.etudiants_fiscalement_independants_in)
     trajet_depuis_domicile_agent = (calcul_aide_scolarite_in.trajet_depuis_domicile_agent_in)
     trajet_depuis_domicile_etudiant = (calcul_aide_scolarite_in.trajet_depuis_domicile_etudiant_in)
     montant_materiel_specifique = (calcul_aide_scolarite_in.montant_materiel_specifique_in)
     etudiant_en_filiere_post_bac = (calcul_aide_scolarite_in.etudiant_en_filiere_post_bac_in)
-    result = (calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(foyer_fiscal_agent_in = foyer_fiscal_agent, etudiants_fiscalement_independants_in = etudiants_fiscalement_independants)))
+    result = (calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(menage_agent_in = menage_agent, etudiants_fiscalement_independants_in = etudiants_fiscalement_independants)))
     calcul_quotient_familial_aide_scolarite__1 = (CalculQuotientFamilialAideScolarite(revenu_fiscal_reference = result.revenu_fiscal_reference, criteres_applicables = result.criteres_applicables, nombre_personnes_vivants_au_foyer = result.nombre_personnes_vivants_au_foyer, nombre_unites = result.nombre_unites, quotient_familial = result.quotient_familial))
     revenu_fiscal_reference = (calcul_quotient_familial_aide_scolarite__1.revenu_fiscal_reference)
     nombre_personnes_vivants_au_foyer = (calcul_quotient_familial_aide_scolarite__1.nombre_personnes_vivants_au_foyer)

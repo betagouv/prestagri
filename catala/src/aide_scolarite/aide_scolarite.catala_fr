@@ -54,7 +54,7 @@ explications pour le calcul des points à la fin de cette Fiche F16).
 
 ```catala-metadata
 déclaration champ d'application CalculAideScolarite:
-  entrée foyer_fiscal_agent contenu Menage
+  entrée menage_agent contenu Menage
   entrée étudiants_fiscalement_indépendants contenu liste de Foyer_fiscal
   entrée trajet_depuis_domicile_agent contenu Trajet
   entrée trajet_depuis_domicile_étudiant contenu optionnel de Trajet
@@ -75,7 +75,7 @@ déclaration champ d'application CalculAideScolarite:
 
 ```catala
 champ d'application CalculAideScolarite:
-  définition calcul_quotient_familial_aide_scolarite.foyer_fiscal_agent égal à foyer_fiscal_agent
+  définition calcul_quotient_familial_aide_scolarite.menage_agent égal à menage_agent
   définition calcul_quotient_familial_aide_scolarite.étudiants_fiscalement_indépendants égal à étudiants_fiscalement_indépendants
   définition revenu_fiscal_reference égal à calcul_quotient_familial_aide_scolarite.revenu_fiscal_reference
   définition nombre_personnes_vivants_au_foyer égal à calcul_quotient_familial_aide_scolarite.nombre_personnes_vivants_au_foyer
@@ -151,7 +151,7 @@ particularités par rapport aux autres prestations ministérielles :
 
 ```catala-metadata
 déclaration champ d'application CalculQuotientFamilialAideScolarite:
-  entrée foyer_fiscal_agent contenu Menage
+  entrée menage_agent contenu Menage
   entrée étudiants_fiscalement_indépendants contenu liste de Foyer_fiscal
   interne menage contenu Menage
   calcul_quotient_familial champ d'application Quotient_familial.CalculQuotientFamilial
@@ -164,7 +164,7 @@ déclaration champ d'application CalculQuotientFamilialAideScolarite:
 
 ```catala
 champ d'application CalculQuotientFamilialAideScolarite:
-  étiquette menage_défaut définition menage égal à foyer_fiscal_agent
+  étiquette menage_défaut définition menage égal à menage_agent
   définition calcul_quotient_familial.menage égal à menage
   définition revenu_fiscal_reference égal à calcul_quotient_familial.revenu_fiscal_reference
   définition nombre_unités égal à calcul_quotient_familial.nombre_unités
@@ -189,8 +189,8 @@ champ d'application CalculQuotientFamilialAideScolarite:
   étiquette ajout_étudiants_fiscalement_indépendants exception menage_défaut
   définition menage
   sous condition nombre de étudiants_fiscalement_indépendants > 0
-  conséquence égal à foyer_fiscal_agent
-  mais en remplaçant { -- membres_du_foyer: foyer_fiscal_agent.membres_du_foyer ++ étudiants_fiscalement_indépendants }
+  conséquence égal à menage_agent
+  mais en remplaçant { -- membres_du_foyer: menage_agent.membres_du_foyer ++ étudiants_fiscalement_indépendants }
 ```
 - Les indemnités perçues par les apprentis doivent être intégrées dans le revenu fiscal de référence pour le
 calcul du QF, que l'apprenti ait fait ou non sa propre déclaration fiscale.

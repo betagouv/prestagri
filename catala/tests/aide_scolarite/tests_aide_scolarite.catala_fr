@@ -16,7 +16,7 @@ déclaration champ d'application TestCalculAideScolarite1:
 champ d'application TestCalculAideScolarite1:
   définition calcul égal à
     résultat de Aide_scolarite.CalculAideScolarite avec {
-      -- foyer_fiscal_agent: Menage {
+      -- menage_agent: Menage {
         -- beneficiaire_porteur_handicap: faux
         -- garde_alternée: faux
         -- parent_isolé: faux
@@ -67,7 +67,7 @@ déclaration champ d'application TestCalculAideScolarite2:
 champ d'application TestCalculAideScolarite2:
   définition calcul égal à
     résultat de Aide_scolarite.CalculAideScolarite avec {
-      -- foyer_fiscal_agent: Menage {
+      -- menage_agent: Menage {
         -- beneficiaire_porteur_handicap: faux
         -- garde_alternée: faux
         -- parent_isolé: faux
@@ -126,7 +126,7 @@ déclaration champ d'application TestCalculAideScolarite3:
 champ d'application TestCalculAideScolarite3:
   définition calcul égal à
     résultat de Aide_scolarite.CalculAideScolarite avec {
-      -- foyer_fiscal_agent: Menage {
+      -- menage_agent: Menage {
         -- beneficiaire_porteur_handicap: faux
         -- garde_alternée: faux
         -- parent_isolé: faux
@@ -174,7 +174,7 @@ déclaration champ d'application TestCalculAideScolarite4:
 champ d'application TestCalculAideScolarite4:
   définition calcul égal à
     résultat de Aide_scolarite.CalculAideScolarite avec {
-      -- foyer_fiscal_agent: Menage {
+      -- menage_agent: Menage {
         -- beneficiaire_porteur_handicap: vrai
         -- garde_alternée: faux
         -- parent_isolé: faux

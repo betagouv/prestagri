@@ -23,7 +23,7 @@ def get_catala_aide_scolarite(menage: Menage, etudiants_fiscalement_independants
 
     optionnel_trajet_depuis_domicile_etudiant = Option(to_trajet(trajet_depuis_domicile_etudiant)) if trajet_depuis_domicile_etudiant is not None else Option(None)
     result = calcul_aide_scolarite(CalculAideScolariteIn(
-        foyer_fiscal_agent_in= to_menage_cat(menage),
+        menage_agent_in= to_menage_cat(menage),
         etudiants_fiscalement_independants_in=to_personne_cat_list(etudiants_fiscalement_independants),
         trajet_depuis_domicile_agent_in=to_trajet(trajet_depuis_domicile_agent),
         trajet_depuis_domicile_etudiant_in=optionnel_trajet_depuis_domicile_etudiant,
@@ -50,7 +50,7 @@ def get_catala_aide_scolarite(menage: Menage, etudiants_fiscalement_independants
 def get_catala_quotient_familial_aide_scolarite(menage: Menage, etudiants_fiscalement_independants: list[FoyerFiscal]) -> Response[Centimes]:
     menage_cat = to_menage_cat(menage)
     etudiants_cat = to_personne_cat_list(etudiants_fiscalement_independants)
-    result = calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(foyer_fiscal_agent_in=menage_cat, etudiants_fiscalement_independants_in=etudiants_cat))
+    result = calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(menage_agent_in=menage_cat, etudiants_fiscalement_independants_in=etudiants_cat))
     value = Centimes(valeur=result.quotient_familial)
     return Response (
         value=value,
