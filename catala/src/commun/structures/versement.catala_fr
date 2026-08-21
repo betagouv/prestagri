@@ -1,0 +1,7 @@
+> Module Versement
+
+```catala-metadata
+déclaration structure Versement:
+  donnée montant contenu argent
+  donnée date_versement contenu date
+```

@@ -9,4 +9,6 @@ fileignoreconfig:
   checksum: 5cbf5e3ef148e272cd9d28168d100cb606dc9cc31680455cf7684d35fa0f8798
 - filename: _shell.nix
   checksum: f5825506f3c6e7924339217bbded474bb77b826f8e1dd5f8a9d0ea72f4aaac19
+- filename: catala/src/enfance_handicapee/handicap_moins_20_ans.catala_fr
+  checksum: 838d6a53576f0cc16d77ecc276224012873e12b3619b68b96a75138320d9b304
 version: "1.0"
