@@ -14,12 +14,15 @@ déclaration champ d'application CalculAideHandicapMoins20Ans:
   entrée pourcentage_incapacite_permanente contenu entier
   entrée perçoit_AEEH contenu booléen
   entrée pourcentage_temps_hors_internat_avec_prise_en_charge contenu entier
+
   interne date_début_période contenu date
+
   résultat alerte_dernière_année contenu booléen
-  résultat versements contenu liste de Versement
   résultat aide_handicap contenu argent
     état défaut
     état prorata
+  résultat versements contenu liste de Versement
+
 ```
 
 Montant au 1er avril 2025 : 183,00 € (Montant mensuel. Versement par trimestre à terme échu)
@@ -43,7 +46,7 @@ champ d'application CalculAideHandicapMoins20Ans:
     conséquence égal à 0€
   étiquette enfant_trop_agé exception handicap_insuffisant
     définition aide_handicap état défaut
-    sous condition date_naissance_enfant + 20 an > date_début_période
+    sous condition date_naissance_enfant + 20 an < date_début_période
     conséquence égal à 0€
   définition alerte_dernière_année égal à aide_handicap > 0 € et date_naissance_enfant + 20 an <= date_début_période + 1 an
 ```
@@ -106,24 +109,18 @@ l'enfant atteint l'âge de 20 ans.
 
 ```catala
 champ d'application CalculAideHandicapMoins20Ans:
-  définition versements égal à [
-    Versement {
-      -- montant: aide_handicap * 3
-      -- date_versement: date_début_période + 3 mois
-    };
-    Versement {
-      -- montant: aide_handicap * 3
-      -- date_versement: date_début_période + 6 mois
-    };
-    Versement {
-      -- montant: aide_handicap * 3
-      -- date_versement: date_début_période + 9 mois
-    };
-    Versement {
-      -- montant: aide_handicap * 3
-      -- date_versement: date_début_période + 12 mois
-    };
-  ]
+  définition versements égal à
+    soit date_dernier_versement égal à 1 jour + Date.dernier_jour_du_mois de date_naissance_enfant + 20 an dans
+    soit dates_versements égal à [ date_début_période + 3 mois; date_début_période + 6 mois; date_début_période + 9 mois; date_début_période + 12 mois ] dans
+    soit versements_dont_0 égal à transforme chaque date_versement parmi dates_versements en
+      soit dates_mensualités égal à [date_versement - 2 mois; date_versement - 1 mois; date_versement] dans
+      soit mensualités_valides égal à liste de date_mensualité parmi dates_mensualités tel que date_dernier_versement >= date_mensualité dans
+      Versement {
+        -- montant: aide_handicap * nombre de mensualités_valides
+        -- date_versement: minimum de [date_versement; date_dernier_versement ]
+      }
+    dans
+    liste de versement parmi versements_dont_0 tel que versement.montant > 0€
 ```
 
 Pièces justificatives** à joindre annuellement
