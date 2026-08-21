@@ -1,0 +1,48 @@
+> Usage de Handicap_moins_20_ans
+> Usage de Versement
+
+# Cas N°1 : Cas classique
+- Enfant de 12 ans
+- 100% dans sa famille
+- handicap 70%
+
+```catala
+#[test]
+déclaration champ d'application TestAideHandicapMoins20Ans1:
+  résultat calcul contenu Handicap_moins_20_ans.CalculAideHandicapMoins20Ans
+
+champ d'application TestAideHandicapMoins20Ans1:
+  définition calcul égal à
+    résultat de Handicap_moins_20_ans.CalculAideHandicapMoins20Ans avec {
+      -- année_demandée: 2026
+      -- date_naissance_enfant: |2014-09-12|
+      -- pourcentage_incapacite_permanente: 70
+      -- perçoit_AEEH: vrai
+      -- pourcentage_temps_hors_internat_avec_prise_en_charge: 100
+    }
+  assertion (calcul.aide_handicap = 183,00€)
+  assertion (calcul.alerte_dernière_année = faux)
+```
+
+# Cas N°2 : Trop agé et handicap non éligible
+- Enfant de 22 ans
+- 100% dans sa famille
+- handicap 30%
+
+```catala
+#[test]
+déclaration champ d'application TestAideHandicapMoins20Ans2:
+  résultat calcul contenu Handicap_moins_20_ans.CalculAideHandicapMoins20Ans
+
+champ d'application TestAideHandicapMoins20Ans2:
+  définition calcul égal à
+    résultat de Handicap_moins_20_ans.CalculAideHandicapMoins20Ans avec {
+      -- année_demandée: 2026
+      -- date_naissance_enfant: |2004-09-12|
+      -- pourcentage_incapacite_permanente: 30
+      -- perçoit_AEEH: faux
+      -- pourcentage_temps_hors_internat_avec_prise_en_charge: 100
+    }
+  assertion (calcul.aide_handicap = 0,00€)
+  assertion (calcul.alerte_dernière_année = faux)
+```

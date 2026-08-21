@@ -1,0 +1,147 @@
+> Module Handicap_moins_20_ans
+
+> Usage de Versement
+
+# Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7
+## ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS
+
+Objet : Aide accordée au titre des enfants handicapés de moins de 20 ans, dont l'incapacité permanente est au moins égale à 50 %.
+
+```catala-metadata
+déclaration champ d'application CalculAideHandicapMoins20Ans:
+  entrée année_demandée contenu entier
+  entrée date_naissance_enfant contenu date
+  entrée pourcentage_incapacite_permanente contenu entier
+  entrée perçoit_AEEH contenu booléen
+  entrée pourcentage_temps_hors_internat_avec_prise_en_charge contenu entier
+  interne date_début_période contenu date
+  résultat alerte_dernière_année contenu booléen
+  résultat versements contenu liste de Versement
+  résultat aide_handicap contenu argent
+    état défaut
+    état prorata
+```
+
+Montant au 1er avril 2025 : 183,00 € (Montant mensuel. Versement par trimestre à terme échu)
+
+```catala
+champ d'application CalculAideHandicapMoins20Ans:
+  étiquette aide_handicap_défaut définition aide_handicap état défaut égal à 183,00 €
+```
+Non cumulable avec l'allocation compensatrice prévue par la loi d'orientation en faveur des personnes handicapées.
+
+Bénéficiaires (outre ceux énumérés aux dispositions générales) :
+- Agents MASA admis à la retraite ayant enfant(s) enfants handicapés de moins de 20 ans, dont l'incapacité permanente est au
+moins égale à 50 % ;
+- Tuteurs d'orphelins d'agents titulaires ou d'agents non titulaires de l'État ;
+
+```catala
+champ d'application CalculAideHandicapMoins20Ans:
+  étiquette handicap_insuffisant exception aide_handicap_défaut
+    définition aide_handicap état défaut
+    sous condition pourcentage_incapacite_permanente < 50
+    conséquence égal à 0€
+  étiquette enfant_trop_agé exception handicap_insuffisant
+    définition aide_handicap état défaut
+    sous condition date_naissance_enfant + 20 an > date_début_période
+    conséquence égal à 0€
+  définition alerte_dernière_année égal à aide_handicap > 0 € et date_naissance_enfant + 20 an <= date_début_période + 1 an
+```
+
+
+Les prestations pourront également être versées, d'une part, au conjoint ou concubin survivant, en cas de décès d'un
+fonctionnaire ou d'un agent de l'État, d'autre part, au conjoint ou concubin non fonctionnaire ayant la charge de l'enfant,
+divorcé ou séparé d'un fonctionnaire ou d'un agent de l'État sous réserve que :
+- l'allocation ait été versée au parent fonctionnaire ou agent de l'État antérieurement à son décès ;
+- le conjoint ou concubin veuf, divorcé ou séparé ne soit pas en situation de percevoir une allocation de même nature servie par
+une CAF ou financée par le budget de l'État, d'une collectivité locale d'un établissement public (dans le cas où la CAF sert une
+prestation d'un montant inférieur à la prestation « fonction publique », il sera versé une allocation différentielle).
+
+Conditions d'attribution :
+- Aucune condition de ressources ou d'indice n'est requise.
+- Percevoir l'allocation d'éducation de l'enfant handicapé (AEEH).
+
+```catala
+champ d'application CalculAideHandicapMoins20Ans:
+  étiquette ne_perçoit_pas_AEEH exception enfant_trop_agé
+  définition aide_handicap état défaut
+  sous condition non perçoit_AEEH
+  conséquence égal à 0€
+```
+
+Cette prestation n'est pas attribuée lorsque l'enfant est placé en internat permanent (compris week-ends et congés scolaires)
+dans un établissement spécialisé avec prise en charge intégrale (soins, frais de scolarité, frais d'internat) par l'État,
+l'assurance maladie, ou l'aide sociale.
+
+```catala
+champ d'application CalculAideHandicapMoins20Ans:
+  étiquette prise_en_charge_permanente_par_internat exception ne_perçoit_pas_AEEH
+  définition aide_handicap état défaut
+  sous condition pourcentage_temps_hors_internat_avec_prise_en_charge = 0
+  conséquence égal à 0€
+```
+
+Lorsque l'enfant est placé en internat de semaine (avec prise en charge intégrale des frais de séjour), la prestation est servie
+au prorata du temps passé dans la famille lors des périodes de retour au foyer : le nombre de mensualités à verser sera égal
+à celui versé au titre de l'allocation d'éducation de l'enfant handicapé (AEEH).
+
+
+```catala
+champ d'application CalculAideHandicapMoins20Ans:
+  définition aide_handicap état prorata égal à aide_handicap * pourcentage_temps_hors_internat_avec_prise_en_charge / 100
+```
+
+En cas de retard ou d'oubli lors du 1er dépôt de dossiers par l’agent, une rétroactivité d'un 1 an* est tolérée au MASA (sauf pour des
+raisons juridiques ou médicales indépendantes de la volonté de l'agent) à l'instar de ce qui est appliqué pour l'instruction des dossiers
+de prestations concernant les séjours d'enfants (Cf. les conditions d'attribution figurant à la page 4 de cette Note de service).
+(* 1 an à partir de la date de réception du dossier par l'administration : le calcul de l’allocation se fera au prorata-temporis entre
+l'année N-1 et l'année N le cas échéant).
+
+Il est à rappeler qu'à la différence des prestations légales (comme les allocations familiales par exemples), les prestations d’action
+sociale sont des prestations à caractère facultatif. Il résulte de ce principe qu’elles ne peuvent être accordées que dans la limite des
+crédits prévus à cet effet et que leur paiement ne peut donner lieu à rappel.
+
+Modalités de versement : Cette allocation est versée trimestriellement et ce, jusqu'à la fin du mois au cours duquel
+l'enfant atteint l'âge de 20 ans.
+
+```catala
+champ d'application CalculAideHandicapMoins20Ans:
+  définition versements égal à [
+    Versement {
+      -- montant: aide_handicap * 3
+      -- date_versement: date_début_période + 3 mois
+    };
+    Versement {
+      -- montant: aide_handicap * 3
+      -- date_versement: date_début_période + 6 mois
+    };
+    Versement {
+      -- montant: aide_handicap * 3
+      -- date_versement: date_début_période + 9 mois
+    };
+    Versement {
+      -- montant: aide_handicap * 3
+      -- date_versement: date_début_période + 12 mois
+    };
+  ]
+```
+
+Pièces justificatives** à joindre annuellement
+(accompagnées du "Formulaire Demande" rempli, daté et signé )
+- Copie de la notification de la décision de la CDAPH
+attribuant l'AEEH à la famille.
+- Attestation* sur l'honneur de non perception de la
+PCH.
+- Copie intégrale du livret de famille tenu à jour
+- Copie du jugement en cas de divorce
+- Attestation de l’employeur du conjoint (services aides sociales ou RH)
+certifiant le non versement de toute aide comparable
+- RIB du demandeur.
+** Le dossier de demande devra impérativement être renouvelé
+tous les ans, avant le 1er mars de l’année N. En l’absence de
+renouvellement, le versement de l’aide sera suspend
+
+```catala
+champ d'application CalculAideHandicapMoins20Ans:
+  définition date_début_période égal à Date.depuis_année_mois_jour de année_demandée, 3, 1
+```
