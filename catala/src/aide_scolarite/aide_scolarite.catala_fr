@@ -54,12 +54,19 @@ explications pour le calcul des points à la fin de cette Fiche F16).
 
 ```catala-metadata
 déclaration champ d'application CalculAideScolarite:
-  entrée quotient_familial contenu argent
+  entrée foyer_fiscal_agent contenu Menage
+  entrée étudiants_fiscalement_indépendants contenu liste de Foyer_fiscal
   entrée trajet_depuis_domicile_agent contenu Trajet
   entrée trajet_depuis_domicile_étudiant contenu optionnel de Trajet
   entrée montant_matériel_spécifique contenu argent
   entrée étudiant_en_filière_post_bac contenu booléen
+  calcul_quotient_familial_aide_scolarite champ d'application CalculQuotientFamilialAideScolarite
   calcul_points champ d'application CalculPointsAideScolarite
+  résultat revenu_fiscal_reference contenu argent
+  résultat nombre_personnes_vivants_au_foyer contenu décimal
+  résultat nombre_unités contenu décimal
+  résultat critères_applicables_quotient_familial contenu liste de Quotient_familial.Critères
+  résultat quotient_familial contenu argent
   résultat valeur_point contenu argent
   résultat critères_applicables contenu liste de Critères
   résultat nb_points contenu décimal
@@ -68,6 +75,13 @@ déclaration champ d'application CalculAideScolarite:
 
 ```catala
 champ d'application CalculAideScolarite:
+  définition calcul_quotient_familial_aide_scolarite.foyer_fiscal_agent égal à foyer_fiscal_agent
+  définition calcul_quotient_familial_aide_scolarite.étudiants_fiscalement_indépendants égal à étudiants_fiscalement_indépendants
+  définition revenu_fiscal_reference égal à calcul_quotient_familial_aide_scolarite.revenu_fiscal_reference
+  définition nombre_personnes_vivants_au_foyer égal à calcul_quotient_familial_aide_scolarite.nombre_personnes_vivants_au_foyer
+  définition nombre_unités égal à calcul_quotient_familial_aide_scolarite.nombre_unités
+  définition quotient_familial égal à calcul_quotient_familial_aide_scolarite.quotient_familial
+  définition critères_applicables_quotient_familial égal à calcul_quotient_familial_aide_scolarite.critères_applicables
   définition valeur_point égal à
     si quotient_familial < 780 €
       alors  100 €

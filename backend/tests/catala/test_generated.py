@@ -7,15 +7,30 @@ from app.catala.generated.catala_runtime import Option, Money, Integer
 
 def test_generated_catala_aide_scolarite():
     result = calcul_aide_scolarite(CalculAideScolariteIn(
-        quotient_familial=Money(645.45),
+        foyer_fiscal_agent_in= Menage(
+            beneficiaire_porteur_handicap= True,
+            garde_alternee= False,
+            parent_isole= False,
+            outre_mer= False,
+            membres_du_foyer=[
+                FoyerFiscal(
+                    revenu_fiscal_reference=Money(3260000),
+                    nombre_personnes=Integer(4)
+                )
+            ]
+        ),
+        etudiants_fiscalement_independants_in=[FoyerFiscal(
+          revenu_fiscal_reference=Money(1000000),
+            nombre_personnes=Integer(1)
+        )],
         trajet_depuis_domicile_agent_in=Trajet(distance_km=Integer(100), duree_minutes=Integer(20)),
         trajet_depuis_domicile_etudiant_in=Option(None),
-        montant_materiel_specifique_in=Money(1000),
+        montant_materiel_specifique_in=Money(100000),
         etudiant_en_filiere_post_bac_in= False
     ))
 
-    assert result.quotient_familial == 64545
-    assert result.revenu_fiscal_reference == 42600
+    assert float(result.quotient_familial) == 645.45
+    assert float(result.revenu_fiscal_reference) == 42600
 
 def test_generated_catala_quotient_familial_aide_scolarite():
     result = calcul_quotient_familial_aide_scolarite(CalculQuotientFamilialAideScolariteIn(
@@ -26,19 +41,19 @@ def test_generated_catala_quotient_familial_aide_scolarite():
             outre_mer=False,
             membres_du_foyer=[
                 FoyerFiscal(
-                    revenu_fiscal_reference=Money(32600),
+                    revenu_fiscal_reference=Money(3260000),
                     nombre_personnes=Integer(4)
                 )
             ]
         ),
         etudiants_fiscalement_independants_in=[FoyerFiscal(
-            revenu_fiscal_reference=Money(10000),
+            revenu_fiscal_reference=Money(1000000),
             nombre_personnes=Integer(1)
         )],
     ))
 
-    assert result.quotient_familial == 64545
-    assert result.revenu_fiscal_reference == 42600
+    assert float(result.quotient_familial) == 645.45
+    assert float(result.revenu_fiscal_reference) == 42600
 
 def test_generated_catala_quotient_familial():
     result = calcul_quotient_familial(CalculQuotientFamilialIn(
@@ -49,12 +64,12 @@ def test_generated_catala_quotient_familial():
             outre_mer=False,
             membres_du_foyer=[
                 FoyerFiscal(
-                    revenu_fiscal_reference=Money(42600),
+                    revenu_fiscal_reference=Money(4260000),
                     nombre_personnes=Integer(5)
                 )
             ]
         )
     ))
 
-    assert result.quotient_familial == 64545
-    assert result.revenu_fiscal_reference == 42600
+    assert float(result.quotient_familial) == 645.45
+    assert float(result.revenu_fiscal_reference) == 42600
