@@ -23,6 +23,7 @@ def test_get_aide_scolarite():
          'calcul_quotient_familial': '42600.0€/ (12 x (5.0 + 0.5))',
          'quotient_familial': '645.45€',
          'critères_applicables_aide_scolarité': "['C3_eloignement_agent : 2.0', 'C4_materiel : 2.0']",
+         'valeur_point': '100.0€',
          'calcul_aide_scolarité': '100.0€ x 4.0 = 400.0€'
          }
     }
