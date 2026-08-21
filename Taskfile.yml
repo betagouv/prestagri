@@ -14,7 +14,7 @@ tasks:
     desc: run backend unit test
     dir: backend
     cmds:
-      - python -m pytest
+      - uv run python -m pytest
   serve_api:
     desc: serve
     dir: backend
@@ -39,6 +39,7 @@ tasks:
       - cd frontend && npm run build  && http-server dist -p 4444
   update_backend_catala:
     desc: build catala code and add the generated source to the python library
+
     cmds:
       - cd catala && clerk build
       - rm -r backend/app/catala/generated && mkdir backend/app/catala/generated
@@ -46,6 +47,16 @@ tasks:
       - mv catala/_target/prestagri_catala/python/* backend/app/catala/generated
       - find backend/app/catala/generated/*.py -type f -exec sed -i 's/catala_runtime/\.catala_runtime/g' {} +
       - sed -i 's/import dates/from .dates import */g' backend/app/catala/generated/catala_runtime.py
+      - sed -i 's/(etudiants_fiscalement_independants.length() > Integer(0))/(len(etudiants_fiscalement_independants) > 0)/g' backend/app/catala/generated/Aide_scolarite.py
+      - sed -i 's/criteres_applicables_garde_alternee.map(nombre_unites__1)/map(nombre_unites__1, criteres_applicables_garde_alternee)/g' backend/app/catala/generated/Quotient_familial.py
+      - sed -i 's/menage__1.membres_du_foyer.map(revenu_total__1)/map(revenu_total__1, menage__1.membres_du_foyer)/g' backend/app/catala/generated/Quotient_familial.py
+      - sed -i 's/menage__1.membres_du_foyer.map(nombre_personnes_vivants_au_foyer__1)/map(nombre_personnes_vivants_au_foyer__1, menage__1.membres_du_foyer)/g' backend/app/catala/generated/Quotient_familial.py
+
+      - sed -i "s/l.fold_left(somme__1, Decimal('0'))/Decimal(sum(l))/g" backend/app/catala/generated/Decimal_fr.py
+      - sed -i "s/l.fold_left(somme__1, Integer(0))/Integer(sum(l))/g" backend/app/catala/generated/Integer_fr.py
+      - sed -i "s/l.fold_left(somme__1, Money('0.00'))/Money(sum(l))/g" backend/app/catala/generated/Money_fr.py
+
+
       - sed -i 's/dates\.//g' backend/app/catala/generated/catala_runtime.py
   setup_commit:
     desc: use production url when commiting

@@ -62,4 +62,7 @@ def arrondi_a_la_decimale(d:Decimal, nieme_decimale:Integer) -> Decimal:
     return decimal_internal.round_to_decimal(d, nieme_decimale)
 
 def somme(l:List[Decimal]) -> Decimal:
+    def _somme__1(total:Decimal, x:Decimal):
+        return (total + x)
+    somme__1 = Function(_somme__1)
     return Decimal(sum(l))

@@ -12,18 +12,19 @@ def get_catala_quotient_familial(menage : Menage) -> Response[Centimes]:
     return Response (
         value=Centimes(valeur=result.quotient_familial),
         explanation= {
-            "criteres_applicables" : str(list(map(cat_enum_to_string, result.criteres_applicables))),
+            "critères_applicables" : str(list(map(cat_enum_to_string, result.criteres_applicables))),
             "calcul" : str(Centimes(valeur=result.revenu_fiscal_reference)) + "/ (12 x (" + str(result.nombre_personnes_vivants_au_foyer) + " + " + str(result.nombre_unites - result.nombre_personnes_vivants_au_foyer) +"))"
         }
     )
 
-def get_catala_aide_scolarite(quotient_familial: Centimes, trajet_depuis_domicile_agent: Trajet,
+def get_catala_aide_scolarite(menage: Menage, etudiants_fiscalement_independants: list[FoyerFiscal], trajet_depuis_domicile_agent: Trajet,
         trajet_depuis_domicile_etudiant: None|Trajet, montant_materiel_specifique: Centimes,
-        valeur_point: Centimes, etudiant_en_filiere_post_bac: bool ) -> Response[Centimes]:
+        etudiant_en_filiere_post_bac: bool ) -> Response[Centimes]:
 
     optionnel_trajet_depuis_domicile_etudiant = Option(to_trajet(trajet_depuis_domicile_etudiant)) if trajet_depuis_domicile_etudiant is not None else Option(None)
     result = calcul_aide_scolarite(CalculAideScolariteIn(
-        quotient_familial_in=to_money_cat(quotient_familial),
+        foyer_fiscal_agent_in= to_menage_cat(menage),
+        etudiants_fiscalement_independants_in=to_personne_cat_list(etudiants_fiscalement_independants),
         trajet_depuis_domicile_agent_in=to_trajet(trajet_depuis_domicile_agent),
         trajet_depuis_domicile_etudiant_in=optionnel_trajet_depuis_domicile_etudiant,
         montant_materiel_specifique_in=to_money_cat(montant_materiel_specifique),
@@ -31,8 +32,13 @@ def get_catala_aide_scolarite(quotient_familial: Centimes, trajet_depuis_domicil
     ))
     value = Centimes(valeur=result.aide_scolarite)
     explanation = {
-        "critere_applicables": str(list(map(cat_enum_to_string, result.criteres_applicables))),
-        "calcul": str(Centimes(valeur=result.valeur_point)) + " x " + str(result.nb_points) + " = " + str(value)
+        "critères_applicables_quotient_familial": str(list(map(cat_enum_to_string, result.criteres_applicables_quotient_familial))),
+        "calcul_quotient_familial": str(Centimes(valeur=result.revenu_fiscal_reference)) + "/ (12 x (" + str(
+            result.nombre_personnes_vivants_au_foyer) + " + " + str(
+            result.nombre_unites - result.nombre_personnes_vivants_au_foyer) + "))",
+        "quotient_familial": str(Centimes(valeur=result.quotient_familial)),
+        "critères_applicables_aide_scolarité": str(list(map(cat_enum_to_string, result.criteres_applicables))),
+        "calcul_aide_scolarité": str(Centimes(valeur=result.valeur_point)) + " x " + str(result.nb_points) + " = " + str(value)
     }
 
     return Response(
@@ -48,7 +54,7 @@ def get_catala_quotient_familial_aide_scolarite(menage: Menage, etudiants_fiscal
     return Response (
         value=value,
         explanation= {
-            "criteres_applicables": str(list(map(cat_enum_to_string, result.criteres_applicables))),
+            "critères_applicables": str(list(map(cat_enum_to_string, result.criteres_applicables))),
             "calcul" :str(Centimes(valeur=result.revenu_fiscal_reference)) + "/ (12 x (" + str(result.nombre_personnes_vivants_au_foyer) + " + " + str(result.nombre_unites - result.nombre_personnes_vivants_au_foyer) +"))"
         }
     )

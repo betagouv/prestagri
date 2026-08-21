@@ -1,4 +1,4 @@
-from app.catala.aides import get_catala_quotient_familial_aide_scolarite, get_catala_aide_scolarite
+from app.catala.aides import get_catala_aide_scolarite
 from app.model import Response, Menage, Centimes, FoyerFiscal, Trajet
 
 def get_aide_scolarite(
@@ -12,17 +12,16 @@ def get_aide_scolarite(
     etudiants_independants = []
     if etudiant_fiscalement_independant is not None:
         etudiants_independants.append(etudiant_fiscalement_independant)
-    quotient_familial_scolarite = get_catala_quotient_familial_aide_scolarite(menage, etudiants_independants)
 
-    aide_scolarite = get_catala_aide_scolarite(quotient_familial_scolarite.value,
+    aide_scolarite = get_catala_aide_scolarite(
+        menage,
+        etudiants_independants,
         trajet_domicile_agent,
         trajet_domicile_etudiant,
         montant_materiel_specifique or Centimes(valeur=0),
-        quotient_familial_scolarite.value,
         etudiant_post_bac)
 
     explanation = {
-        "quotient_familial": quotient_familial_scolarite.explanation,
         "aide_scolarite": aide_scolarite.explanation
     }
 
