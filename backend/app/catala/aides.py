@@ -37,6 +37,7 @@ def get_catala_aide_scolarite(menage: Menage, etudiants_fiscalement_independants
         "quotient_familial": float(Centimes(valeur=result.quotient_familial)),
         "revenu_fiscal_reference": float(Centimes(valeur=result.revenu_fiscal_reference)),
         "critères_applicables_aide_scolarité": str(list(map(cat_enum_to_string, result.criteres_applicables))),
+        "valeur_point": str(Centimes(valeur=result.valeur_point)),
         "calcul_aide_scolarité": str(Centimes(valeur=result.valeur_point)) + " x " + str(result.nb_points) + " = " + str(value)
     }
 
