@@ -103,7 +103,7 @@ champ d'application TestAideHandicapMoins20Ans4:
   ])
 ```
 
-# Cas N°4 : ne reçoit pas toute les mensualités de l'AEEH
+# Cas N°5 : ne reçoit pas toute les mensualités de l'AEEH
 - Enfant de 17 ans
 - 70% dans sa famille
 - handicap 70%
@@ -123,5 +123,5 @@ champ d'application TestAideHandicapMoins20Ans5:
     }
   assertion (calcul.aide_handicap = 128,10€)
   assertion (calcul.alerte_dernière_année = faux)
-  assertion (faux = vrai)
+  assertion (faux = vrai) # cf l87-89 du texte de loi
 ```
