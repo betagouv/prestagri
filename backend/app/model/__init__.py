@@ -3,3 +3,7 @@ from .foyerfiscal import FoyerFiscal
 from .menage import Menage
 from .trajet import Trajet
 from .response import Response
+from .champ import Champ
+from .annotation import Annotation
+from .prestation import Prestation
+from .dn_dossier import DNDossier
