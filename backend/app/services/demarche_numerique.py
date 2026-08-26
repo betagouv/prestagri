@@ -6,7 +6,9 @@ from enum import Enum
 
 from app.services.properties import properties
 from app.model import Menage, FoyerFiscal, Trajet, Annotation, Prestation, Champ, DNDossier, Centimes
+from app.utils import to_bool
 
+MISSING_DATA = "information manquante"
 url= "https://demarche.numerique.gouv.fr/api/v2/graphql"
 
 def get_pilotage_data() -> Any:
@@ -54,8 +56,16 @@ def create_dn_annotations(dossier_id: str, number: int) -> List[Annotation]:
     annotations = get_champ_repetable_by_label(raw["data"]["dossierModifierAnnotations"]["annotations"], ChampLabel.LABEL_INSTRUCTION_REPETABLE)
     return parse_annotation(annotations)
 
-def fill_dn_text(dossier_id: str, field_id: str, value: str) -> Any:
+def fill_dn_decimal(dossier_id: str, field_id: str, value: str) -> Any:
+    return fill_dn_field(dossier_id, field_id, {"decimalNumber" : value})
+
+
+def fill_dn_short_text(dossier_id: str, field_id: str, value: str) -> Any:
     return fill_dn_field(dossier_id, field_id, {"text" : value})
+
+def fill_dn_long_text(dossier_id: str, field_id: str, value: str) -> Any:
+    return fill_dn_field(dossier_id, field_id, {"textarea" : value})
+
 
 def fill_dn_simple_choice(dossier_id: str, field_id: str, value: str) -> Any:
     return fill_dn_field(dossier_id, field_id, {"dropDownList" : value})
@@ -97,7 +107,7 @@ class ChampLabel(Enum):
     LABEL_ASSOCIATED_PRESTATION="Identifiant de prestation"
     LABEL_SIMULATION_AMOUNT="Montant calculé par simulation"
     LABEL_SIMULATION_EXPLANATION="Explication de la simulation"
-    LABEL_ENFANT_PORTEUR_HANDICAP="L'enfant est-il porteur d'un handicap ?"
+    LABEL_ENFANT_PORTEUR_HANDICAP="L'enfant est il porteur d'un handicap ?"
     LABEL_ENFANT_GARDE_ALTERNEE="L'enfant est-il en garde alternée ?"
     LABEL_PARENT_ISOLE="Êtes-vous un parent isolé ?"
     LABEL_OUTRE_MER="Résidez vous en Outre-Mer ?"
@@ -119,7 +129,7 @@ def get_champ_by_label(dossier: Any, label: ChampLabel) -> Champ:
                 id= champ["id"],
                 value= champ["stringValue"]
             )
-    return Champ(id= "information manquante", value= "information manquante")
+    return Champ(id= MISSING_DATA, value= MISSING_DATA)
 
 def get_champ_repetable_by_label(dossier: Any, label: ChampLabel) -> List[Any]:
     for champ in dossier:
@@ -135,12 +145,12 @@ def parse_dn_dossier(dn_data: Any) -> DNDossier:
 
     return DNDossier(
         id = dossier["id"],
-        prestations= parse_prestation(prestations),
+        prestations= parse_prestation(prestations, dossier),
         annotations= parse_annotation(annotations),
         raw= dn_data
     )
 
-def parse_prestation(prestations: List[Any]) -> List[Prestation]:
+def parse_prestation(prestations: List[Any], dossier: Any) -> List[Prestation]:
     result = []
     for p in prestations:
         champs = p["champs"]
@@ -151,7 +161,7 @@ def parse_prestation(prestations: List[Any]) -> List[Prestation]:
             calcul_data= {}
         )
         if prestation.type  == "Aide a la scolarité":
-            prestation.calcul_data = {} # parse_data_for_aide_scolarite_data(p)
+            prestation.calcul_data = parse_data_for_aide_scolarite_data(p, dossier)
         result.append(prestation)
     return result
 
@@ -168,7 +178,7 @@ def parse_annotation(annotations: List[Any]) -> List[Annotation]:
         ))
     return result
 
-def parse_data_for_aide_scolarite_data(prestation: Any) -> Any:
+def parse_data_for_aide_scolarite_data(raw_prestation: Any, raw_dn_dossier: Any) -> Any:
     """
     parsed = menage: Menage,
     etudiant_fiscalement_independant: FoyerFiscal | None,
@@ -178,29 +188,35 @@ def parse_data_for_aide_scolarite_data(prestation: Any) -> Any:
     etudiant_post_bac: bool = False
     """
     menage = Menage(
-        beneficiaire_porteur_handicap=bool(get_champ_by_label(prestation["champs"], ChampLabel.LABEL_ENFANT_PORTEUR_HANDICAP).value),
-        garde_alternee=bool(get_champ_by_label(prestation["champs"], ChampLabel.LABEL_ENFANT_GARDE_ALTERNEE).value),
-        parent_isole=bool(get_champ_by_label(prestation["champs"], ChampLabel.LABEL_PARENT_ISOLE).value),
-        outre_mer=bool(get_champ_by_label(prestation["champs"], ChampLabel.LABEL_OUTRE_MER).value),
+        beneficiaire_porteur_handicap=to_bool(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_ENFANT_PORTEUR_HANDICAP).value),
+        garde_alternee=to_bool(get_champ_by_label(raw_dn_dossier["champs"], ChampLabel.LABEL_ENFANT_GARDE_ALTERNEE).value),
+        parent_isole=to_bool(get_champ_by_label(raw_dn_dossier["champs"], ChampLabel.LABEL_PARENT_ISOLE).value),
+        outre_mer=to_bool(get_champ_by_label(raw_dn_dossier["champs"], ChampLabel.LABEL_OUTRE_MER).value),
         membres=[FoyerFiscal(
-            revenu=Centimes.from_euros_int(int(get_champ_by_label(prestation["champs"], ChampLabel.LABEL_REVENU_FISCAL).value)),
-            personnes=int(get_champ_by_label(prestation["champs"], ChampLabel.LABEL_AVIS_IMPOTS_DEPENDANTS).value)
+            revenu=Centimes.from_euros_int(int(get_champ_by_label(raw_dn_dossier["champs"], ChampLabel.LABEL_REVENU_FISCAL).value)),
+            personnes=int(get_champ_by_label(raw_dn_dossier["champs"], ChampLabel.LABEL_AVIS_IMPOTS_DEPENDANTS).value)
         )]
     )
-    etudiant_fiscalement_independant = FoyerFiscal(
-        revenu=Centimes.from_euros_int(int(get_champ_by_label(prestation["champs"], ChampLabel.LABEL_REVENU_FISCAL_ENFANT).value)),
-        personnes= int(get_champ_by_label(prestation["champs"], ChampLabel.LABEL_AVIS_IMPOTS_DEPENDANTS_ENFANT).value)
+    revenu_fiscal_enfant = get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_REVENU_FISCAL_ENFANT).value
+    etudiant_fiscalement_independant = None if (revenu_fiscal_enfant == MISSING_DATA) else FoyerFiscal(
+        revenu=Centimes.from_euros_int(int(revenu_fiscal_enfant)),
+        personnes=int(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_AVIS_IMPOTS_DEPENDANTS_ENFANT).value)
     )
+
     trajet_domicile_agent = Trajet(
-        distance_km=int(get_champ_by_label(prestation["champs"], ChampLabel.LABEL_DISTANCE_AGENT_ECOLE).value),
-        duree_min=int(get_champ_by_label(prestation["champs"], ChampLabel.LABEL_DUREE_AGENT_ECOLE).value),
+        distance_km=int(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_DISTANCE_AGENT_ECOLE).value),
+        duree_min=int(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_DUREE_AGENT_ECOLE).value),
     )
-    trajet_domicile_etudiant = Trajet(
-        distance_km=int(get_champ_by_label(prestation["champs"], ChampLabel.LABEL_DISTANCE_ENFANT_ECOLE).value),
-        duree_min=int(get_champ_by_label(prestation["champs"], ChampLabel.LABEL_DUREE_ENFANT_ECOLE).value),
+
+    duree_trajet_domicile_enfant = get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_DUREE_ENFANT_ECOLE).value
+    trajet_domicile_etudiant = None if duree_trajet_domicile_enfant == MISSING_DATA else Trajet(
+        distance_km=int(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_DISTANCE_ENFANT_ECOLE).value),
+        duree_min=int(duree_trajet_domicile_enfant),
     )
-    montant_materiel_specifique=int(get_champ_by_label(prestation["champs"], ChampLabel.LABEL_MATERIEL_SPECIFIQUE).value)
-    etudiant_post_bac = bool(get_champ_by_label(prestation["champs"], ChampLabel.LABEL_ENFANT_ETUDES_SUPERIEURES).value)
+
+    champ_materiel_specifique = get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_MATERIEL_SPECIFIQUE).value
+    montant_materiel_specifique= None if champ_materiel_specifique == MISSING_DATA else Centimes.from_euros_int(int(champ_materiel_specifique))
+    etudiant_post_bac = to_bool(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_ENFANT_ETUDES_SUPERIEURES).value)
     return {
         "menage" : menage,
         "etudiant_fiscalement_independant": etudiant_fiscalement_independant,

@@ -21,8 +21,4 @@ def get_aide_scolarite(
         montant_materiel_specifique or Centimes(valeur=0),
         etudiant_post_bac)
 
-    explanation = {
-        "aide_scolarite": aide_scolarite.explanation
-    }
-
-    return Response[Centimes](value=aide_scolarite.value, explanation=explanation)
+    return aide_scolarite
