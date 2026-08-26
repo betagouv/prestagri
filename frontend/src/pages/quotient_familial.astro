@@ -1,7 +1,6 @@
 ---
 import DsfrLayout from "../layouts/dsfrLayout.astro"
 ---
-
 <DsfrLayout>
     <div class="fr-container fr-mt-8v fr-mt-md-14v fr-mb-2v fr-mb-md-8v">
         <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--center">
@@ -27,51 +26,52 @@ import DsfrLayout from "../layouts/dsfrLayout.astro"
                                             </div>
                                         </div>
                                         <div class="fr-fieldset__element">
-                                        <div class="fr-input-group">
-                                            <label class="fr-label" for="agent_personnes">Combien de personnes sont déclarées sur l'avis d'imposition de l'agent ? * </label>
-                                            <input class="fr-input" type="number" name="agent_personnes" id="agent_personnes" required />
-                                        </div>
-                                        </div>
-                                        <div class="fr-fieldset__element">
-                                        <div class="fr-input-group">
-                                            <label class="fr-label" for="conjoint_revenu">En cas d'avis d'imposition distinct, quels sont les revenus déclarés sur l'avis d'imposition du conjoint.e de l'agent ? </label>
-                                            <input class="fr-input" type="number" name="conjoint_revenu" id="conjoint_revenu"/>
-                                        </div>
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="agent_personnes">Combien de personnes sont déclarées sur l'avis d'imposition de l'agent ? * </label>
+                                                <input class="fr-input" type="number" name="agent_personnes" id="agent_personnes" required />
+                                            </div>
                                         </div>
                                         <div class="fr-fieldset__element">
-                                        <div class="fr-input-group">
-                                            <label class="fr-label" for="conjoint_personnes">En cas d'avis d'imposition distinct, combien de personnes sont déclarées sur l'avis d'imposition du conjoint.e de l'agent ? </label>
-                                            <input class="fr-input" type="number" name="conjoint_personnes" id="conjoint_personnes"/>
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="conjoint_revenu">En cas d'avis d'imposition distinct, quels sont les revenus déclarés sur l'avis d'imposition du conjoint.e de l'agent ? </label>
+                                                <input class="fr-input" type="number" name="conjoint_revenu" id="conjoint_revenu"/>
+                                            </div>
                                         </div>
                                         <div class="fr-fieldset__element">
-                                        <div class="fr-input-group">
-                                            <label class="fr-label" for="etudiant_revenu">Si pertinent, quels sont les revenus déclarés sur l'avis d'imposition de l'étudiant ? </label>
-                                            <input class="fr-input" type="number" name="etudiant_revenu" id="etudiant_revenu"/>
-                                        </div>
-                                        </div>
-                                        <div class="fr-fieldset__element">
-                                        <div class="fr-input-group">
-                                            <label class="fr-label" for="etudiant_personnes">Si pertinent, combien de personnes sont déclarées sur l'avis d'imposition de l'étudiant ? </label>
-                                            <input class="fr-input" type="number" name="etudiant_personnes" id="etudiant_personnes"/>
-                                        </div>
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="conjoint_personnes">En cas d'avis d'imposition distinct, combien de personnes sont déclarées sur l'avis d'imposition du conjoint.e de l'agent ? </label>
+                                                <input class="fr-input" type="number" name="conjoint_personnes" id="conjoint_personnes"/>
+                                            </div>
                                         </div>
                                         <div class="fr-fieldset__element">
-                                        <div class="fr-checkbox-group">
-                                            <input type="checkbox" name="beneficiaire_porteur_handicap" id="beneficiaire_porteur_handicap" />
-                                            <label class="fr-label" for="beneficiaire_porteur_handicap">L'agent ou l'enfant concerné par la demande est porteur de handicap</label>
-                                        </div>
-                                        </div>
-                                        <div class="fr-fieldset__element">
-                                        <div class="fr-checkbox-group">
-                                            <input type="checkbox" name="garde_alternee" id="garde_alternee" />
-                                            <label class="fr-label" for="garde_alternee">L'enfant concerné par la demande est en garde alternée </label>
-                                        </div>
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="etudiant_revenu">Si pertinent, quels sont les revenus déclarés sur l'avis d'imposition de l'étudiant ? </label>
+                                                <input class="fr-input" type="number" name="etudiant_revenu" id="etudiant_revenu"/>
+                                            </div>
                                         </div>
                                         <div class="fr-fieldset__element">
-                                        <div class="fr-checkbox-group">
-                                            <input type="checkbox" name="parent_isole" id="parent_isole" />
-                                            <label class="fr-label" for="parent_isole">L'agent est un parent isolé</label>
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="etudiant_personnes">Si pertinent, combien de personnes sont déclarées sur l'avis d'imposition de l'étudiant ? </label>
+                                                <input class="fr-input" type="number" name="etudiant_personnes" id="etudiant_personnes"/>
+                                            </div>
                                         </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-checkbox-group">
+                                                <input type="checkbox" name="beneficiaire_porteur_handicap" id="beneficiaire_porteur_handicap" />
+                                                <label class="fr-label" for="beneficiaire_porteur_handicap">L'agent ou l'enfant concerné par la demande est porteur de handicap</label>
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-checkbox-group">
+                                                <input type="checkbox" name="garde_alternee" id="garde_alternee" />
+                                                <label class="fr-label" for="garde_alternee">L'enfant concerné par la demande est en garde alternée </label>
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-checkbox-group">
+                                                <input type="checkbox" name="parent_isole" id="parent_isole" />
+                                                <label class="fr-label" for="parent_isole">L'agent est un parent isolé</label>
+                                            </div>
                                         </div>
                                         <div class="fr-fieldset__element">
                                             <div class="fr-checkbox-group">
