@@ -1,10 +1,14 @@
 fileignoreconfig:
-- filename: frontend/dist/pagefind/pagefind.js
-  checksum: f3f2ec7a49bc78a8abd0d87c71c776f60889b7703b4ca8d1bbc23c6f9f4749fe
-- filename: frontend/src/assets/style/dsfr.min.css
-  checksum: 92d07dbc5a7e0df5f50469a90d6e2fd3a32acb3ac4c104367bf21abd76ffe74f
-- filename: frontend/src/assets/style/utility/utility.min.css
-  checksum: 7ad2177d062cf869b3f9e45ba34002591adc896489b45c907c5940312971a572
+- filename: frontend/package-lock.json
+  checksum: 8c6bcc2ef3cab3b21cf1dae40c91567d20181773bf6428a0b24e3411fec5c2b6
+- filename: doc/src/assets/style/dsfr.module.min.js
+  checksum: 78541d27a2a2d1bcf507789257ebfd58bf4f721e95de005129c46ffffd863cc3
+- filename: doc/src/assets/style/dsfr.nomodule.min.js
+  checksum: 20783b5299e240ae4fed7225a3fc888767bbf169373107131850ee8551a5cc4b
+- filename: doc/src/assets/style/utility/utility.min.css
+  checksum: 429aecf882219f021e0a964c723d343c1be00e1f9194143239e7de96ed9badc4
+- filename: doc/src/assets/style/dsfr.min.css
+  checksum: 4ce48aad9e8a1ed2df8f4056ecb031809744bb5a3080dc2d88883de693174953
 - filename: backend/uv.lock
   checksum: 5cbf5e3ef148e272cd9d28168d100cb606dc9cc31680455cf7684d35fa0f8798
 - filename: _shell.nix

@@ -1,0 +1,175 @@
+---
+import DsfrLayout from "../layouts/dsfrLayout.astro"
+---
+
+<DsfrLayout>
+    <div class="fr-container fr-mt-8v fr-mt-md-14v fr-mb-2v fr-mb-md-8v">
+        <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--center">
+            <div class="fr-col-12 fr-col-md-10 fr-col-lg-8">
+                <h2>Calcul de l'aide a la scolarité</h2>
+                <p class="fr-text--lead">Renseignez les informations fournies par l'agent dans son dossier</p>
+            </div>
+        </div>
+    </div>
+    <div class="fr-container fr-container--fluid fr-mb-md-14v">
+        <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
+            <div class="fr-col-12 fr-col-md-10 fr-col-lg-8">
+                <div class="fr-container fr-background-alt--grey fr-px-md-0 fr-py-10v fr-py-md-14v">
+                    <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
+                        <div class="fr-col-12 fr-col-md-10 fr-col-lg-9">
+                            <div class="fr-mb-6v">
+                                <form id="calculForm" action="" method="get" class="form-example">
+                                    <fieldset class="fr-fieldset" aria-labelledby="text-legend text-messages">
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="agent_revenu">Quels sont les revenus déclarés sur l'avis d'imposition de l'agent ? * </label>
+                                                <input class="fr-input" type="number" name="agent_revenu" id="agent_revenu" required />
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="agent_personnes">Combien de personnes sont déclarées sur l'avis d'imposition de l'agent ? * </label>
+                                                <input class="fr-input" type="number" name="agent_personnes" id="agent_personnes" required />
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="trajet_agent_km">Quelle est la distance entre le domicile de l'agent et l'établissement scolaire ?*</label>
+                                                <input class="fr-input" type="number" name="trajet_agent_km" id="trajet_agent_km" required />
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="trajet_agent_min">Quelle est la durée du trajet entre le domicile de l'agent et l'établissement scolaire ?*</label>
+                                                <input class="fr-input" type="number" name="trajet_agent_min" id="trajet_agent_min" required />
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="conjoint_revenu">En cas d'avis d'imposition distinct, quels sont les revenus déclarés sur l'avis d'imposition du conjoint.e de l'agent ? </label>
+                                                <input class="fr-input" type="number" name="conjoint_revenu" id="conjoint_revenu"/>
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="conjoint_personnes">En cas d'avis d'imposition distinct, combien de personnes sont déclarées sur l'avis d'imposition du conjoint.e de l'agent ? </label>
+                                                <input class="fr-input" type="number" name="conjoint_personnes" id="conjoint_personnes"/>
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="etudiant_revenu">Si pertinent, quels sont les revenus déclarés sur l'avis d'imposition de l'étudiant ? </label>
+                                                <input class="fr-input" type="number" name="etudiant_revenu" id="etudiant_revenu"/>
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="etudiant_personnes">Si pertinent, combien de personnes sont déclarées sur l'avis d'imposition de l'étudiant ? </label>
+                                                <input class="fr-input" type="number" name="etudiant_personnes" id="etudiant_personnes"/>
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="trajet_etudiant_km">Quelle est la distance entre le domicile de l'étudiant et l'établissement scolaire ?</label>
+                                                <input class="fr-input" type="number" name="trajet_etudiant_km" id="trajet_etudiant_km" />
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="trajet_etudiant_min">Quelle est la durée du trajet entre le domicile de l'étudiant et l'établissement scolaire ?</label>
+                                                <input class="fr-input" type="number" name="trajet_etudiant_min" id="trajet_etudiant_min" />
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-input-group">
+                                                <label class="fr-label" for="montant_materiel_specifique">Quelle est le montant du materiel explicitement demandé par l'établissement scolaire ?</label>
+                                                <input class="fr-input" type="number" name="montant_materiel_specifique" id="montant_materiel_specifique" />
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-checkbox-group">
+                                                <input type="checkbox" name="beneficiaire_porteur_handicap" id="beneficiaire_porteur_handicap" />
+                                                <label class="fr-label" for="beneficiaire_porteur_handicap">L'agent ou l'enfant concerné par la demande est porteur de handicap</label>
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-checkbox-group">
+                                                <input type="checkbox" name="garde_alternee" id="garde_alternee" />
+                                                <label class="fr-label" for="garde_alternee">L'enfant concerné par la demande est en garde alternée</label>
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-checkbox-group">
+                                                <input type="checkbox" name="parent_isole" id="parent_isole" />
+                                                <label class="fr-label" for="parent_isole">L'agent est un parent isolé</label>
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-checkbox-group">
+                                                <input type="checkbox" name="outre_mer" id="outre_mer" />
+                                                <label class="fr-label" for="outre_mer">L'agent vit dans un département d'outre-mer</label>
+                                            </div>
+                                        </div>
+                                        <div class="fr-fieldset__element">
+                                            <div class="fr-checkbox-group">
+                                                <input type="checkbox" name="etudiant_post_bac" id="etudiant_post_bac" />
+                                                <label class="fr-label" for="etudiant_post_bac">L'enfant concerné par la demande est en études supérieures</label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <button class="fr-btn" type="submit">Calculer l'aide a la scolarité</button>
+                                </form>
+                            </div>
+                            <div class="fr-callout" id="answer" style = "display:none">
+                                <h3 class="fr-callout__title">Résultat du calcul</h3>
+                                <p id="value" class="fr-callout__text">...</p>
+                                <h4 class="fr-callout__text">Explication : </h4>
+                                <p id="explanation" class="fr-callout__text">...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</DsfrLayout>
+<script>
+    let calculForm = document.getElementById("calculForm");
+    calculForm?.addEventListener("submit", (e) => {
+    let url = "https://api.prest-agri.beta.gouv.fr/aide_scolarite/trajet?" +
+        "foyer_fiscal_agent_revenu="+ (document.getElementById('agent_revenu') as HTMLInputElement).value +"&"+
+        "foyer_fiscal_agent_membres="+ (document.getElementById('agent_personnes') as HTMLInputElement).value +"&"+
+        "foyer_fiscal_conjoint_revenu="+ ((document.getElementById('conjoint_revenu') as HTMLInputElement).value || 0) +"&"+
+        "foyer_fiscal_conjoint_membres="+ ((document.getElementById('conjoint_personnes') as HTMLInputElement).value || 0) +"&"+
+        "foyer_fiscal_etudiant_revenu="+ ((document.getElementById('conjoint_revenu') as HTMLInputElement).value || 0) +"&"+
+        "foyer_fiscal_etudiant_membres="+ ((document.getElementById('conjoint_revenu') as HTMLInputElement).value || 0) +"&"+
+        "beneficiaire_porteur_handicap="+ (document.getElementById('beneficiaire_porteur_handicap') as HTMLInputElement).checked +"&"+
+        "garde_alternee="+ (document.getElementById('garde_alternee') as HTMLInputElement).checked +"&"+
+        "parent_isole="+ (document.getElementById('parent_isole') as HTMLInputElement).checked +"&"+
+        "outre_mer="+ (document.getElementById('outre_mer') as HTMLInputElement).checked + "&" +
+        "etudiant_post_bac="+ (document.getElementById('etudiant_post_bac') as HTMLInputElement).checked + "&" +
+        "trajet_agent_km=" + (document.getElementById('trajet_agent_km') as HTMLInputElement).value +"&"+
+        "trajet_agent_min=" + (document.getElementById('trajet_agent_min') as HTMLInputElement).value +"&"+
+        "trajet_etudiant_km="+ ((document.getElementById('trajet_etudiant_km') as HTMLInputElement).value || 0) +"&"+
+        "trajet_etudiant_min="+ ((document.getElementById('trajet_etudiant_min') as HTMLInputElement).value || 0) +"&"+
+        "montant_materiel_specifique=" + ((document.getElementById('montant_materiel_specifique') as HTMLInputElement).value || 0) +"&"+
+        "etudiant_post_bac=" + (document.getElementById('etudiant_post_bac') as HTMLInputElement).checked +"&"
+
+
+
+    console.log(url)
+    e.preventDefault();
+    fetch(url)
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(`On a un souci, contactez le support`);
+        }
+        return response.json()
+    })
+    .then((data) => {
+        document.getElementById("answer")!.style.display="block";
+        document.getElementById('value')!.textContent = "Le quotient famillial est de " + data.value + "€"
+        document.getElementById('explanation')!.textContent = data.explanation
+    })
+    });
+</script>
