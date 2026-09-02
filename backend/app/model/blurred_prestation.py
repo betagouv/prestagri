@@ -4,11 +4,11 @@ from app.model import Annotation, Prestation
 
 from pydantic import BaseModel
 
-class DNDossier(BaseModel):
+class BlurredPrestation(BaseModel):
     id: str
     matricule: str
     affectation: str
     genre: str
-    date_naissance: str
-    prestations: List[Prestation]
-    annotations: List[Annotation]
+    decennie: str
+    type: str
+    montant_simule: str

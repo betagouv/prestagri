@@ -96,8 +96,8 @@ def read_quotient_familial_aide_scolarite(
                                       None, None,
                                       beneficiaire_porteur_handicap, garde_alternee, parent_isole, outre_mer)
         etudiant_independant = FoyerFiscal(revenu=Centimes.from_euros_int(foyer_fiscal_etudiant_revenu), personnes=foyer_fiscal_etudiant_membres or 0) if foyer_fiscal_etudiant_revenu is not None else None
-        trajet_etudiant = Trajet(trajet_etudiant_km, trajet_etudiant_min) if (trajet_etudiant_km is not None and trajet_etudiant_min is not None) else None
-        trajet_agent = Trajet(trajet_agent_km, trajet_agent_min)
+        trajet_etudiant = Trajet(distance_km=trajet_etudiant_km, duree_minutes=trajet_etudiant_min) if (trajet_etudiant_km is not None and trajet_etudiant_min is not None) else None
+        trajet_agent = Trajet(distance_km=trajet_agent_km, duree_minutes=trajet_agent_min)
         montant_materiel = Centimes.from_euros_int(montant_materiel_specifique) if montant_materiel_specifique is not None else None
 
         response = get_aide_scolarite(menage, etudiant_independant, trajet_agent, trajet_etudiant ,montant_materiel,etudiant_post_bac)

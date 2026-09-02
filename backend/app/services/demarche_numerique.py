@@ -9,16 +9,16 @@ from app.model import Menage, FoyerFiscal, Trajet, Annotation, Prestation, Champ
 from app.utils import to_bool
 
 MISSING_DATA = "information manquante"
-url= "https://demarche.numerique.gouv.fr/api/v2/graphql"
+url= "https://demarche.numerique.gouv.fr/api/v2/graphql" #TODO set as varenv properties
 
-def get_pilotage_data() -> Any:
+def get_pilotage_data() -> List[DNDossier]:
     headers = {
         'Content-Type' : 'application/json',
         'Authorization' : 'Bearer ' + properties.dn_pilotage_token
     }
     data = '{ "query": "{ demarche(number:'+  properties.dn_demarche_id +') { title dossiers { nodes {id champs { id label stringValue ... on RepetitionChamp { rows { champs {id label stringValue} } } } annotations {label stringValue ... on RepetitionChamp { rows { champs {id label stringValue} } } } } } } }"}'
     r = requests.post(url, headers=headers, data=data)
-    return r.json()
+    return parse_dn_demarche(r.json())
 
 def get_dn_dossier(dossier_number: str) -> DNDossier:
     headers = {
@@ -29,7 +29,7 @@ def get_dn_dossier(dossier_number: str) -> DNDossier:
 
 
     r = requests.post(url, headers=headers, data=data)
-    return parse_dn_dossier(r.json())
+    return parse_dn_dossier(r.json()["data"]["dossier"])
 
 def create_dn_annotations(dossier_id: str, number: int) -> List[Annotation]:
     headers = {
@@ -94,9 +94,9 @@ def fill_dn_field(dossier_id: str, field_id: str, value: Any) -> Any:
     return r.json()
 
 class ChampLabel(Enum):
-    MATRICULE="Q2hhbXAtNjYyNTkyOA=="
-    AFFECTATION="Q2hhbXAtNjM2MDYzMg=="
-    BIRTHDATE="Q2hhbXAtNjQyMDQwMA=="
+    LABEL_MATRICULE="Numéro d'immatriculation"
+    LABEL_BIRTHDATE="Date de naissance"
+    LABEL_AFFECTATION="Quelle est votre administration d'affectation ?"
     LABEL_INSTRUCTION_REPETABLE="Instruction de prestation"
     LABEL_PRESTATION_REPETABLE ="Demande de prestation"
     LABEL_TYPE_PRESTATION="Quelle prestation demandez-vous ?"
@@ -136,17 +136,25 @@ def get_champ_repetable_by_label(dossier: Any, label: ChampLabel) -> List[Any]:
             return champ["rows"]
     return []
 
+def parse_dn_demarche(dn_data: Any) -> List[DNDossier]:
+    dossiers = dn_data["data"]["demarche"]["dossiers"]["nodes"]
+    parsed = []
+    for dossier in dossiers:
+        parsed.append(parse_dn_dossier(dossier))
+    return parsed
 
-def parse_dn_dossier(dn_data: Any) -> DNDossier:
-    dossier = dn_data["data"]["dossier"]
+def parse_dn_dossier(dossier: Any) -> DNDossier:
     prestations = get_champ_repetable_by_label(dossier["champs"], ChampLabel.LABEL_PRESTATION_REPETABLE)
     annotations = get_champ_repetable_by_label(dossier["annotations"], ChampLabel.LABEL_INSTRUCTION_REPETABLE)
 
     return DNDossier(
         id = dossier["id"],
+        matricule=get_champ_by_label(dossier["champs"], ChampLabel.LABEL_MATRICULE).value,
+        affectation=get_champ_by_label(dossier["champs"], ChampLabel.LABEL_AFFECTATION).value,
+        genre="non précisé",
+        date_naissance=get_champ_by_label(dossier["champs"], ChampLabel.LABEL_BIRTHDATE).value,
         prestations= parse_prestation(prestations, dossier),
         annotations= parse_annotation(annotations),
-        raw= dn_data
     )
 
 def parse_prestation(prestations: List[Any], dossier: Any) -> List[Prestation]:
@@ -193,7 +201,7 @@ def parse_data_for_aide_scolarite_data(raw_prestation: Any, raw_dn_dossier: Any)
         outre_mer=to_bool(get_champ_by_label(raw_dn_dossier["champs"], ChampLabel.LABEL_OUTRE_MER).value),
         membres=[FoyerFiscal(
             revenu=Centimes.from_euros_int(int(get_champ_by_label(raw_dn_dossier["champs"], ChampLabel.LABEL_REVENU_FISCAL).value)),
-            personnes=int(get_champ_by_label(raw_dn_dossier["champs"], ChampLabel.LABEL_AVIS_IMPOTS_DEPENDANTS).value)
+            personnes=int(get_champ_by_label(raw_dn_dossier["champs"], ChampLabel.LABEL_AVIS_IMPOTS_DEPENDANTS).value or "0")
         )]
     )
     revenu_fiscal_enfant = get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_REVENU_FISCAL_ENFANT).value
@@ -204,13 +212,13 @@ def parse_data_for_aide_scolarite_data(raw_prestation: Any, raw_dn_dossier: Any)
 
     trajet_domicile_agent = Trajet(
         distance_km=int(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_DISTANCE_AGENT_ECOLE).value),
-        duree_min=int(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_DUREE_AGENT_ECOLE).value),
+        duree_minutes=int(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_DUREE_AGENT_ECOLE).value or "0"),
     )
 
     duree_trajet_domicile_enfant = get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_DUREE_ENFANT_ECOLE).value
     trajet_domicile_etudiant = None if duree_trajet_domicile_enfant == MISSING_DATA else Trajet(
         distance_km=int(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_DISTANCE_ENFANT_ECOLE).value),
-        duree_min=int(duree_trajet_domicile_enfant),
+        duree_minutes=int(duree_trajet_domicile_enfant),
     )
 
     champ_materiel_specifique = get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_MATERIEL_SPECIFIQUE).value

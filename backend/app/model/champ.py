@@ -3,3 +3,5 @@ from pydantic import BaseModel
 class Champ(BaseModel):
     id: str
     value: str
+
+emptyChamp = Champ(id='', value='')
