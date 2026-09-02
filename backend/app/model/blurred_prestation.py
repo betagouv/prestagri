@@ -8,7 +8,9 @@ class BlurredPrestation(BaseModel):
     id: str
     matricule: str
     affectation: str
-    genre: str
+    gender: str
+    departement:str
     decennie: str
     type: str
     montant_simule: str
+    montant_retenu: str

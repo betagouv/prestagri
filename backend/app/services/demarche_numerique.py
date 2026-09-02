@@ -94,7 +94,9 @@ def fill_dn_field(dossier_id: str, field_id: str, value: Any) -> Any:
     return r.json()
 
 class ChampLabel(Enum):
+    LABEL_SECURITE_SOCIALE= "Numéro de sécurité sociale"
     LABEL_MATRICULE="Numéro d'immatriculation"
+    LABEL_ADDRESS="Adresse postale personnelle"
     LABEL_BIRTHDATE="Date de naissance"
     LABEL_AFFECTATION="Quelle est votre administration d'affectation ?"
     LABEL_INSTRUCTION_REPETABLE="Instruction de prestation"
@@ -106,6 +108,7 @@ class ChampLabel(Enum):
     LABEL_ASSOCIATED_PRESTATION="Identifiant de prestation (rempli automatiquement, ne pas modifier)"
     LABEL_SIMULATION_AMOUNT="Montant calculé par simulation (rempli automatiquement, ne pas modifier)"
     LABEL_SIMULATION_EXPLANATION="Explication de la simulation (rempli automatiquement, ne pas modifier)"
+    LABEL_MONTANT_RETENU="Montant de l'aide retenu"
     LABEL_ENFANT_PORTEUR_HANDICAP="L'enfant est-il porteur d'un handicap ?"
     LABEL_ENFANT_GARDE_ALTERNEE="L'enfant est-il en garde alternée ?"
     LABEL_PARENT_ISOLE="Êtes-vous un parent isolé ?"
@@ -146,12 +149,13 @@ def parse_dn_demarche(dn_data: Any) -> List[DNDossier]:
 def parse_dn_dossier(dossier: Any) -> DNDossier:
     prestations = get_champ_repetable_by_label(dossier["champs"], ChampLabel.LABEL_PRESTATION_REPETABLE)
     annotations = get_champ_repetable_by_label(dossier["annotations"], ChampLabel.LABEL_INSTRUCTION_REPETABLE)
-
+    print(dossier)
     return DNDossier(
         id = dossier["id"],
         matricule=get_champ_by_label(dossier["champs"], ChampLabel.LABEL_MATRICULE).value,
         affectation=get_champ_by_label(dossier["champs"], ChampLabel.LABEL_AFFECTATION).value,
-        genre="non précisé",
+        securite_sociale=get_champ_by_label(dossier["champs"], ChampLabel.LABEL_SECURITE_SOCIALE).value,
+        adresse=get_champ_by_label(dossier["champs"], ChampLabel.LABEL_ADDRESS).value,
         date_naissance=get_champ_by_label(dossier["champs"], ChampLabel.LABEL_BIRTHDATE).value,
         prestations= parse_prestation(prestations, dossier),
         annotations= parse_annotation(annotations),
@@ -181,7 +185,8 @@ def parse_annotation(annotations: List[Any]) -> List[Annotation]:
             beneficiaire=get_champ_by_label(champs, ChampLabel.LABEL_BENEFICIAIRE),
             associated_prestation_id= get_champ_by_label(champs, ChampLabel.LABEL_ASSOCIATED_PRESTATION),
             simulation_montant= get_champ_by_label(champs, ChampLabel.LABEL_SIMULATION_AMOUNT),
-            simulation_explication= get_champ_by_label(champs, ChampLabel.LABEL_SIMULATION_EXPLANATION)
+            simulation_explication= get_champ_by_label(champs, ChampLabel.LABEL_SIMULATION_EXPLANATION),
+            montant_retenu=get_champ_by_label(champs, ChampLabel.LABEL_MONTANT_RETENU)
         ))
     return result
 

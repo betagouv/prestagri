@@ -4,7 +4,7 @@ from typing import Any, List
 
 from app.services.properties import properties
 from app.services.demarche_numerique import get_pilotage_data
-from app.services.blurring import blur_birthdate, blur_id
+from app.services.blurring import blur_birthdate, blur_id, get_assigned_gender, blur_address
 from app.model import DNDossier, BlurredPrestation, Prestation, Annotation, emptyAnnotation
 
 
@@ -34,10 +34,12 @@ def get_prestations(dn_dossier: DNDossier) -> List[BlurredPrestation]:
                 id= blur_id(prestation.id),
                 matricule=blur_id(dn_dossier.matricule),
                 affectation=dn_dossier.affectation,
-                genre=dn_dossier.genre,
+                gender=get_assigned_gender(dn_dossier.securite_sociale),
+                departement=blur_address(dn_dossier.adresse),
                 decennie=blur_birthdate(dn_dossier.date_naissance),
                 type= prestation.type,
-                montant_simule=annotation.simulation_montant.value
+                montant_simule=annotation.simulation_montant.value,
+                montant_retenu=annotation.montant_retenu.value
             )
         )
     return blurred
@@ -71,9 +73,11 @@ def get_grist_format(prestations: List[BlurredPrestation])-> str:
                     "matricule": p.matricule,
                     "affectation": p.affectation,
                     "decennie": p.decennie,
-                    "genre": p.genre,
+                    "departement": p.departement,
+                    "genre": p.gender,
                     "type_prestation": p.type,
-                    "montant_simulation": p.montant_simule
+                    "montant_simulation": p.montant_simule,
+                    "montant_retenu": p.montant_retenu
                 }
             }
         )

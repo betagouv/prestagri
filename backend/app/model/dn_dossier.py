@@ -8,7 +8,8 @@ class DNDossier(BaseModel):
     id: str
     matricule: str
     affectation: str
-    genre: str
+    securite_sociale: str
+    adresse: str
     date_naissance: str
     prestations: List[Prestation]
     annotations: List[Annotation]
