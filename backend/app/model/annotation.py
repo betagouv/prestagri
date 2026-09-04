@@ -8,7 +8,9 @@ class Annotation(BaseModel):
     associated_prestation_id: Champ
     simulation_montant: Champ
     simulation_explication: Champ
+    simulation_QF: Champ
     montant_retenu: Champ
+    qf_retenu: Champ
 
 emptyAnnotation = Annotation(
     type=emptyChamp,
@@ -16,5 +18,7 @@ emptyAnnotation = Annotation(
     associated_prestation_id=emptyChamp,
     simulation_montant=emptyChamp,
     simulation_explication=emptyChamp,
-    montant_retenu=emptyChamp
+    simulation_QF=emptyChamp,
+    montant_retenu=emptyChamp,
+    qf_retenu=emptyChamp
 )

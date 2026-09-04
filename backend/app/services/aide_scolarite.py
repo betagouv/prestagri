@@ -1,3 +1,6 @@
+import textwrap
+from typing import Any
+
 from app.catala.aides import get_catala_aide_scolarite
 from app.model import Response, Menage, Centimes, FoyerFiscal, Trajet
 
@@ -22,3 +25,15 @@ def get_aide_scolarite(
         etudiant_post_bac)
 
     return aide_scolarite
+
+def format_explanation(raw_explanation: Any) ->  str :
+    template_explanation = """
+        calcul : {calcul_aide_scolarité}
+        critères applicables : {critères_applicables_aide_scolarité}
+
+        quotient familial : {quotient_familial}
+        calcul : {calcul_quotient_familial}
+        critères applicables : {critères_applicables_quotient_familial}
+    """
+
+    return textwrap.dedent(template_explanation.format(**raw_explanation)).strip()

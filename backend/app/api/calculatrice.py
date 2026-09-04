@@ -6,7 +6,7 @@ from app.services.properties import properties
 from app.utils import logger
 from app.model import Menage, FoyerFiscal, Response, Centimes, Trajet
 from app.services.quotient_familial import get_quotient_familial
-from app.services.aide_scolarite import get_aide_scolarite
+from app.services.aide_scolarite import get_aide_scolarite, format_explanation
 
 router = APIRouter()
 
@@ -101,7 +101,7 @@ def read_quotient_familial_aide_scolarite(
         montant_materiel = Centimes.from_euros_int(montant_materiel_specifique) if montant_materiel_specifique is not None else None
 
         response = get_aide_scolarite(menage, etudiant_independant, trajet_agent, trajet_etudiant ,montant_materiel,etudiant_post_bac)
-        return Response(value=str(response.value) , explanation=response.explanation)
+        return Response(value=str(response.value) , explanation=format_explanation(response.explanation))
     except Exception as e:
         sentry_sdk.capture_exception(e)
         logger.exception(e)

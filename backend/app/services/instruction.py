@@ -1,8 +1,7 @@
-import json
 from typing import Any, List
-from app.services.demarche_numerique import get_dn_dossier, create_dn_annotations, fill_dn_short_text, fill_dn_simple_choice, fill_dn_long_text
+from app.services.demarche_numerique import get_dn_dossier, create_dn_annotations, fill_dn_short_text, fill_dn_simple_choice, fill_dn_long_text, fill_dn_decimal
 from app.model import DNDossier, Annotation, Prestation, Centimes, Response
-from app.services.aide_scolarite import get_aide_scolarite
+from app.services.aide_scolarite import get_aide_scolarite, format_explanation
 
 
 def prefill_dossier_annotations(dossier_number: str) -> Any:
@@ -29,8 +28,9 @@ def fill_annotations(dossier_id: str, prestations:List[Prestation], annotations:
         fill_dn_short_text(dossier_id, annotation.associated_prestation_id.id, prestation.id)
         if prestation.type == "Aide a la scolarité":
             response = compute_aide_scolarite(prestation)
-            fill_dn_short_text(dossier_id, annotation.simulation_montant.id, str(response.value))
-            fill_dn_long_text(dossier_id, annotation.simulation_explication.id, response.explanation)
+            fill_dn_short_text(dossier_id, annotation.simulation_montant.id, str(float(response.value)))
+            fill_dn_short_text(dossier_id, annotation.simulation_QF.id, str(response.explanation["quotient_familial"]))
+            fill_dn_long_text(dossier_id, annotation.simulation_explication.id, format_explanation(response.explanation))
 
     return associated_annotations
 

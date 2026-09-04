@@ -6,5 +6,5 @@ from .response import Response
 from .champ import Champ, emptyChamp
 from .annotation import Annotation, emptyAnnotation
 from .prestation import Prestation
-from .dn_dossier import DNDossier
+from .dn_dossier import DNDossier, DossierState
 from .blurred_prestation import BlurredPrestation

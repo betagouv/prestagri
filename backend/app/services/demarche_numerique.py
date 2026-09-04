@@ -1,11 +1,12 @@
 import json
+from datetime import datetime
 
 import requests
 from typing import Any, List
 from enum import Enum
 
 from app.services.properties import properties
-from app.model import Menage, FoyerFiscal, Trajet, Annotation, Prestation, Champ, DNDossier, Centimes
+from app.model import Menage, FoyerFiscal, Trajet, Annotation, Prestation, Champ, DNDossier, Centimes, DossierState
 from app.utils import to_bool
 
 MISSING_DATA = "information manquante"
@@ -16,7 +17,7 @@ def get_pilotage_data() -> List[DNDossier]:
         'Content-Type' : 'application/json',
         'Authorization' : 'Bearer ' + properties.dn_pilotage_token
     }
-    data = '{ "query": "{ demarche(number:'+  properties.dn_demarche_id +') { title dossiers { nodes {id champs { id label stringValue ... on RepetitionChamp { rows { champs {id label stringValue} } } } annotations {label stringValue ... on RepetitionChamp { rows { champs {id label stringValue} } } } } } } }"}'
+    data = '{ "query": "{ demarche(number:'+  properties.dn_demarche_id +') { title dossiers { nodes {id state dateDepot datePassageEnInstruction dateDerniereModificationAnnotations demandeur { ... on PersonnePhysique {civilite} } champs { id label stringValue ... on RepetitionChamp { rows { champs {id label stringValue} } } } annotations {label stringValue ... on RepetitionChamp { rows { champs {id label stringValue} } } } } } } }"}'
     r = requests.post(url, headers=headers, data=data)
     return parse_dn_demarche(r.json())
 
@@ -25,7 +26,7 @@ def get_dn_dossier(dossier_number: str) -> DNDossier:
         'Content-Type' : 'application/json',
         'Authorization' : 'Bearer ' + properties.dn_pilotage_token
     }
-    data = '{ "query": "{ dossier(number: '+  dossier_number +') { id champs { id label stringValue ... on RepetitionChamp { rows { champs {id label stringValue} } } } annotations {id label stringValue ... on RepetitionChamp { rows { champs {id label stringValue} } } } } }"}'
+    data = '{ "query": "{ dossier(number: '+  dossier_number +') { id state dateDepot datePassageEnInstruction dateDerniereModificationAnnotations demandeur { ... on PersonnePhysique {civilite} } champs { id label stringValue ... on RepetitionChamp { rows { champs {id label stringValue} } } } annotations {id label stringValue ... on RepetitionChamp { rows { champs {id label stringValue} } } } } }"}'
 
 
     r = requests.post(url, headers=headers, data=data)
@@ -56,16 +57,14 @@ def create_dn_annotations(dossier_id: str, number: int) -> List[Annotation]:
     annotations = get_champ_repetable_by_label(raw["data"]["dossierModifierAnnotations"]["annotations"], ChampLabel.LABEL_INSTRUCTION_REPETABLE)
     return parse_annotation(annotations)
 
-def fill_dn_decimal(dossier_id: str, field_id: str, value: str) -> Any:
+def fill_dn_decimal(dossier_id: str, field_id: str, value: float) -> Any:
     return fill_dn_field(dossier_id, field_id, {"decimalNumber" : value})
-
 
 def fill_dn_short_text(dossier_id: str, field_id: str, value: str) -> Any:
     return fill_dn_field(dossier_id, field_id, {"text" : value})
 
 def fill_dn_long_text(dossier_id: str, field_id: str, value: str) -> Any:
     return fill_dn_field(dossier_id, field_id, {"textarea" : value})
-
 
 def fill_dn_simple_choice(dossier_id: str, field_id: str, value: str) -> Any:
     return fill_dn_field(dossier_id, field_id, {"dropDownList" : value})
@@ -98,6 +97,7 @@ class ChampLabel(Enum):
     LABEL_MATRICULE="Numéro d'immatriculation"
     LABEL_ADDRESS="Adresse postale personnelle"
     LABEL_BIRTHDATE="Date de naissance"
+    LABEL_CATEGORY="Quelle est votre catégorie d'agent ?"
     LABEL_AFFECTATION="Quelle est votre administration d'affectation ?"
     LABEL_INSTRUCTION_REPETABLE="Instruction de prestation"
     LABEL_PRESTATION_REPETABLE ="Demande de prestation"
@@ -106,8 +106,10 @@ class ChampLabel(Enum):
     LABEL_ENFANT_CONCERNE="Nom et prénom de l'enfant concerné"
     LABEL_BENEFICIAIRE="Bénéficiaire (rempli automatiquement, ne pas modifier)"
     LABEL_ASSOCIATED_PRESTATION="Identifiant de prestation (rempli automatiquement, ne pas modifier)"
+    LABEL_SIMULATION_QF="Quotient familial (rempli automatiquement, ne pas modifier)"
     LABEL_SIMULATION_AMOUNT="Montant calculé par simulation (rempli automatiquement, ne pas modifier)"
     LABEL_SIMULATION_EXPLANATION="Explication de la simulation (rempli automatiquement, ne pas modifier)"
+    LABEL_QF_RETENU="Quotient familial retenu"
     LABEL_MONTANT_RETENU="Montant de l'aide retenu"
     LABEL_ENFANT_PORTEUR_HANDICAP="L'enfant est-il porteur d'un handicap ?"
     LABEL_ENFANT_GARDE_ALTERNEE="L'enfant est-il en garde alternée ?"
@@ -149,13 +151,18 @@ def parse_dn_demarche(dn_data: Any) -> List[DNDossier]:
 def parse_dn_dossier(dossier: Any) -> DNDossier:
     prestations = get_champ_repetable_by_label(dossier["champs"], ChampLabel.LABEL_PRESTATION_REPETABLE)
     annotations = get_champ_repetable_by_label(dossier["annotations"], ChampLabel.LABEL_INSTRUCTION_REPETABLE)
-    print(dossier)
     return DNDossier(
-        id = dossier["id"],
+        id= dossier["id"],
+        state=DossierState(dossier["state"]),
+        date_depot= datetime.fromisoformat(dossier["dateDepot"]),
+        date_instruction= datetime.fromisoformat(dossier["datePassageEnInstruction"]) if dossier["datePassageEnInstruction"] else None,
+        date_dernier_changement=  datetime.fromisoformat(dossier["dateDerniereModificationAnnotations"]),
         matricule=get_champ_by_label(dossier["champs"], ChampLabel.LABEL_MATRICULE).value,
         affectation=get_champ_by_label(dossier["champs"], ChampLabel.LABEL_AFFECTATION).value,
-        securite_sociale=get_champ_by_label(dossier["champs"], ChampLabel.LABEL_SECURITE_SOCIALE).value,
+        category=get_champ_by_label(dossier["champs"], ChampLabel.LABEL_CATEGORY).value,
+        civilite=dossier["demandeur"]["civilite"],
         adresse=get_champ_by_label(dossier["champs"], ChampLabel.LABEL_ADDRESS).value,
+        revenu_fiscal_reference=get_champ_by_label(dossier["champs"], ChampLabel.LABEL_REVENU_FISCAL).value,
         date_naissance=get_champ_by_label(dossier["champs"], ChampLabel.LABEL_BIRTHDATE).value,
         prestations= parse_prestation(prestations, dossier),
         annotations= parse_annotation(annotations),
@@ -186,7 +193,9 @@ def parse_annotation(annotations: List[Any]) -> List[Annotation]:
             associated_prestation_id= get_champ_by_label(champs, ChampLabel.LABEL_ASSOCIATED_PRESTATION),
             simulation_montant= get_champ_by_label(champs, ChampLabel.LABEL_SIMULATION_AMOUNT),
             simulation_explication= get_champ_by_label(champs, ChampLabel.LABEL_SIMULATION_EXPLANATION),
-            montant_retenu=get_champ_by_label(champs, ChampLabel.LABEL_MONTANT_RETENU)
+            simulation_QF = get_champ_by_label(champs, ChampLabel.LABEL_SIMULATION_QF),
+            montant_retenu=get_champ_by_label(champs, ChampLabel.LABEL_MONTANT_RETENU),
+            qf_retenu = get_champ_by_label(champs, ChampLabel.LABEL_QF_RETENU),
         ))
     return result
 

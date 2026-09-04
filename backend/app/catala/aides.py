@@ -1,11 +1,8 @@
-import textwrap
-
 from app.catala.generated.Quotient_familial import CalculQuotientFamilialIn, calcul_quotient_familial
 from app.catala.generated.Aide_scolarite import CalculQuotientFamilialAideScolariteIn, calcul_quotient_familial_aide_scolarite, CalculPointsAideScolariteIn, calcul_points_aide_scolarite, calcul_aide_scolarite, CalculAideScolariteIn, Integer
 from app.catala.generated.catala_runtime import Option
 from app.model import Menage, FoyerFiscal, Trajet, Response, Centimes
 from app.catala.utils import to_menage_cat, to_personne_cat_list, to_money_cat, to_trajet, cat_enum_to_string
-
 
 def get_catala_quotient_familial(menage : Menage) -> Response[Centimes]:
     menage_cat = to_menage_cat(menage)
@@ -37,22 +34,16 @@ def get_catala_aide_scolarite(menage: Menage, etudiants_fiscalement_independants
         "calcul_quotient_familial": str(Centimes(valeur=result.revenu_fiscal_reference)) + "/ (12 x (" + str(
             result.nombre_personnes_vivants_au_foyer) + " + " + str(
             result.nombre_unites - result.nombre_personnes_vivants_au_foyer) + "))",
-        "quotient_familial": str(Centimes(valeur=result.quotient_familial)),
+        "quotient_familial": float(Centimes(valeur=result.quotient_familial)),
+        "revenu_fiscal_reference": float(Centimes(valeur=result.revenu_fiscal_reference)),
         "critères_applicables_aide_scolarité": str(list(map(cat_enum_to_string, result.criteres_applicables))),
         "calcul_aide_scolarité": str(Centimes(valeur=result.valeur_point)) + " x " + str(result.nb_points) + " = " + str(value)
     }
-    template_explanation = """
-        calcul : {calcul_aide_scolarité}
-        critères applicables : {critères_applicables_aide_scolarité}
 
-        quotient familial : {quotient_familial}
-        calcul : {calcul_quotient_familial}
-        critères applicables : {critères_applicables_quotient_familial}
-    """
 
     return Response(
         value=value,
-        explanation=textwrap.dedent(template_explanation.format(**raw_explanation)).strip()
+        explanation= raw_explanation
     )
 
 def get_catala_quotient_familial_aide_scolarite(menage: Menage, etudiants_fiscalement_independants: list[FoyerFiscal]) -> Response[Centimes]:
