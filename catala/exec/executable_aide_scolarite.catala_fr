@@ -22,5 +22,6 @@ champ d'application TestCalculPointsAideScolarite4:
       }
       -- montant_matériel_spécifique : 0€
       -- étudiant_en_filière_post_bac: faux
+      -- affectation_drom: faux
     }
 ```

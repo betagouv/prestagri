@@ -40,18 +40,6 @@ professionnelle : joindre la copie du contrat de location ou la facture d'intern
 - les frais d'équipement scolaire obligatoires (équipement en lien avec la formation suivie par l'enfant, HORS manuels scolaires,
 ordinateurs ou tablette : joindre la copie de la liste ou du courrier de l'établissement qui demande ces équipements + les factures d'achat.
 
-## Montant de l'aide :
-Le montant de l'aide est plafonné à 1 000,00 € (mille euros) par enfant et par année scolaire / universitaire.
-Son montant est calculé sur la base d'un nombre de points attribués en fonction d'un barème. La valeur de chaque
-point (50 €, 75 € ou 100 €) varie selon le QF obtenu par l'agent demandeur (Cf. : barème en annexe F16a ainsi que les
-explications pour le calcul des points à la fin de cette Fiche F16).
-
-
-- QF < 780 : valeur du point = 100€
-- QF < 930 : valeur du point = 75€
-- QF < 1090 :  valeur du point = 50€
-- QF >= 1090 :  valeur du point = 0€
-
 ```catala-metadata
 déclaration champ d'application CalculAideScolarite:
   entrée foyer_fiscal_agent contenu Menage
@@ -82,6 +70,42 @@ champ d'application CalculAideScolarite:
   définition nombre_unités égal à calcul_quotient_familial_aide_scolarite.nombre_unités
   définition quotient_familial égal à calcul_quotient_familial_aide_scolarite.quotient_familial
   définition critères_applicables_quotient_familial égal à calcul_quotient_familial_aide_scolarite.critères_applicables
+  définition calcul_points.valeur_point égal à valeur_point
+  définition calcul_points.trajet_depuis_domicile_agent égal à trajet_depuis_domicile_agent
+  définition calcul_points.trajet_depuis_domicile_étudiant égal à trajet_depuis_domicile_étudiant
+  définition calcul_points.montant_matériel_spécifique égal à montant_matériel_spécifique
+  définition calcul_points.étudiant_en_filière_post_bac égal à étudiant_en_filière_post_bac
+  définition calcul_points.affectation_drom égal à foyer_fiscal_agent.outre_mer
+  définition critères_applicables égal à calcul_points.critères_applicables
+  définition nb_points égal à calcul_points.nb_points
+
+```
+
+## Montant de l'aide :
+Le montant de l'aide est plafonné à 1 000,00 € (mille euros) par enfant et par année scolaire / universitaire.
+
+```catala
+# A priori impossible car le maximun est de nb_points (6) x valeur_point (100) = 600
+champ d'application CalculAideScolarite:
+  étiquette aide_scolarite_max exception non_eligible_aide_scolarite
+  définition aide_scolarite
+  sous condition nb_points * valeur_point > 1000 €
+  conséquence égal à 1000 €
+```
+
+
+Son montant est calculé sur la base d'un nombre de points attribués en fonction d'un barème. La valeur de chaque
+point (50 €, 75 € ou 100 €) varie selon le QF obtenu par l'agent demandeur (Cf. : barème en annexe F16a ainsi que les
+explications pour le calcul des points à la fin de cette Fiche F16).
+
+
+- QF < 780 : valeur du point = 100€
+- QF < 930 : valeur du point = 75€
+- QF < 1090 : valeur du point = 50€
+- QF >= 1090 : valeur du point = 0€
+
+```catala
+champ d'application CalculAideScolarite:
   définition valeur_point égal à
     si quotient_familial < 780 €
       alors  100 €
@@ -90,15 +114,8 @@ champ d'application CalculAideScolarite:
     sinon si quotient_familial < 1090 €
       alors 50 €
     sinon 0 €
-  définition calcul_points.valeur_point égal à valeur_point
-  définition calcul_points.trajet_depuis_domicile_agent égal à trajet_depuis_domicile_agent
-  définition calcul_points.trajet_depuis_domicile_étudiant égal à trajet_depuis_domicile_étudiant
-  définition calcul_points.montant_matériel_spécifique égal à montant_matériel_spécifique
-  définition calcul_points.étudiant_en_filière_post_bac égal à étudiant_en_filière_post_bac
-  définition critères_applicables égal à calcul_points.critères_applicables
-  définition nb_points égal à calcul_points.nb_points
-
 ```
+
 
 ## Conditions d'attribution :
 
@@ -230,6 +247,7 @@ déclaration énumération Critères:
   -- C3_éloignement_étudiant contenu décimal
   -- C4_matériel contenu décimal
   -- C5_études_supérieures contenu décimal
+  -- C6_drom contenu décimal
 
 déclaration champ d'application CalculPointsAideScolarite:
   entrée trajet_depuis_domicile_agent contenu Trajet
@@ -237,6 +255,7 @@ déclaration champ d'application CalculPointsAideScolarite:
   entrée montant_matériel_spécifique contenu argent
   entrée valeur_point contenu argent
   entrée étudiant_en_filière_post_bac contenu booléen
+  entrée affectation_drom contenu booléen
   interne points_domiciliation_séparée contenu décimal
   résultat critères_applicables contenu liste de Critères
     état base
@@ -244,6 +263,7 @@ déclaration champ d'application CalculPointsAideScolarite:
     état éloignement
     état matériel_spécifique
     état études_supérieures
+    état drom
   résultat nb_points contenu décimal
 ```
 
@@ -259,6 +279,7 @@ champ d'application CalculPointsAideScolarite:
         -- C3_éloignement_étudiant contenu c_points: c_points
         -- C4_matériel contenu c_points: c_points
         -- C5_études_supérieures contenu c_points: c_points
+        -- C6_drom contenu c_points: c_points
     dans
     Décimal.somme de points
 
@@ -375,5 +396,15 @@ champ d'application CalculPointsAideScolarite:
       ( existe critère parmi critères_applicables tel que critère sous forme C2_domiciliation_séparée
       ou existe critère parmi critères_applicables tel que critère sous forme C3_éloignement_agent )
     alors critères_applicables ++ [ C5_études_supérieures contenu 1,0]
+    sinon critères_applicables
+```
+
+- Un critère «affectation drom» (C6) :
+```catala
+champ d'application CalculPointsAideScolarite:
+  définition critères_applicables état drom
+  égal à
+    si affectation_drom
+    alors critères_applicables ++ [ C6_drom contenu 1,0]
     sinon critères_applicables
 ```
