@@ -59,3 +59,5 @@ def get_catala_quotient_familial_aide_scolarite(menage: Menage, etudiants_fiscal
             "calcul" :str(Centimes(valeur=result.revenu_fiscal_reference)) + "/ (12 x (" + str(result.nombre_personnes_vivants_au_foyer) + " + " + str(result.nombre_unites - result.nombre_personnes_vivants_au_foyer) +"))"
         }
     )
+
+def get_catala_aide_enfance_handicapee(annee_demandee: int, date_naissance: date, pourcentage_incapacite_permanente: int, percoit_aeeh: bool, pourcentage_hors_internat: bool) -> Response[Centimes]:
