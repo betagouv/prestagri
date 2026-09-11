@@ -161,7 +161,7 @@ loc = (Array([SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_
               SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=93, start_column=22, end_line=93, end_column=28, law_headings=["Montant de l'aide :", "AIDE À LA SCOLARITÉ"]),
               SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=173, start_column=11, end_line=173, end_column=17, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
               SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=185, start_column=14, end_line=185, end_column=45, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
-              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=209, start_column=22, end_line=210, end_column=120, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
+              SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=209, start_column=22, end_line=210, end_column=114, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
               SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=235, start_column=22, end_line=235, end_column=25, law_headings=["I – Détermination du Quotient Familial (QF)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
               SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=259, start_column=11, end_line=259, end_column=39, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
               SourcePosition(filename="src/aide_scolarite/aide_scolarite.catala_fr", start_line=260, start_column=12, end_line=260, end_column=32, law_headings=["II - Mode de calcul des points (des justificatifs sont requis pour valider chaque point obtenu dans chaque critère)", "Mode de calcul du montant de la prestation (Cf. Annexes F16a et F16b à remplir et à joindre au dossier) :", "AIDE À LA SCOLARITÉ"]),
@@ -187,9 +187,9 @@ def calcul_quotient_familial_aide_scolarite(calcul_quotient_familial_aide_scolar
     menage_agent = (calcul_quotient_familial_aide_scolarite_in.menage_agent_in)
     etudiants_fiscalement_independants = (calcul_quotient_familial_aide_scolarite_in.etudiants_fiscalement_independants_in)
     if (len(etudiants_fiscalement_independants) > 0):
-        menage__1 = (Option(CatalaTuple(menage.Menage(beneficiaire_porteur_handicap = menage_agent.beneficiaire_porteur_handicap, garde_alternee = menage_agent.garde_alternee, parent_isole = menage_agent.parent_isole, outre_mer = menage_agent.outre_mer, membres_du_foyer = (menage_agent.membres_du_foyer + etudiants_fiscalement_independants)), loc[3])))
+        menage__1 = (Option(CatalaTuple(menage.Menage(beneficiaire_porteur_handicap = menage_agent.beneficiaire_porteur_handicap, garde_alternee = menage_agent.garde_alternee, parent_isole = menage_agent.parent_isole, outre_mer = menage_agent.outre_mer, membres_du_foyer = (menage_agent.membres_du_foyer + etudiants_fiscalement_independants)), loc[4])))
     else:
-        menage__1 = (Option(CatalaTuple(menage_agent, loc[1])))
+        menage__1 = (Option(CatalaTuple(menage_agent, loc[2])))
     if menage__1.value is not None:
         result__1 = (menage__1.value[0])
     else:
@@ -430,7 +430,7 @@ def calcul_aide_scolarite(calcul_aide_scolarite_in:CalculAideScolariteIn) -> Cal
         valeur_point = (Money('50.00'))
     else:
         valeur_point = (Money('0.00'))
-    result__1 = (calcul_points_aide_scolarite(CalculPointsAideScolariteIn(trajet_depuis_domicile_agent_in = trajet_depuis_domicile_agent, trajet_depuis_domicile_etudiant_in = trajet_depuis_domicile_etudiant, montant_materiel_specifique_in = montant_materiel_specifique, valeur_point_in = valeur_point, etudiant_en_filiere_post_bac_in = etudiant_en_filiere_post_bac, affectation_drom_in = foyer_fiscal_agent.outre_mer)))
+    result__1 = (calcul_points_aide_scolarite(CalculPointsAideScolariteIn(trajet_depuis_domicile_agent_in = trajet_depuis_domicile_agent, trajet_depuis_domicile_etudiant_in = trajet_depuis_domicile_etudiant, montant_materiel_specifique_in = montant_materiel_specifique, valeur_point_in = valeur_point, etudiant_en_filiere_post_bac_in = etudiant_en_filiere_post_bac, affectation_drom_in = menage_agent.outre_mer)))
     calcul_points = (CalculPointsAideScolarite(criteres_applicables = result__1.criteres_applicables, nb_points = result__1.nb_points))
     criteres_applicables = (calcul_points.criteres_applicables)
     nb_points = (calcul_points.nb_points)

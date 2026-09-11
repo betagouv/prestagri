@@ -77,7 +77,7 @@ champ d'application TestAideHandicapMoins20Ans3:
 
 # Cas N°4 : en partie dans un internat spécialisé
 - Enfant de 17 ans
-- 30% dans sa famille
+- 70% dans sa famille
 - handicap 70%
 ```catala
 #[test]
