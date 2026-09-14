@@ -1,4 +1,5 @@
 import sentry_sdk
+from datetime import  date
 from fastapi import APIRouter
 
 from app.services.gps import get_trajet
@@ -107,7 +108,21 @@ def read_quotient_familial_aide_scolarite(
         logger.exception(e)
         return Response(value="Une erreur est survenue", explanation=properties.error_contact)
 
-
+@router.get("/quotient_familial")
+def read_aide_handicap_moins_20ans(
+    annee_demandee: int,
+    date_naissance_enfant: date,
+    date_fin_validite_aeeh: date,
+    pourcentage_incapacite_permanente: int,
+    pourcentage_temps_hors_internat_avec_prise_en_charge : int = 100,
+    ) -> Response :
+    try :
+        response = get_quotient_familial(menage)
+        return Response(value=str(response.value), explanation= response.explanation)
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
+        logger.exception(e)
+        return Response(value="Une erreur est survenue", explanation=properties.error_contact)
 
 @router.get("/error-simulator")
 async def trigger_error():

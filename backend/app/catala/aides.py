@@ -1,8 +1,12 @@
+from datetime import date
+from unittest import result
+
 from app.catala.generated.Quotient_familial import CalculQuotientFamilialIn, calcul_quotient_familial
+from app.catala.generated.Handicap_moins_20_ans import CalculAideHandicapMoins20AnsIn, calcul_aide_handicap_moins20_ans
 from app.catala.generated.Aide_scolarite import CalculQuotientFamilialAideScolariteIn, calcul_quotient_familial_aide_scolarite, CalculPointsAideScolariteIn, calcul_points_aide_scolarite, calcul_aide_scolarite, CalculAideScolariteIn, Integer
 from app.catala.generated.catala_runtime import Option
 from app.model import Menage, FoyerFiscal, Trajet, Response, Centimes
-from app.catala.utils import to_menage_cat, to_personne_cat_list, to_money_cat, to_trajet, cat_enum_to_string
+from app.catala.utils import to_menage_cat, to_personne_cat_list, to_money_cat, to_trajet, cat_enum_to_string, to_date_cat
 
 def get_catala_quotient_familial(menage : Menage) -> Response[Centimes]:
     menage_cat = to_menage_cat(menage)
@@ -60,4 +64,21 @@ def get_catala_quotient_familial_aide_scolarite(menage: Menage, etudiants_fiscal
         }
     )
 
-def get_catala_aide_enfance_handicapee(annee_demandee: int, date_naissance: date, pourcentage_incapacite_permanente: int, percoit_aeeh: bool, pourcentage_hors_internat: bool) -> Response[Centimes]:
+def get_catala_aide_handicap_moins_20ans(annee_demandee: int, date_naissance: date, date_fin_validite: date, pourcentage_incapacite_permanente: int, pourcentage_hors_internat: int) -> Response[Centimes]:
+    result = calcul_aide_handicap_moins20_ans(
+        CalculAideHandicapMoins20AnsIn(
+            annee_demandee_in= annee_demandee,
+            date_naissance_enfant_in= to_date_cat(date_naissance),
+            date_fin_validite_AEEH_in= to_date_cat(date_fin_validite),
+            pourcentage_incapacite_permanente_in= pourcentage_incapacite_permanente,
+            pourcentage_temps_hors_internat_avec_prise_en_charge_in= pourcentage_hors_internat
+        )
+    )
+    value = Centimes(valeur=result.aide_handicap)
+    return Response (
+        value= value,
+        explanation= {
+            "versements": result.versements,
+            "alerte_derniere_annee": result.alerte_derniere_annee
+        }
+    )
