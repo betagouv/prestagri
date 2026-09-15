@@ -13,6 +13,7 @@ from __future__ import annotations # 'ClsType' ~> ClsType annotations
 import math
 from fractions import Fraction
 from .dates import *
+from .dates import Date as dates_Date
 from typing import NewType, List, Generic, Callable, Tuple, TypeVar, Iterable, Union, Any, overload, override, ClassVar
 from functools import reduce
 from enum import Enum, IntEnum, nonmember, auto
@@ -564,19 +565,19 @@ class Money(Value, int): #type:ignore[misc]
 class Date(Value):
     __slots__ = ( 'value' )
 
-    value: Date
+    value: dates_Date
 
     def __new__(cls, value: Union [Tuple[int, int, int], Date, int], *args, pos: SourcePosition | None = None) -> Date:
         if isinstance(value, Date):
             return value
-        if isinstance(value, Date):
+        if isinstance(value, dates_Date):
             return super().__new__(cls, value=value)
         if isinstance(value, int):
             (y, m, d) = (value, args[0], args[1])
         else:
             (y, m, d) = (value[0], value[1], value[2])
         try:
-            return super().__new__(cls, value=Date(year=int(y), month=int(m), day=int(d)))
+            return super().__new__(cls, value=dates_Date(year=int(y), month=int(m), day=int(d)))
         except InvalidDate:
             raise DateError(pos, "|%04d-%02d-%02d| is not a valid date" %
                             (y, m, d))

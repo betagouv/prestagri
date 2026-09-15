@@ -257,10 +257,13 @@ class Date:
             and self.day == other.day
 
     def __lt__(self, other):
-        if self.year == other.year:
-            if self.month == other.month: return self.day < other.day
-            else: return self.month < other.month
-        else: return self.year < other.year
+        if isinstance(other, Date):
+            if self.year == other.year:
+                if self.month == other.month: return self.day < other.day
+                else: return self.month < other.month
+            else: return self.year < other.year
+        else:
+            return self < other.value
 
     @property
     def ymd(self):

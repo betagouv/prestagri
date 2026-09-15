@@ -1,6 +1,5 @@
 from datetime import date
-from .generated.catala_runtime import Money as Money_cat, Integer, CatalaEnum
-from .generated.dates import Date as Date_cat
+from .generated.catala_runtime import Money as Money_cat, Integer, CatalaEnum, Date as Date_cat
 from .generated.Foyer_fiscal import FoyerFiscal as Foyer_fiscal_cat
 from .generated.Trajet import Trajet as Trajet_cat
 from .generated.Menage import Menage as Menage_cat
@@ -39,4 +38,4 @@ def cat_enum_to_string(enum: CatalaEnum) -> str :
     return str(enum.code) + " : " + str(enum.payload)
 
 def to_date_cat(date_py: date) -> Date_cat:
-    return Date_cat(year = date_py.year, month=date_py.month, day=date_py.day)
+    return Date_cat(date_py.year, date_py.month, date_py.day)

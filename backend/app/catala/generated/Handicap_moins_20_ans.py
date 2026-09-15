@@ -28,18 +28,18 @@ class CalculAideHandicapMoins20Ans(CatalaStruct):
     }
 
 class CalculAideHandicapMoins20AnsIn(CatalaStruct):
-    __slots__ = ('annee_demandee_in', 'date_naissance_enfant_in', 'pourcentage_incapacite_permanente_in', 'percoit_AEEH_in', 'pourcentage_temps_hors_internat_avec_prise_en_charge_in')
+    __slots__ = ('annee_demandee_in', 'date_naissance_enfant_in', 'date_fin_validite_AEEH_in', 'pourcentage_incapacite_permanente_in', 'pourcentage_temps_hors_internat_avec_prise_en_charge_in')
     annee_demandee_in: Integer
     date_naissance_enfant_in: Date
+    date_fin_validite_AEEH_in: Date
     pourcentage_incapacite_permanente_in: Integer
-    percoit_AEEH_in: Bool
     pourcentage_temps_hors_internat_avec_prise_en_charge_in: Integer
     name = 'CalculAideHandicapMoins20Ans_in'
     fields = {
         'annee_demandee_in': 'année_demandée_in', # content Integer
         'date_naissance_enfant_in': 'date_naissance_enfant_in', # content Date
+        'date_fin_validite_AEEH_in': 'date_fin_validite_AEEH_in', # content Date
         'pourcentage_incapacite_permanente_in': 'pourcentage_incapacite_permanente_in', # content Integer
-        'percoit_AEEH_in': 'perçoit_AEEH_in', # content Bool
         'pourcentage_temps_hors_internat_avec_prise_en_charge_in': 'pourcentage_temps_hors_internat_avec_prise_en_charge_in', # content Integer
     }
 
@@ -58,36 +58,37 @@ loc = (Array([SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_
               SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=94, start_column=48, end_line=94, end_column=61, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
               SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=113, start_column=40, end_line=113, end_column=99, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
               SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=113, start_column=40, end_line=113, end_column=107, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
-              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=114, start_column=36, end_line=114, end_column=54, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
-              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=114, start_column=36, end_line=114, end_column=63, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
-              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=114, start_column=65, end_line=114, end_column=83, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
-              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=114, start_column=65, end_line=114, end_column=92, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
-              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=114, start_column=94, end_line=114, end_column=112, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
-              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=114, start_column=94, end_line=114, end_column=121, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
-              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=114, start_column=123, end_line=114, end_column=141, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
-              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=114, start_column=123, end_line=114, end_column=151, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
-              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=116, start_column=38, end_line=116, end_column=61, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
-              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=116, start_column=63, end_line=116, end_column=86, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
-              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=120, start_column=28, end_line=120, end_column=80, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
-              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=143, start_column=40, end_line=143, end_column=67, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"])]))
+              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=114, start_column=35, end_line=114, end_column=95, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
+              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=115, start_column=36, end_line=115, end_column=54, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
+              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=115, start_column=36, end_line=115, end_column=63, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
+              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=115, start_column=65, end_line=115, end_column=83, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
+              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=115, start_column=65, end_line=115, end_column=92, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
+              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=115, start_column=94, end_line=115, end_column=112, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
+              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=115, start_column=94, end_line=115, end_column=121, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
+              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=115, start_column=123, end_line=115, end_column=141, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
+              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=115, start_column=123, end_line=115, end_column=151, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
+              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=117, start_column=38, end_line=117, end_column=61, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
+              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=117, start_column=63, end_line=117, end_column=86, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
+              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=121, start_column=28, end_line=121, end_column=99, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"]),
+              SourcePosition(filename="src/enfance_handicapee/handicap_moins_20_ans.catala_fr", start_line=144, start_column=40, end_line=144, end_column=67, law_headings=["ALLOCATION AUX PARENTS D’ENFANTS HANDICAPES DE MOINS DE 20 ANS", "Prestation interministérielle d'action sociale : ENFANCE HANDICAPÉE F7"])]))
 
 def calcul_aide_handicap_moins20_ans(calcul_aide_handicap_moins20_ans_in:CalculAideHandicapMoins20AnsIn) -> CalculAideHandicapMoins20Ans:
     annee_demandee = (calcul_aide_handicap_moins20_ans_in.annee_demandee_in)
     date_naissance_enfant = (calcul_aide_handicap_moins20_ans_in.date_naissance_enfant_in)
+    date_fin_validite_a_e_e_h = (calcul_aide_handicap_moins20_ans_in.date_fin_validite_AEEH_in)
     pourcentage_incapacite_permanente = (calcul_aide_handicap_moins20_ans_in.pourcentage_incapacite_permanente_in)
-    percoit_a_e_e_h = (calcul_aide_handicap_moins20_ans_in.percoit_AEEH_in)
     pourcentage_temps_hors_internat_avec_prise_en_charge = (calcul_aide_handicap_moins20_ans_in.pourcentage_temps_hors_internat_avec_prise_en_charge_in)
-    date_debut_periode = (Option(CatalaTuple(date_fr.depuis_annee_mois_jour(loc[25], annee_demandee, Integer(3), Integer(1)), loc[0])))
+    date_debut_periode = (Option(CatalaTuple(date_fr.depuis_annee_mois_jour(loc[26], annee_demandee, Integer(3), Integer(1)), loc[0])))
     if (pourcentage_temps_hors_internat_avec_prise_en_charge == Integer(0)):
         aide_handicap_defaut = (Option(CatalaTuple(Money('0.00'), loc[10])))
-    elif percoit_a_e_e_h.not_():
+    elif (date_fr.acces_annee(date_fin_validite_a_e_e_h) < Integer(annee_demandee)):
         aide_handicap_defaut = (Option(CatalaTuple(Money('0.00'), loc[9])))
     else:
         if date_debut_periode.value is not None:
             aide_handicap_defaut__1 = (date_debut_periode.value[0])
         else:
             raise NoValue(loc[4])
-        if (date_naissance_enfant.__add__(Duration((20,0,0)), dates.DateRounding.AbortOnRound, loc[3]) < aide_handicap_defaut__1):
+        if (date_naissance_enfant.__add__(Duration((20,0,0)), DateRounding.AbortOnRound, loc[3]) < aide_handicap_defaut__1):
             aide_handicap_defaut = (Option(CatalaTuple(Money('0.00'), loc[5])))
         elif (pourcentage_incapacite_permanente < Integer(50)):
             aide_handicap_defaut = (Option(CatalaTuple(Money('0.00'), loc[2])))
@@ -102,37 +103,38 @@ def calcul_aide_handicap_moins20_ans(calcul_aide_handicap_moins20_ans_in:CalculA
         alerte_derniere_annee__1 = (date_debut_periode.value[0])
     else:
         raise NoValue(loc[7])
-    alerte_derniere_annee = (((aide_handicap_prorata > Money('0.00')) and (date_naissance_enfant.__add__(Duration((20,0,0)), dates.DateRounding.AbortOnRound, loc[6]) <= alerte_derniere_annee__1.__add__(Duration((1,0,0)), dates.DateRounding.AbortOnRound, loc[8]))))
-    date_dernier_versement = (date_fr.dernier_jour_du_mois(date_naissance_enfant).__add__(Duration((0,0,1)), dates.DateRounding.AbortOnRound, loc[12]).__add__(Duration((20,0,0)), dates.DateRounding.AbortOnRound, loc[13]))
+    alerte_derniere_annee = (((aide_handicap_prorata > Money('0.00')) and (date_naissance_enfant.__add__(Duration((20,0,0)), DateRounding.AbortOnRound, loc[6]) <= alerte_derniere_annee__1.__add__(Duration((1,0,0)), DateRounding.AbortOnRound, loc[8]))))
+    date_dernier_versement = (date_fr.dernier_jour_du_mois(date_naissance_enfant).__add__(Duration((0,0,1)), DateRounding.AbortOnRound, loc[12]).__add__(Duration((20,0,0)), DateRounding.AbortOnRound, loc[13]))
+    date_fin_validite = (date_fr.dernier_jour_du_mois(date_fin_validite_a_e_e_h).__add__(Duration((0,0,1)), DateRounding.AbortOnRound, loc[14]))
     if date_debut_periode.value is not None:
         dates_versements__1 = (date_debut_periode.value[0])
     else:
-        raise NoValue(loc[14])
+        raise NoValue(loc[15])
     if date_debut_periode.value is not None:
         dates_versements__2 = (date_debut_periode.value[0])
     else:
-        raise NoValue(loc[16])
+        raise NoValue(loc[17])
     if date_debut_periode.value is not None:
         dates_versements__3 = (date_debut_periode.value[0])
     else:
-        raise NoValue(loc[18])
+        raise NoValue(loc[19])
     if date_debut_periode.value is not None:
         dates_versements__4 = (date_debut_periode.value[0])
     else:
-        raise NoValue(loc[20])
-    dates_versements = (Array([dates_versements__1.__add__(Duration((0,3,0)), dates.DateRounding.AbortOnRound, loc[15]),
-                               dates_versements__2.__add__(Duration((0,6,0)), dates.DateRounding.AbortOnRound, loc[17]),
-                               dates_versements__3.__add__(Duration((0,9,0)), dates.DateRounding.AbortOnRound, loc[19]),
-                               dates_versements__4.__add__(Duration((0,12,0)), dates.DateRounding.AbortOnRound, loc[21])]))
+        raise NoValue(loc[21])
+    dates_versements = (Array([dates_versements__1.__add__(Duration((0,3,0)), DateRounding.AbortOnRound, loc[16]),
+                               dates_versements__2.__add__(Duration((0,6,0)), DateRounding.AbortOnRound, loc[18]),
+                               dates_versements__3.__add__(Duration((0,9,0)), DateRounding.AbortOnRound, loc[20]),
+                               dates_versements__4.__add__(Duration((0,12,0)), DateRounding.AbortOnRound, loc[22])]))
     def _versements__1(versement__1:versement.Versement):
         return (versement__1.montant > Money('0.00'))
     versements__1 = Function(_versements__1)
     def _versements__2(date_versement:Date):
-        dates_mensualites = (Array([date_versement.__sub__(Duration((0,2,0)), dates.DateRounding.AbortOnRound, loc[22]),
-                                    date_versement.__sub__(Duration((0,1,0)), dates.DateRounding.AbortOnRound, loc[23]),
+        dates_mensualites = (Array([date_versement.__sub__(Duration((0,2,0)), DateRounding.AbortOnRound, loc[23]),
+                                    date_versement.__sub__(Duration((0,1,0)), DateRounding.AbortOnRound, loc[24]),
                                     date_versement]))
         def _versements__3(date_mensualite:Date):
-            return (date_dernier_versement >= date_mensualite)
+            return ((date_dernier_versement >= date_mensualite) and (date_fin_validite >= date_mensualite))
         versements__3 = Function(_versements__3)
         def _versements__5(x:Date, y:Date):
             if (x < y):
@@ -141,11 +143,12 @@ def calcul_aide_handicap_moins20_ans(calcul_aide_handicap_moins20_ans_in:CalculA
                 return y
         versements__5 = Function(_versements__5)
         versements__6 = (Array([date_versement,
-                                date_dernier_versement]).reduce(versements__5))
+                                date_dernier_versement,
+                                date_fin_validite]).reduce(versements__5))
         if versements__6.value is not None:
             versements__4 = (versements__6.value)
         else:
-            raise ListEmpty(loc[24])
+            raise ListEmpty(loc[25])
         return versement.Versement(montant = (aide_handicap_prorata * dates_mensualites.filter(versements__3).length()), date_versement = versements__4)
     versements__2 = Function(_versements__2)
     versements = (dates_versements.map(versements__2).filter(versements__1))

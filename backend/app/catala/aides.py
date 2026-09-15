@@ -67,11 +67,11 @@ def get_catala_quotient_familial_aide_scolarite(menage: Menage, etudiants_fiscal
 def get_catala_aide_handicap_moins_20ans(annee_demandee: int, date_naissance: date, date_fin_validite: date, pourcentage_incapacite_permanente: int, pourcentage_hors_internat: int) -> Response[Centimes]:
     result = calcul_aide_handicap_moins20_ans(
         CalculAideHandicapMoins20AnsIn(
-            annee_demandee_in= annee_demandee,
+            annee_demandee_in= Integer(annee_demandee),
             date_naissance_enfant_in= to_date_cat(date_naissance),
             date_fin_validite_AEEH_in= to_date_cat(date_fin_validite),
-            pourcentage_incapacite_permanente_in= pourcentage_incapacite_permanente,
-            pourcentage_temps_hors_internat_avec_prise_en_charge_in= pourcentage_hors_internat
+            pourcentage_incapacite_permanente_in= Integer(pourcentage_incapacite_permanente),
+            pourcentage_temps_hors_internat_avec_prise_en_charge_in= Integer(pourcentage_hors_internat)
         )
     )
     value = Centimes(valeur=result.aide_handicap)
