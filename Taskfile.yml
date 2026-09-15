@@ -48,7 +48,8 @@ tasks:
       - find backend/app/catala/generated/*.py -type f -exec sed -i 's/catala_runtime/\.catala_runtime/g' {} +
       - sed -i 's/import dates/from .dates import Date as dates_Date, DateRounding, Period, AmbiguousComputation, InvalidDate/g' backend/app/catala/generated/catala_runtime.py
       - sed -i 's/Date(year=int(y), month=int(m), day=int(d))/dates_Date(year=int(y), month=int(m), day=int(d))/g' backend/app/catala/generated/catala_runtime.py
-      - sed -i 's/if isinstance(value, Date)/if isinstance(value, dates_Date)/g' backend/app/catala/generated/catala_runtime.py
+      - sed -i '572s/Date/dates_Date/' backend/app/catala/generated/catala_runtime.py
+      - sed -i '567s/Date/dates_Date/' backend/app/catala/generated/catala_runtime.py
 
 
       - sed -i 's/(etudiants_fiscalement_independants.length() > Integer(0))/(len(etudiants_fiscalement_independants) > 0)/g' backend/app/catala/generated/Aide_scolarite.py

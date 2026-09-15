@@ -3,7 +3,8 @@ from .generated.catala_runtime import Money as Money_cat, Integer, CatalaEnum, D
 from .generated.Foyer_fiscal import FoyerFiscal as Foyer_fiscal_cat
 from .generated.Trajet import Trajet as Trajet_cat
 from .generated.Menage import Menage as Menage_cat
-from app.model import Menage, FoyerFiscal, Trajet, Centimes
+from .generated.Versement import Versement as Versement_cat
+from app.model import Menage, FoyerFiscal, Trajet, Centimes, Versement
 from gmpy2 import mpq
 
 def to_menage_cat(menage: Menage) -> Menage_cat:
@@ -27,7 +28,10 @@ def to_personne_cat(personne: FoyerFiscal) -> Foyer_fiscal_cat:
 def to_money_cat(cents: Centimes) -> Money_cat:
     return Money_cat(cents.valeur/100) ## the whole cents setup may seem overengineered now that we end up dividing again but for context the Money used to ask for cents
 
-def to_trajet(trajet: Trajet) -> Trajet_cat:
+def from_money_cat(money: Money_cat) -> Centimes:
+    return Centimes(valeur=int(money))
+
+def to_trajet_cat(trajet: Trajet) -> Trajet_cat:
     return Trajet_cat(distance_km=Integer(trajet.distance_km),duree_minutes=Integer(trajet.duree_minutes))
 
 def to_float(_mpq: mpq):
@@ -39,3 +43,12 @@ def cat_enum_to_string(enum: CatalaEnum) -> str :
 
 def to_date_cat(date_py: date) -> Date_cat:
     return Date_cat(date_py.year, date_py.month, date_py.day)
+
+def from_date_cat(date_cat: Date_cat) -> date:
+    return date(year=date_cat.value.year, month=date_cat.value.month, day=date_cat.value.day)
+
+def from_versement_cat(versement_cat: Versement_cat) -> Versement:
+    return Versement(
+        montant=from_money_cat(versement_cat.montant),
+        date=from_date_cat(versement_cat.date_versement)
+    )

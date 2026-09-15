@@ -1,12 +1,11 @@
 from datetime import date
-from unittest import result
 
 from app.catala.generated.Quotient_familial import CalculQuotientFamilialIn, calcul_quotient_familial
 from app.catala.generated.Handicap_moins_20_ans import CalculAideHandicapMoins20AnsIn, calcul_aide_handicap_moins20_ans
 from app.catala.generated.Aide_scolarite import CalculQuotientFamilialAideScolariteIn, calcul_quotient_familial_aide_scolarite, CalculPointsAideScolariteIn, calcul_points_aide_scolarite, calcul_aide_scolarite, CalculAideScolariteIn, Integer
 from app.catala.generated.catala_runtime import Option
 from app.model import Menage, FoyerFiscal, Trajet, Response, Centimes
-from app.catala.utils import to_menage_cat, to_personne_cat_list, to_money_cat, to_trajet, cat_enum_to_string, to_date_cat
+from app.catala.utils import to_menage_cat, to_personne_cat_list, to_money_cat, to_trajet_cat, cat_enum_to_string, to_date_cat, from_date_cat, from_versement_cat
 
 def get_catala_quotient_familial(menage : Menage) -> Response[Centimes]:
     menage_cat = to_menage_cat(menage)
@@ -23,11 +22,11 @@ def get_catala_aide_scolarite(menage: Menage, etudiants_fiscalement_independants
         trajet_depuis_domicile_etudiant: None|Trajet, montant_materiel_specifique: Centimes,
         etudiant_en_filiere_post_bac: bool ) -> Response[Centimes]:
 
-    optionnel_trajet_depuis_domicile_etudiant = Option(to_trajet(trajet_depuis_domicile_etudiant)) if trajet_depuis_domicile_etudiant is not None else Option(None)
+    optionnel_trajet_depuis_domicile_etudiant = Option(to_trajet_cat(trajet_depuis_domicile_etudiant)) if trajet_depuis_domicile_etudiant is not None else Option(None)
     result = calcul_aide_scolarite(CalculAideScolariteIn(
         menage_agent_in= to_menage_cat(menage),
         etudiants_fiscalement_independants_in=to_personne_cat_list(etudiants_fiscalement_independants),
-        trajet_depuis_domicile_agent_in=to_trajet(trajet_depuis_domicile_agent),
+        trajet_depuis_domicile_agent_in=to_trajet_cat(trajet_depuis_domicile_agent),
         trajet_depuis_domicile_etudiant_in=optionnel_trajet_depuis_domicile_etudiant,
         montant_materiel_specifique_in=to_money_cat(montant_materiel_specifique),
         etudiant_en_filiere_post_bac_in=etudiant_en_filiere_post_bac
@@ -78,7 +77,7 @@ def get_catala_aide_handicap_moins_20ans(annee_demandee: int, date_naissance: da
     return Response (
         value= value,
         explanation= {
-            "versements": result.versements,
-            "alerte_derniere_annee": result.alerte_derniere_annee
+            "versements": [from_versement_cat(v) for v in result.versements],
+            "alerte_derniere_annee": bool(result.alerte_derniere_annee.value)
         }
     )

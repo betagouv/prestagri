@@ -1,21 +1,111 @@
 from datetime import date
 from app.services.prestations.handicap import get_aide_handicap_moins_20ans, format_explanation
+from app.model import Versement, Centimes
 
-def test_get_aide_handicap():
+def test_classic():
     resultat = get_aide_handicap_moins_20ans(
         annee_demandee=2026,
-        date_naissance= date(year=2016, month=3, day=8),
-        date_fin_validite= date(year=2028, month=12, day=12),
-        pourcentage_incapacite_permanente= 80,
-        pourcentage_hors_internat= 70
+        date_naissance= date(year=2014, month=9, day=12),
+        date_fin_validite= date(year=2028, month=10, day=23),
+        pourcentage_incapacite_permanente= 70,
+        pourcentage_hors_internat= 100
     )
 
     assert str(resultat.value) == '183.0€'
-    assert format_explanation(resultat.explanation) == {
-        'versement': "['Handicap : 0.5']",
-        '': '42600.0€/ (12 x (5.0 + 0.5))',
-        'quotient_familial': '645.45€',
-        'critères_applicables_aide_scolarité': "['C3_eloignement_agent : 2.0', 'C4_materiel : 2.0']",
-        'valeur_point': '100.0€',
-        'calcul_aide_scolarité': '100.0€ x 4.0 = 400.0€'
+    assert resultat.explanation == {
+        "versements": [
+            Versement(date=date(2026, 6, 1), montant=Centimes(valeur=54900)),
+            Versement(date=date(2026, 9, 1), montant=Centimes(valeur=54900)),
+            Versement(date=date(2026,12, 1), montant = Centimes(valeur=54900)),
+            Versement(date=date(2027, 3, 1), montant=Centimes(valeur=54900))
+        ],
+        "alerte_derniere_annee": False
+    }
+
+def test_trop_age():
+    resultat = get_aide_handicap_moins_20ans(
+        annee_demandee=2026,
+        date_naissance= date(year=2004, month=9, day=12),
+        date_fin_validite= date(year=2028, month=10, day=23),
+        pourcentage_incapacite_permanente= 60,
+        pourcentage_hors_internat= 100
+    )
+
+    assert str(resultat.value) == '0.0€'
+    assert resultat.explanation == {
+        "versements": [],
+        "alerte_derniere_annee": False
+    }
+
+def test_20_this_year():
+    resultat = get_aide_handicap_moins_20ans(
+        annee_demandee=2026,
+        date_naissance= date(year=2006, month=9, day=12),
+        date_fin_validite= date(year=2028, month=10, day=23),
+        pourcentage_incapacite_permanente= 60,
+        pourcentage_hors_internat= 100
+    )
+
+    assert str(resultat.value) == '183.0€'
+    assert resultat.explanation == {
+        "versements": [
+            Versement(date=date(2026, 6, 1), montant=Centimes(valeur=54900)),
+            Versement(date=date(2026, 9, 1), montant=Centimes(valeur=54900)),
+            Versement(date=date(2026,10, 1), montant = Centimes(valeur=18300)),
+        ],
+        "alerte_derniere_annee": True
+    }
+
+def test_internat():
+    resultat = get_aide_handicap_moins_20ans(
+        annee_demandee=2026,
+        date_naissance= date(year=2009, month=9, day=12),
+        date_fin_validite= date(year=2028, month=10, day=23),
+        pourcentage_incapacite_permanente= 60,
+        pourcentage_hors_internat= 70
+    )
+
+    assert str(resultat.value) == '128.1€'
+    assert resultat.explanation == {
+        "versements": [
+            Versement(date=date(2026, 6, 1), montant=Centimes(valeur=38430)),
+            Versement(date=date(2026, 9, 1), montant=Centimes(valeur=38430)),
+            Versement(date=date(2026,12, 1), montant = Centimes(valeur=38430)),
+            Versement(date=date(2027, 3, 1), montant=Centimes(valeur=38430))
+        ],
+        "alerte_derniere_annee": False
+    }
+
+def test_aeeh_ending():
+    resultat = get_aide_handicap_moins_20ans(
+        annee_demandee=2026,
+        date_naissance=date(year=2009, month=9, day=12),
+        date_fin_validite=date(year=2026, month=10, day=23),
+        pourcentage_incapacite_permanente=60,
+        pourcentage_hors_internat=70
+    )
+
+    assert str(resultat.value) == '128.1€'
+    assert resultat.explanation == {
+        "versements": [
+            Versement(date=date(2026, 6, 1), montant=Centimes(valeur=38430)),
+            Versement(date=date(2026, 9, 1), montant=Centimes(valeur=38430)),
+            Versement(date=date(2026, 11, 1), montant=Centimes(valeur=25620)),
+        ],
+        "alerte_derniere_annee": False
+    }
+
+def test_handicap_inneligible():
+    resultat = get_aide_handicap_moins_20ans(
+        annee_demandee=2026,
+        date_naissance=date(year=2016, month=9, day=12),
+        date_fin_validite=date(year=2028, month=10, day=23),
+        pourcentage_incapacite_permanente=30,
+        pourcentage_hors_internat=70
+    )
+
+    assert str(resultat.value) == '0.0€'
+    assert resultat.explanation == {
+        "versements": [],
+        "alerte_derniere_annee": False
     }
