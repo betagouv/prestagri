@@ -1,6 +1,7 @@
 [project]
 include_dirs = [
     "src/aide_scolarite",
+    "src/enfance_handicapee",
     "src/commun",
     "src/commun/structures"
 ]
@@ -11,6 +12,6 @@ target_dir   = "_target"   # Définit où sortir les fichiers finaux des cibles.
 
 [[target]]
 name     = "prestagri_catala"
-modules  = [ "Quotient_familial", "Aide_scolarite"]
-tests    = [ "tests/commun", "tests/aide_scolarite" ]
+modules  = [ "Quotient_familial", "Aide_scolarite", "Handicap_moins_20_ans"]
+tests    = [ "tests/commun", "tests/aide_scolarite", "tests/enfance_handicapee" ]
 backends = [ "python" ]

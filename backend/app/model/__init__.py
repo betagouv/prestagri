@@ -8,3 +8,5 @@ from .annotation import Annotation, emptyAnnotation
 from .prestation import Prestation
 from .dn_dossier import DNDossier, DossierState
 from .blurred_prestation import BlurredPrestation
+from .versement import Versement
+from .prestation_type import PrestationType

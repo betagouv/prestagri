@@ -6,3 +6,4 @@ DataT = TypeVar('DataT')
 class Response(BaseModel, Generic[DataT]):
     value: DataT
     explanation: Any ## Contains JSON or str
+    formatted_explanation: str = "no formatted explanation"
