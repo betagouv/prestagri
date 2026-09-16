@@ -9,9 +9,14 @@ def get_aide_handicap_moins_20ans(annee_demandee: int, date_naissance: date, dat
     return get_catala_aide_handicap_moins_20ans(annee_demandee=annee_demandee, date_naissance=date_naissance, date_fin_validite=date_fin_validite, pourcentage_incapacite_permanente=pourcentage_incapacite_permanente, pourcentage_hors_internat=pourcentage_hors_internat)
 
 def format_explanation(raw_explanation: Any) ->  str :
+    str_explanation = {
+        "alerte_derniere_annee": "vrai" if raw_explanation["alerte_derniere_annee"] else "faux",
+        "versements": [str(v) for v in raw_explanation["versements"]]
+
+    }
     template_explanation = """
         versements : {versements}
         alerte_derniere_annee : {alerte_derniere_annee}
     """
 
-    return textwrap.dedent(template_explanation.format(**raw_explanation)).strip()
+    return textwrap.dedent(template_explanation.format(**str_explanation)).strip()

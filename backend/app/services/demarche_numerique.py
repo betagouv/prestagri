@@ -99,13 +99,13 @@ class ChampLabel(Enum):
     LABEL_BIRTHDATE="Date de naissance"
     LABEL_CATEGORY="Quelle est votre catégorie d'agent ?"
     LABEL_AFFECTATION="Quelle est votre administration d'affectation ?"
-    LABEL_INSTRUCTION_REPETABLE="Instruction de prestations"
-    LABEL_PRESTATION_REPETABLE ="Demande de prestations"
-    LABEL_TYPE_PRESTATION="Quelle prestations demandez-vous ?"
-    LABEL_ANNOTATION_TYPE_PRESTATION="Type de prestations demandée (rempli automatiquement, ne pas modifier)"
+    LABEL_INSTRUCTION_REPETABLE="Instruction de prestation"
+    LABEL_PRESTATION_REPETABLE ="Demande de prestation"
+    LABEL_TYPE_PRESTATION="Quelle prestation demandez-vous ?"
+    LABEL_ANNOTATION_TYPE_PRESTATION="Type de prestation demandée (rempli automatiquement, ne pas modifier)"
     LABEL_ENFANT_CONCERNE="Nom et prénom de l'enfant concerné"
     LABEL_BENEFICIAIRE="Bénéficiaire (rempli automatiquement, ne pas modifier)"
-    LABEL_ASSOCIATED_PRESTATION="Identifiant de prestations (rempli automatiquement, ne pas modifier)"
+    LABEL_ASSOCIATED_PRESTATION="Identifiant de prestation (rempli automatiquement, ne pas modifier)"
     LABEL_SIMULATION_QF="Quotient familial (rempli automatiquement, ne pas modifier)"
     LABEL_SIMULATION_AMOUNT="Montant calculé par simulation (rempli automatiquement, ne pas modifier)"
     LABEL_SIMULATION_EXPLANATION="Explication de la simulation (rempli automatiquement, ne pas modifier)"
@@ -117,6 +117,7 @@ class ChampLabel(Enum):
     LABEL_OUTRE_MER="Résidez vous en Outre-Mer ?"
     LABEL_REVENU_FISCAL="Revenu fiscal de référence (arrondi à l'euro)"
     LABEL_AVIS_IMPOTS_DEPENDANTS="Nombre de personnes rattachées à l'avis d'imposition"
+    # Prestation Aide scolarité
     LABEL_REVENU_FISCAL_ENFANT="Revenu fiscal de référence de l'enfant (arrondi à l'euro)"
     LABEL_AVIS_IMPOTS_DEPENDANTS_ENFANT="Nombre de personnes rattachées à l'avis d'imposition de l'enfant"
     LABEL_DISTANCE_AGENT_ECOLE="Quelle est la distance entre votre logement et l'établissement scolaire de votre enfant (en km)"
@@ -125,6 +126,13 @@ class ChampLabel(Enum):
     LABEL_DUREE_ENFANT_ECOLE="Quelle est la durée du trajet entre le logement de votre enfant et son établissement scolaire (en min)"
     LABEL_MATERIEL_SPECIFIQUE="Quel est le montant total des factures acquittées ? (arrondi à l'euros près)"
     LABEL_ENFANT_ETUDES_SUPERIEURES="Votre enfant est-il un étudiant en études supérieures ?"
+    ## Prestation Handicap
+    LABEL_NAISSANCE_ENFANT ="Date de naissance de l'enfant"
+    LABEL_ANNEE_DEMANDEE = "Année pour laquelle est faite la demande"
+    LABEL_FIN_AEEH = "Quelle est la date de fin de validité de la décision de la CDAPH ?"
+    LABEL_POURCENTAGE_INCAPACITE = "Quel est le pourcentage d'incapacité permanente de votre enfant ?"
+    LABEL_POURCENTAGE_EN_INTERNAT = "Quel pourcentage de l'année votre enfant est il pris en charge par cet internat ?"
+
 
 def get_champ_by_label(dossier: Any, label: ChampLabel) -> Champ:
     for champ in dossier:
@@ -180,6 +188,8 @@ def parse_prestation(prestations: List[Any], dossier: Any) -> List[Prestation]:
         )
         if prestation.type  == "Aide a la scolarité":
             prestation.calcul_data = parse_data_for_aide_scolarite_data(p, dossier)
+        if prestation.type == "Enfant en situation de handicap":
+            prestation.calcul_data = parse_data_for_enfant_handicap_data(p)
         result.append(prestation)
     return result
 
@@ -246,3 +256,21 @@ def parse_data_for_aide_scolarite_data(raw_prestation: Any, raw_dn_dossier: Any)
         "montant_materiel_specifique": montant_materiel_specifique,
         "etudiant_post_bac": etudiant_post_bac
     }
+
+def parse_data_for_enfant_handicap_data(raw_prestation: Any) -> Any:
+    """
+    annee_demandee: int,
+    date_naissance: date,
+    date_fin_validite: date,
+    pourcentage_incapacite_permanente: int,
+    pourcentage_hors_internat: int
+    """
+    parsed = {
+        "annee_demandee": get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_ANNEE_DEMANDEE).value,
+        "date_naissance": get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_NAISSANCE_ENFANT).value,
+        "date_fin_validite": get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_FIN_AEEH).value,
+        "pourcentage_incapacite_permanente": get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_POURCENTAGE_INCAPACITE).value,
+        "pourcentage_hors_internat": get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_POURCENTAGE_EN_INTERNAT).value,
+    }
+    print(parsed)
+    return parsed

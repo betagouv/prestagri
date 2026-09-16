@@ -8,6 +8,7 @@ from app.utils import logger
 from app.model import Menage, FoyerFiscal, Response, Centimes, Trajet
 from app.services.quotient_familial import get_quotient_familial
 from app.services.aide_scolarite import get_aide_scolarite, format_explanation
+from app.services.prestations.handicap import get_aide_handicap_moins_20ans, format_explanation as handicap_format_explanation
 
 router = APIRouter()
 
@@ -108,7 +109,7 @@ def read_quotient_familial_aide_scolarite(
         logger.exception(e)
         return Response(value="Une erreur est survenue", explanation=properties.error_contact)
 
-@router.get("/quotient_familial")
+@router.get("/handicap_moins_20ans")
 def read_aide_handicap_moins_20ans(
     annee_demandee: int,
     date_naissance_enfant: date,
@@ -117,8 +118,8 @@ def read_aide_handicap_moins_20ans(
     pourcentage_temps_hors_internat_avec_prise_en_charge : int = 100,
     ) -> Response :
     try :
-        response = get_quotient_familial(menage)
-        return Response(value=str(response.value), explanation= response.explanation)
+        response = get_aide_handicap_moins_20ans(annee_demandee=annee_demandee, date_naissance=date_naissance_enfant,date_fin_validite=date_fin_validite_aeeh, pourcentage_incapacite_permanente=pourcentage_incapacite_permanente, pourcentage_hors_internat=pourcentage_temps_hors_internat_avec_prise_en_charge)
+        return Response(value=str(response.value), explanation= handicap_format_explanation(response.explanation))
     except Exception as e:
         sentry_sdk.capture_exception(e)
         logger.exception(e)

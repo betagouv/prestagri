@@ -7,6 +7,10 @@ from app.services.aide_scolarite import get_aide_scolarite, format_explanation
 def prefill_dossier_annotations(dossier_number: str) -> Any:
     dn_dossier = get_dn_dossier(dossier_number)
     created = create_annotations(dn_dossier.id, dn_dossier)
+    print("already")
+    print(dn_dossier.annotations)
+    print("created")
+    print(created)
     annotations = created if created else dn_dossier.annotations
     filled = fill_annotations(dn_dossier.id, dn_dossier.prestations, annotations)
     return {
@@ -55,6 +59,9 @@ def identify_associated_annotations(prestations:List[Prestation], annotations: L
             if p.id == a.associated_prestation_id:
                 associated_prestation[p.id] = (p, a)
                 unassociated_annotation.remove(a)
+    print(prestations)
+    print(associated_prestation)
+    print(unassociated_annotation)
     for p in prestations:
         if p.id not in associated_prestation.keys():
             associated_prestation[p.id] = (p, unassociated_annotation.pop())

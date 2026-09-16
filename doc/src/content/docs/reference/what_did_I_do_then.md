@@ -10,14 +10,14 @@ description.
 
 ______________________________________________________________________
 
-## Bug description
+##  in get_dn_dossier return parse_dn_dossier(r.json()["data"]["dossier"]) TypeError: 'NoneType' object is not subscriptable
+
 
 *how long* :
 
-*what happened* :
+*what happened* : error 401 when calling the DN API
 
-*why* :
+*why* : Token expired
 
-*what did i do to fix it* :
-
-*how often* :
+*what did i do to fix it* : in DN, profil administrateur, voir mon profil, jeton d'identification de l'API
+*how often* : depending on the validity of the token every ~6 month
