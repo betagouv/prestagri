@@ -62,10 +62,8 @@ tasks:
       - sed -i "s/l.fold_left(somme__1, Money('0.00'))/Money(sum(l))/g" backend/app/catala/generated/Money_fr.py
       - sed -i "s/< annee_demandee/< Integer(annee_demandee)/g" backend/app/catala/generated/Handicap_moins_20_ans.py
       - sed -i "s/dates.DateRounding/DateRounding/g" backend/app/catala/generated/Handicap_moins_20_ans.py
-
-
-
       - sed -i 's/dates\.//g' backend/app/catala/generated/catala_runtime.py
+      - task: check
   setup_commit:
     desc: use production url when commiting
     cmds:
