@@ -11,8 +11,9 @@ def get_aide_handicap_moins_20ans(annee_demandee: int, date_naissance: date, dat
     return aide
 
 def format_explanation(raw_explanation: Any) ->  str :
+
     str_explanation = {
-        "alerte_derniere_annee": "vrai" if raw_explanation["alerte_derniere_annee"] else "faux",
+        "alerte_derniere_annee": "oui" if raw_explanation["alerte_derniere_annee"] else "non",
         "versements": [str(v) for v in raw_explanation["versements"]]
 
     }
