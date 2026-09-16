@@ -1,12 +1,14 @@
 import json
-from datetime import datetime
+from datetime import date, datetime
+from locale import setlocale, LC_ALL
 
 import requests
 from typing import Any, List
 from enum import Enum
 
 from app.services.properties import properties
-from app.model import Menage, FoyerFiscal, Trajet, Annotation, Prestation, Champ, DNDossier, Centimes, DossierState
+from app.model import Menage, FoyerFiscal, Trajet, Annotation, Prestation, Champ, DNDossier, Centimes, DossierState, \
+    PrestationType
 from app.utils import to_bool
 
 MISSING_DATA = "information manquante"
@@ -186,9 +188,9 @@ def parse_prestation(prestations: List[Any], dossier: Any) -> List[Prestation]:
             enfant= get_champ_by_label(champs, ChampLabel.LABEL_ENFANT_CONCERNE).value,
             calcul_data= {}
         )
-        if prestation.type  == "Aide a la scolarité":
+        if prestation.type  ==PrestationType.AIDE_SCOLARITE.value:
             prestation.calcul_data = parse_data_for_aide_scolarite_data(p, dossier)
-        if prestation.type == "Enfant en situation de handicap":
+        if prestation.type == PrestationType.ENFANT_HANDICAP.value:
             prestation.calcul_data = parse_data_for_enfant_handicap_data(p)
         result.append(prestation)
     return result
@@ -265,12 +267,17 @@ def parse_data_for_enfant_handicap_data(raw_prestation: Any) -> Any:
     pourcentage_incapacite_permanente: int,
     pourcentage_hors_internat: int
     """
+    print(raw_prestation)
     parsed = {
-        "annee_demandee": get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_ANNEE_DEMANDEE).value,
-        "date_naissance": get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_NAISSANCE_ENFANT).value,
-        "date_fin_validite": get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_FIN_AEEH).value,
-        "pourcentage_incapacite_permanente": get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_POURCENTAGE_INCAPACITE).value,
-        "pourcentage_hors_internat": get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_POURCENTAGE_EN_INTERNAT).value,
+        "annee_demandee": int(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_ANNEE_DEMANDEE).value),
+        "date_naissance": parse_date(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_NAISSANCE_ENFANT).value),
+        "date_fin_validite": parse_date(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_FIN_AEEH).value),
+        "pourcentage_incapacite_permanente": int(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_POURCENTAGE_INCAPACITE).value),
+        "pourcentage_en_internat": int(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_POURCENTAGE_EN_INTERNAT).value),
     }
     print(parsed)
     return parsed
+
+def parse_date(date_str: str) -> datetime:
+    setlocale(LC_ALL, "fr_FR.utf8" )
+    return datetime.strptime(date_str, "%d %B %Y")
