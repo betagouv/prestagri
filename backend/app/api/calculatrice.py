@@ -7,8 +7,8 @@ from app.services.properties import properties
 from app.utils import logger
 from app.model import Menage, FoyerFiscal, Response, Centimes, Trajet
 from app.services.quotient_familial import get_quotient_familial
-from app.services.aide_scolarite import get_aide_scolarite, format_explanation
-from app.services.prestations.handicap import get_aide_handicap_moins_20ans, format_explanation as handicap_format_explanation
+from app.services.aide_scolarite import get_aide_scolarite
+from app.services.prestations.handicap import get_aide_handicap_moins_20ans
 
 router = APIRouter()
 
@@ -103,7 +103,7 @@ def read_quotient_familial_aide_scolarite(
         montant_materiel = Centimes.from_euros_int(montant_materiel_specifique) if montant_materiel_specifique is not None else None
 
         response = get_aide_scolarite(menage, etudiant_independant, trajet_agent, trajet_etudiant ,montant_materiel,etudiant_post_bac)
-        return Response(value=str(response.value) , explanation=format_explanation(response.explanation))
+        return Response(value=str(response.value) , explanation=response.formatted_explanation)
     except Exception as e:
         sentry_sdk.capture_exception(e)
         logger.exception(e)
@@ -119,7 +119,7 @@ def read_aide_handicap_moins_20ans(
     ) -> Response :
     try :
         response = get_aide_handicap_moins_20ans(annee_demandee=annee_demandee, date_naissance=date_naissance_enfant,date_fin_validite=date_fin_validite_aeeh, pourcentage_incapacite_permanente=pourcentage_incapacite_permanente, pourcentage_hors_internat=pourcentage_temps_hors_internat_avec_prise_en_charge)
-        return Response(value=str(response.value), explanation= handicap_format_explanation(response.explanation))
+        return Response(value=str(response.value), explanation= response.formatted_explanation)
     except Exception as e:
         sentry_sdk.capture_exception(e)
         logger.exception(e)

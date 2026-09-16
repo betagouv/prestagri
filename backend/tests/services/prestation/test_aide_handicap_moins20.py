@@ -1,5 +1,5 @@
 from datetime import date
-from app.services.prestations.handicap import get_aide_handicap_moins_20ans, format_explanation
+from app.services.prestations.handicap import get_aide_handicap_moins_20ans
 from app.model import Versement, Centimes
 
 def test_classic():

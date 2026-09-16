@@ -1,4 +1,4 @@
-from app.services.aide_scolarite import get_aide_scolarite, format_explanation
+from app.services.aide_scolarite import get_aide_scolarite
 from app.model import Menage, FoyerFiscal, Centimes, Trajet
 from app.catala.aides import get_catala_quotient_familial_aide_scolarite
 

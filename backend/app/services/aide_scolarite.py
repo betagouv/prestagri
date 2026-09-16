@@ -24,6 +24,8 @@ def get_aide_scolarite(
         montant_materiel_specifique or Centimes(valeur=0),
         etudiant_post_bac)
 
+    aide_scolarite.formatted_explanation = format_explanation(aide_scolarite.explanation)
+
     return aide_scolarite
 
 def format_explanation(raw_explanation: Any) ->  str :
