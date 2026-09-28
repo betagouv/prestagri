@@ -43,7 +43,7 @@ import DsfrLayout from "../layouts/dsfrLayout.astro"
 <script>
     let calculForm = document.getElementById("calculForm");
     calculForm?.addEventListener("submit", (e) => {
-    let url = "https://api.prest-agri.beta.gouv.fr/instruction/" + (document.getElementById('dossier_id') as HTMLInputElement).value
+    let url = "http://localhost:8000/instruction/" + (document.getElementById('dossier_id') as HTMLInputElement).value
     console.log(url)
     e.preventDefault();
     fetch(url)

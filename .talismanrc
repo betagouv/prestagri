@@ -1,6 +1,4 @@
 fileignoreconfig:
-- filename: frontend/package-lock.json
-  checksum: 8c6bcc2ef3cab3b21cf1dae40c91567d20181773bf6428a0b24e3411fec5c2b6
 - filename: doc/src/assets/style/dsfr.module.min.js
   checksum: 78541d27a2a2d1bcf507789257ebfd58bf4f721e95de005129c46ffffd863cc3
 - filename: doc/src/assets/style/dsfr.nomodule.min.js
@@ -15,4 +13,9 @@ fileignoreconfig:
   checksum: f5825506f3c6e7924339217bbded474bb77b826f8e1dd5f8a9d0ea72f4aaac19
 - filename: catala/src/enfance_handicapee/handicap_moins_20_ans.catala_fr
   checksum: 58e38cea059295f21899c5c8b2a58ccf132d4208e3f98846daaff49b9f0e5dde
+- filename: frontend/package-lock.json
+  checksum: b3b32c431cec346889e40e87aa91f4d6e81801e2c2f771b65cce241e624920dd
+- filename: frontend/src/assets/js/grist-plugin-api.js
+  checksum: a2a6a9bceeeba94324871b59b2baa2bf1cd4a265bb476c6e78a5f5a47ceb9ad9
+
 version: "1.0"

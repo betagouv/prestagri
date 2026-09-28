@@ -1,0 +1,182 @@
+---
+import DsfrLayout from "../layouts/dsfr_report_Layout.astro"
+---
+
+<DsfrLayout>
+    <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
+
+    <div class="fr-container fr-mt-8v fr-mt-md-14v fr-mb-2v fr-mb-md-8v">
+        <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--center">
+            <div class="fr-col-12 fr-col-md-10 fr-col-lg-8">
+                <h2><span id="annee"></span> - Toutes prestations </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="fr-container fr-container--fluid fr-mb-md-14v">
+        <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
+            <div class="fr-col-12 fr-col-md-10 fr-col-lg-8">
+                <h3>Quelques chiffres clefs</h3>
+
+                <p> Le coût total des prestations est de <span style="font-weight: bold;"><span id="cost" ></span>€</span></p>
+
+                <p> <span style="font-weight: bold;"><span id="nb_demandes" ></span> demandes</span> de prestations ont été faites par <span style="font-weight: bold;"><span id="nb_demandeurs"></span> personnes distinctes</span>  </p>
+
+                <p> Les hommes représentent <span style="font-weight: bold;"><span id="prctg_demandes_par_hommes" ></span>% des demandes</span> et <span style="font-weight: bold;"><span id="prctg_demandeurs"></span>% des demandeurs</span>  </p>
+
+                <h3>Périodicité des demandes</h3>
+                <div id="periodicite" style="max-width: 600px; max-height: 300px"></div>
+
+                <h3>Demandes par catégorie</h3>
+                <div id="category" style="max-width: 600px; max-height: 300px"></div>
+
+                <h3>Quel est le profil des foyers demandeurs ?</h3>
+
+                <div id="qf_box_plot" style="max-width: 600px; max-height: 300px"></div>
+
+                <div id="rfr_box_plot" style="max-width: 600px; max-height: 300px"></div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        import ApexCharts from 'apexcharts'
+        import {grist} from '../assets/js/grist-plugin-api'
+
+        window.Apex = {colors: ["#6a6af4", "#000091", "#cacafb"]}
+
+        grist.ready({columns: ['Periode', 'Cost','Periodicite_demandes', 'Periodicite_demandeureuses', 'Nb_demandes', 'Nb_demandeurs', 'Categorie_demandes', 'Categorie_demandeureuses', 'Prctg_demandeurs', 'Prctg_demandes_par_hommes'], requiredAccess: 'read table'});
+        grist.onRecord(record => {
+            const mapped = grist.mapColumnNames(record);
+            if (!mapped) {
+                console.log("Please map all columns")
+            }
+            else {
+
+                document.getElementById('annee').innerText = mapped.Periode
+                document.getElementById('cost').innerText = mapped.Cost
+                document.getElementById('nb_demandes').innerText = mapped.Nb_demandes
+                document.getElementById('nb_demandeurs').innerText = mapped.Nb_demandeurs
+                document.getElementById('prctg_demandes_par_hommes').innerText = mapped.Prctg_demandes_par_hommes
+                document.getElementById('prctg_demandeurs').innerText = mapped.Prctg_demandeurs
+
+
+                renderGraphs(mapped)
+
+            }
+        });
+
+    function renderGraphs(mapped) {
+        let charts = {
+            "qf_box_plot" : document.getElementById('qf_box_plot'),
+            "rfr_box_plot": document.getElementById('rfr_box_plot'),
+            "periodicite": document.getElementById('periodicite'),
+            "category": document.getElementById('category')
+        }
+
+        cleanupChartBeforeReRender(charts)
+
+        new ApexCharts(charts.qf_box_plot, {
+            chart: {
+                type: 'boxPlot'
+            },
+            plotOptions: {
+                boxPlot: {
+                    colors: {
+                    upper: '#6a6af4',
+                    lower: '#000091'
+                    }
+                },
+                bar: {
+                    horizontal: true
+                }
+            },
+            series: [{
+                data: [
+                    { x: 'Aide à la scolarité', points: [400, 500, 560, 600, 632] },
+                    { x: 'Enfant handicap', points: [350, 480, 530, 620, 660] },
+                    { x: 'Adulte handicap', points: [280, 480, 540, 580, 700] },
+                    { x: 'Centre de loisirs sans hébergement', points: [400, 500, 560, 600, 632] },
+                ]
+            }]
+        }).render()
+
+        new ApexCharts(charts.rfr_box_plot, {
+            chart: {
+                type: 'boxPlot'
+            },
+            height: '50%',
+            plotOptions: {
+                boxPlot: {
+                    colors: {
+                    upper: '#6a6af4',
+                    lower: '#000091'
+                    }
+                },
+                bar: {
+                    horizontal: true
+                }
+            },
+            series: [{
+                data: [
+                    { x: 'Aide à la scolarité', points: [10000, 18000, 34000, 36000, 45000] },
+                    { x: 'Enfant handicap', points: [10000, 22000, 37000, 40000, 85000] },
+                    { x: 'Adulte handicap', points: [10000, 22000, 37000, 40000, 85000] },
+                    { x: 'Centre de loisirs sans hébergement', points: [10000, 18000, 34000, 36000, 45000] },
+                ]
+            }]
+        }).render()
+
+        new ApexCharts(charts.periodicite, {
+            series: [
+                {
+                name: 'Nombre de demandes',
+                data: JSON.parse(mapped.Periodicite_demandes)
+                },
+                {
+                name: 'Nombre de demandeureuses',
+                data: JSON.parse(mapped.Periodicite_demandeureuses)
+                },
+            ],
+            chart: {
+                type: 'bar',
+                height: 350,
+            },
+            xaxis: {
+                categories: ['Invalide', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+            },
+        }).render()
+
+        new ApexCharts(charts.category, {
+            series: [
+                {
+                    name : 'Nombre de demandes',
+                    data: JSON.parse(mapped.Categorie_demandes),
+                },
+                {
+                    name : 'Nombre de demandeurs',
+                    data: JSON.parse(mapped.Categorie_demandeureuses),
+                }
+            ],
+            chart: {
+                type: 'bar',
+                height: 350,
+            },
+            xaxis: {
+                categories: ["B - Contractuel", "A - Contractuel", "A - Titulaire"]
+            },
+        }).render()
+    }
+
+    function cleanupChartBeforeReRender(charts){
+        for(var chart in charts) {
+            charts[chart].innerText = ''
+        }
+    }
+
+    </script>
+
+</DsfrLayout>

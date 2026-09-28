@@ -28,7 +28,7 @@ tasks:
   serve_front:
     desc: run the doc locally
     cmds:
-      - cd frontend && npm run start
+      - cd frontend && npm run dev
   check:
     desc: run pre-commit hook
     cmds:
@@ -69,8 +69,10 @@ tasks:
     cmds:
       - sed -i 's/http:\/\/localhost:8000/https:\/\/api.prest-agri.beta.gouv.fr/g' frontend/src/pages/aide_scolarite.astro
       - sed -i 's/http:\/\/localhost:8000/https:\/\/api.prest-agri.beta.gouv.fr/g' frontend/src/pages/quotient_familial.astro
+      - sed -i 's/http:\/\/localhost:8000/https:\/\/api.prest-agri.beta.gouv.fr/g' frontend/src/pages/pre_instruction.astro
   setup_local:
     desc: use localhost url when dev
     cmds:
       - sed -i 's/https:\/\/api.prest-agri.beta.gouv.fr/http:\/\/localhost:8000/g' frontend/src/pages/aide_scolarite.astro
       - sed -i 's/https:\/\/api.prest-agri.beta.gouv.fr/http:\/\/localhost:8000/g' frontend/src/pages/quotient_familial.astro
+      - sed -i 's/https:\/\/api.prest-agri.beta.gouv.fr/http:\/\/localhost:8000/g' frontend/src/pages/pre_instruction.astro

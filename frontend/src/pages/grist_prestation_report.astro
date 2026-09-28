@@ -1,0 +1,125 @@
+---
+import DsfrLayout from "../layouts/dsfr_report_Layout.astro"
+---
+
+<DsfrLayout>
+    <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
+
+    <div class="fr-container fr-mt-8v fr-mt-md-14v fr-mb-2v fr-mb-md-8v">
+        <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--center">
+            <div class="fr-col-12 fr-col-md-10 fr-col-lg-8">
+                <h2><span id="annee"></span> - Toutes prestations </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="fr-container fr-container--fluid fr-mb-md-14v">
+        <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
+            <div class="fr-col-12 fr-col-md-10 fr-col-lg-8">
+                <h3>Quelques chiffres clefs</h3>
+
+                <p> Le coût total de la prestations est de <span style="font-weight: bold;"><span id="cost" ></span>€</span> avec une somme médiane de <span style="font-weight: bold;"><span id="median_amount" ></span>€</span> </p>
+
+                <p> <span style="font-weight: bold;"><span id="nb_demandes" ></span> demandes</span> de prestations ont été faites par <span style="font-weight: bold;"><span id="nb_demandeurs"></span> personnes distinctes</span>  </p>
+
+                <p> Les hommes représentent <span style="font-weight: bold;"><span id="prctg_demandes_par_hommes" ></span>% des demandes</span> et <span style="font-weight: bold;"><span id="prctg_demandeurs"></span>% des demandeurs</span>  </p>
+
+                <h3>Demandes par catégorie</h3>
+                <div id="category" style="max-width: 600px; max-height: 300px"></div>
+
+                <h3>Demandes par age des demandeurs</h3>
+                <div id="age" style="max-width: 600px; max-height: 300px"></div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        import ApexCharts from 'apexcharts'
+        import {grist} from '../assets/js/grist-plugin-api'
+
+        window.Apex = {colors: ["#6a6af4", "#000091", "#cacafb"]}
+
+        grist.ready({columns:
+            ['Periode', 'Cost', 'Median_Amount', 'Nb_demandes', 'Nb_demandeurs', 'Age_demandes', 'Age_demandeurs',
+            'Categorie_demandes', 'Categorie_demandeureuses', 'Prctg_demandeurs', 'Prctg_demandes_par_hommes'],
+            requiredAccess: 'read table'});
+        grist.onRecord(record => {
+            const mapped = grist.mapColumnNames(record);
+            if (!mapped) {
+                console.log("Please map all columns")
+            }
+            else {
+
+                document.getElementById('annee').innerText = mapped.Periode
+                document.getElementById('cost').innerText = mapped.Cost
+                document.getElementById('nb_demandes').innerText = mapped.Nb_demandes
+                document.getElementById('nb_demandeurs').innerText = mapped.Nb_demandeurs
+                document.getElementById('prctg_demandes_par_hommes').innerText = mapped.Prctg_demandes_par_hommes
+                document.getElementById('prctg_demandeurs').innerText = mapped.Prctg_demandeurs
+                document.getElementById('median_amount').innerText = mapped.Median_Amount
+
+
+                renderGraphs(mapped)
+
+            }
+        });
+
+    function renderGraphs(mapped) {
+        let charts = {
+            "category": document.getElementById('category'),
+            "age": document.getElementById('age'),
+        }
+
+        cleanupChartBeforeReRender(charts)
+
+        new ApexCharts(charts.category, {
+            series: [
+                {
+                    name : 'Nombre de demandes',
+                    data: JSON.parse(mapped.Categorie_demandes),
+                },
+                {
+                    name : 'Nombre de demandeurs',
+                    data: JSON.parse(mapped.Categorie_demandeureuses),
+                }
+            ],
+            chart: {
+                type: 'bar',
+                height: 350,
+            },
+            xaxis: {
+                categories: ["B - Contractuel", "A - Contractuel", "A - Titulaire"]
+            },
+        }).render()
+
+        new ApexCharts(charts.age, {
+            series: [
+                {
+                    name : 'Nombre de demandes',
+                    data: JSON.parse(mapped.Age_demandes),
+                },
+                {
+                    name : 'Nombre de demandeurs',
+                    data: JSON.parse(mapped.Age_demandeurs),
+                }
+            ],
+            chart: {
+                type: 'bar',
+                height: 350,
+            },
+            xaxis: {
+                categories: ["1940", "1950", "1960", "1970", "1980", "1990", "2000", "2010", "2020" ]
+            },
+        }).render()
+    }
+
+    function cleanupChartBeforeReRender(charts){
+        for(var chart in charts) {
+            charts[chart].innerText = ''
+        }
+    }
+
+    </script>
+
+</DsfrLayout>

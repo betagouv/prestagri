@@ -8,5 +8,5 @@ router = APIRouter()
 
 @router.get("/pilotage")
 def read_root():
-    logger.info('Pilotage')
-    return upload_pilotage_data()
+    upload_pilotage_data()
+    return "Instruction pré-remplie"

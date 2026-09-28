@@ -1,0 +1,154 @@
+---
+import DsfrLayout from "../layouts/dsfr_report_Layout.astro"
+---
+
+<DsfrLayout>
+    <div class="fr-container fr-mt-8v fr-mt-md-14v fr-mb-2v fr-mb-md-8v">
+        <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--center">
+            <div class="fr-col-12 fr-col-md-10 fr-col-lg-8">
+                <h2><span id="annee"></span> - Prestation <span id="prestation_name"></span> </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="fr-container fr-container--fluid fr-mb-md-14v">
+        <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
+            <div class="fr-col-12 fr-col-md-10 fr-col-lg-8">
+                <h3>Quelques chiffres clefs</h3>
+
+                <p> Cout total de la prestation <span id="cost" ></span>€</p>
+                <p> Somme moyenne allouée pour cette prestation : <span id="cost" ></span>€</p>
+                <p> Revenu fiscal moyen des bénéficiaires de cette prestation : <span id="rfr" ></span>€</p>
+                <p> Temps moyen des bénéficiaires de cette prestation : <span id="rfr" ></span>€</p>
+
+                <p> <span style="font-weight: bold;"><span id="nb_demandes" ></span> demandes</span> de prestations ont été faites par <span style="font-weight: bold;"><span id="nb_demandeurs"></span> personnes distinctes</span>  </p>
+
+                <h3>Périodicité des demandes</h3>
+                <span id="periodicite" style="max-width: 600px; max-height: 300px"></span>
+
+                <h3>Demandes par catégorie</h3>
+                <span id="category" style="max-width: 600px; max-height: 300px"></span>
+
+                <h3>Quelles familles demandent cette prestation</h3>
+
+                <p> Quotient familial moyen des bénéficiaires de cette prestation : <span id="qf-average" ></span>€</p>
+
+                <span id="qf_box_plot"></span>
+
+                <span id="rfr_box_plot"></span>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        import ApexCharts from 'apexcharts'
+        window.Apex = {colors: ["#6a6af4", "#000091", "#cacafb"]}
+        /**
+        grist.ready({columns: ['Periodicite', 'Civilite', 'Nb_demandes', 'Nb_demandeurs'], requiredAccess: 'read table'});
+        grist.onRecords(table => {
+
+        });
+        grist.onRecord(record => {
+        const mapped = grist.mapColumnNames(record);
+            if (mapped) {
+            add_periodicite_chart("[0,1,2,3,4,5,6,7,8,9,10,11,12]")//mapped.Periodicite)
+            document.getElementById('nb_demandes').innerText = 3 // mapped.Nb_demandes
+            document.getElementById('nb_demandeurs').innerText = 4 //mapped.Nb_demandeurs
+
+            } else {
+            console.log("Please map all columns")
+            }
+        });
+ */
+
+        document.getElementById('annee').innerText = "2026" // mapped.Nb_demandes
+        document.getElementById('nb_demandes').innerText = "3" // mapped.Nb_demandes
+        document.getElementById('nb_demandeurs').innerText = "4" //mapped.Nb_demandeurs
+
+        new ApexCharts(document.getElementById('qf_box_plot'), {
+            chart: {
+                type: 'boxPlot'
+            },
+            plotOptions: {
+                boxPlot: {
+                    colors: {
+                    upper: '#6a6af4',
+                    lower: '#000091'
+                    }
+                },
+                bar: {
+                    horizontal: true
+                }
+            },
+            series: [{
+                data: [
+                    { x: 'Quotient familial', points: [1.2, 1.9, 3.4, 2.2, 2.8] },
+                ]
+            }]
+        }).render()
+
+        new ApexCharts(document.getElementById('rfr_box_plot'), {
+            chart: {
+                type: 'boxPlot'
+            },
+            height: '50%',
+            plotOptions: {
+                boxPlot: {
+                    colors: {
+                    upper: '#6a6af4',
+                    lower: '#000091'
+                    }
+                },
+                bar: {
+                    horizontal: true
+                }
+            },
+            series: [{
+                data: [
+                    { x: 'Revenu fiscal de référence', points: [1.2, 1.9, 3.4, 2.2, 2.8] },
+                ]
+            }]
+        }).render()
+
+        new ApexCharts(document.getElementById('periodicite'), {
+            series: [
+                {
+                name: 'Nombre de demandes',
+                data: JSON.parse("[0,1,2,3,4,5,6,7,8,9,10,11,12]"), //mapped.Periodicite)
+                },
+            ],
+            chart: {
+                type: 'bar',
+                height: 350,
+            },
+            xaxis: {
+                categories: ['Invalide', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+            },
+        }).render()
+
+        new ApexCharts(document.getElementById('category'), {
+            series: [
+                {
+                    name : 'Nombre de demandes',
+                    data: JSON.parse("[1,2,3]") // prestations_by_category),
+                },
+                {
+                    name : 'Nombre de demandeurs',
+                    data: JSON.parse("[3,2,1]") //beneficiaries_by_category),
+                }
+            ],
+            chart: {
+                type: 'bar',
+                height: 350,
+            },
+            xaxis: {
+                categories: ["B - Contractuel", "A - Contractuel", "A - Titulaire"]
+            },
+        }).render()
+
+    </script>
+
+</DsfrLayout>
