@@ -267,7 +267,6 @@ def parse_data_for_enfant_handicap_data(raw_prestation: Any) -> Any:
     pourcentage_incapacite_permanente: int,
     pourcentage_hors_internat: int
     """
-    print(raw_prestation)
     parsed = {
         "annee_demandee": int(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_ANNEE_DEMANDEE).value),
         "date_naissance": parse_date(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_NAISSANCE_ENFANT).value),
@@ -275,7 +274,6 @@ def parse_data_for_enfant_handicap_data(raw_prestation: Any) -> Any:
         "pourcentage_incapacite_permanente": int(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_POURCENTAGE_INCAPACITE).value),
         "pourcentage_en_internat": int(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_POURCENTAGE_EN_INTERNAT).value),
     }
-    print(parsed)
     return parsed
 
 def parse_date(date_str: str) -> datetime:
