@@ -27,7 +27,7 @@ def fill_annotations(dossier_id: str, prestations:List[Prestation], annotations:
         fill_dn_short_text(dossier_id, annotation.beneficiaire.id, prestation.enfant)
         fill_dn_simple_choice(dossier_id, annotation.type.id, prestation.type)
         fill_dn_short_text(dossier_id, annotation.associated_prestation_id.id, prestation.id)
-        response = Response(value=Centimes(valeur=0), explanation={"quotient_familial" : "non connu pour cette prestation"})
+        response = Response(value=Centimes(valeur=0), explanation={"quotient_familial" : "0"})
         if prestation.type == PrestationType.AIDE_SCOLARITE.value:
             response = compute_aide_scolarite(prestation)
         if prestation.type == PrestationType.ENFANT_HANDICAP.value:
@@ -60,7 +60,7 @@ def compute_aide_handicap_moins_20ans(prestation: Prestation) -> Response[Centim
         pourcentage_incapacite_permanente=data["pourcentage_incapacite_permanente"],
         pourcentage_hors_internat=100-data["pourcentage_en_internat"],
     )
-    result.explanation["quotient_familial"] = "non connu pour cette prestation"
+    result.explanation["quotient_familial"] = 0
     return result
 
 #TODO To improved - rushed before demo test
