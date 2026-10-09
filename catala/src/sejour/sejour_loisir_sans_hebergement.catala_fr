@@ -1,0 +1,132 @@
+> Module Sejour_loisir_sans_hebergement
+
+> Usage de Quotient_familial
+> Usage de Menage
+> Usage de Foyer_fiscal
+
+# SÉJOUR EN CENTRES DE LOISIRS SANS HÉBERGEMENT
+
+```catala-metadata
+
+déclaration champ d'application CalculSejourLoisirSansHebergement:
+  entrée date_naissance contenu date
+  entrée date_debut_sejour contenu date
+  entrée durée_séjour contenu décimal
+  entrée montant_déboursé contenu argent
+  entrée quotient_familial contenu argent
+  entrée centre_agréé contenu booléen
+  résultat taux_jour contenu argent
+  résultat taux_demi_jour contenu argent
+  résultat aide contenu argent
+   état défaut
+   état minoré
+```
+
+## Objet :
+
+Prestation destinée à prendre en charge une partie des frais de séjour des enfants des agents dans des centres de loisirs
+sans hébergement : lieux d'accueil (dont les centres aérés) recevant les enfants à la journée à l'occasion des congés
+scolaires et des temps de loisirs, présentant un choix d'activités diverses.
+
+## Montant au 1er janvier 2026 :
+QF= revenu fiscal de référence
+12 x nb de personnes vivant au foyer (a)
+(a) : +1 pour un parent isolé
++ 0,5 selon cas particulier décrit à la page 5.
+
+Information destinée à l’administration / aux services :
+N° compte PCE à utiliser dans Chorus : 647121000
+Prestations facultatives d'action sociale : prestations culturelles sportives et de loisirs
+
+|QF |   Quotient familial mensuel (QF)  |  Taux par jour  | Taux demi-journée |
+|1  | < 621 €                           | 8,65 €          | 4,35 €            |
+|2  | 621 à 780 €                       | 8,05 €          | 4,05 €            |
+|3  | 781 à 930 €                       | 7,70 €          | 3,85 €            |
+|4  | 931 à 1090 €                      | 7,10 €          | 3,55 €            |
+|5  | 1091 à 1250 €                     | 6,65 €          | 3,35 €            |
+|6  | 1251 à 1400 €                     | 6,45 €          | 3,25 €            |
+|7  | > 1400 €                          | NÉANT           | NÉANT             |
+
+
+
+```catala
+champ d'application CalculSejourLoisirSansHebergement:
+  définition taux_jour égal à
+    si quotient_familial < 621 €
+      alors  8,65 €
+    sinon si quotient_familial < 781  €
+      alors 8,05 €
+    sinon si quotient_familial < 931 €
+      alors 7,70 €
+    sinon si quotient_familial < 1091 €
+      alors 7,10 €
+    sinon si quotient_familial < 1251 €
+      alors 6,65 €
+        sinon si quotient_familial < 1401 €
+      alors 6,45 €
+    sinon 0 €
+  définition taux_demi_jour égal à
+    si quotient_familial < 621 €
+      alors 4,35 €
+    sinon si quotient_familial < 781  €
+      alors 4,05 €
+    sinon si quotient_familial < 931 €
+      alors 3,85 €
+    sinon si quotient_familial < 1091 €
+      alors 3,55 €
+    sinon si quotient_familial < 1251 €
+      alors 3,35 €
+        sinon si quotient_familial < 1401 €
+      alors 3,25 €
+    sinon 0 €
+  définition aide état défaut égal à
+    soit durée_jour égal à Décimal.troncature de durée_séjour dans
+    soit nb_demi_journée égal à si durée_séjour - durée_jour > 0,0 alors 1,0 sinon 0,0 dans
+  durée_jour*taux_jour + nb_demi_journée*taux_demi_jour
+
+```
+
+## Bénéficiaires (outre ceux énumérés aux dispositions générales) :
+- Agents MAASA admis à la retraite ayant enfant(s) à charge âgé(s) de moins de 18 ans au 1er jour du séjour ;
+- Tuteurs d'orphelins d'agents titulaires ou d'agents non titulaires de l'État.
+
+## Conditions d'attribution :
+- L'enfant, à charge, doit être âgé de moins de 18 ans au 1er jour du séjour.
+
+```catala
+champ d'application CalculSejourLoisirSansHebergement:
+
+  étiquette enfant_trop_agé exception aide_par_defaut définition aide état minoré
+  sous condition date_naissance + 18 an < date_debut_sejour
+  conséquence égal à 0 €
+
+```
+
+- Les centres de loisirs doivent être titulaires d'un agrément académique ou un label départemental* du lieu du siège social de
+l'organisateur du séjour ;
+
+```catala
+champ d'application CalculSejourLoisirSansHebergement:
+
+  étiquette centre_non_agréé exception enfant_trop_agé définition aide état minoré
+  sous condition non centre_agréé
+  conséquence égal à 0 €
+
+```
+
+- La prestation est versée sans limitation du nombre de jours de placement.
+
+
+- La prestation est également servie pour les demi-journées de placement. La subvention est alors calculée à mi-taux .
+* agréments ou labels émis par les ministères chargés de l'éducation nationale et/ou du tourisme.
+
+## Modalités de versement :
+La somme versée, ajoutée aux divers avantages perçus d'autres organismes sans lien avec le MAASA (l'employeur du-de la
+conjoint-e par exemple), ne peut être supérieure au coût réel dépensé par l'agent au titre du séjour.
+
+```catala
+champ d'application CalculSejourLoisirSansHebergement:
+
+  étiquette aide_par_defaut définition aide état minoré égal à Argent.min de montant_déboursé, aide
+
+```

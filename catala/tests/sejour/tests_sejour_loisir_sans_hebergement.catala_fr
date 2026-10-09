@@ -1,0 +1,102 @@
+> Usage de Sejour_loisir_sans_hebergement
+
+# Cas N°1 : séjour 3.5 jours classiques
+
+```catala
+#[test]
+déclaration champ d'application TestLoisirSansHebergement_classique:
+  résultat calcul contenu Sejour_loisir_sans_hebergement.CalculSejourLoisirSansHebergement
+
+champ d'application TestLoisirSansHebergement_classique:
+  définition calcul égal à
+    résultat de Sejour_loisir_sans_hebergement.CalculSejourLoisirSansHebergement avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 3,5
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- centre_agréé: vrai
+    }
+  assertion (calcul.aide = 30,30€)
+```
+
+
+# Cas N° 2: séjour enfant trop agé
+
+```catala
+#[test]
+déclaration champ d'application TestLoisirSansHebergement_trop_agé:
+  résultat calcul contenu Sejour_loisir_sans_hebergement.CalculSejourLoisirSansHebergement
+
+champ d'application TestLoisirSansHebergement_trop_agé:
+  définition calcul égal à
+    résultat de Sejour_loisir_sans_hebergement.CalculSejourLoisirSansHebergement avec {
+      -- date_naissance : |1992-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 3,5
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- centre_agréé: vrai
+    }
+  assertion (calcul.aide = 0,0€)
+```
+
+# Cas N° 3: séjour centre non agréé
+
+```catala
+#[test]
+déclaration champ d'application TestLoisirSansHebergement_centre_non_agréé:
+  résultat calcul contenu Sejour_loisir_sans_hebergement.CalculSejourLoisirSansHebergement
+
+champ d'application TestLoisirSansHebergement_centre_non_agréé:
+  définition calcul égal à
+    résultat de Sejour_loisir_sans_hebergement.CalculSejourLoisirSansHebergement avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 3,5
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- centre_agréé: faux
+    }
+  assertion (calcul.aide = 0,0€)
+```
+
+# Cas N° 4 : séjour moins cher que l'aide
+
+```catala
+#[test]
+déclaration champ d'application TestLoisirSansHebergement_séjour_peu_cher:
+  résultat calcul contenu Sejour_loisir_sans_hebergement.CalculSejourLoisirSansHebergement
+
+champ d'application TestLoisirSansHebergement_séjour_peu_cher:
+  définition calcul égal à
+    résultat de Sejour_loisir_sans_hebergement.CalculSejourLoisirSansHebergement avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 3,5
+      -- montant_déboursé: 20 €
+      -- quotient_familial: 600 €
+      -- centre_agréé: vrai
+    }
+  assertion (calcul.aide = 20,0€)
+```
+
+# Cas N°5 : famille aisée
+
+```catala
+#[test]
+déclaration champ d'application TestLoisirSansHebergement_famille_aisée:
+  résultat calcul contenu Sejour_loisir_sans_hebergement.CalculSejourLoisirSansHebergement
+
+champ d'application TestLoisirSansHebergement_famille_aisée:
+  définition calcul égal à
+    résultat de Sejour_loisir_sans_hebergement.CalculSejourLoisirSansHebergement avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 3,5
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 2000 €
+      -- centre_agréé: vrai
+    }
+  assertion (calcul.aide = 0,0€)
+```
