@@ -134,6 +134,11 @@ class ChampLabel(Enum):
     LABEL_FIN_AEEH = "Quelle est la date de fin de validité de la décision de la CDAPH ?"
     LABEL_POURCENTAGE_INCAPACITE = "Quel est le pourcentage d'incapacité permanente de votre enfant ?"
     LABEL_POURCENTAGE_EN_INTERNAT = "Quel pourcentage de l'année votre enfant est il pris en charge par cet internat ?"
+    ## Prestation Séjour Loisir Sans Hébergement
+    LABEL_DATE_DEBUT_SEJOUR = "Date de début du séjour"
+    LABEL_DUREE_SEJOUR = "Durée du séjour (en jours)"
+    LABEL_MONTANT_DEBOURSE_SEJOUR = "Montant déboursé pour le séjour (en euros)"
+    LABEL_CENTRE_AGREE = "Le centre est-il agréé ?"
 
 
 def get_champ_by_label(dossier: Any, label: ChampLabel) -> Champ:
@@ -192,6 +197,8 @@ def parse_prestation(prestations: List[Any], dossier: Any) -> List[Prestation]:
             prestation.calcul_data = parse_data_for_aide_scolarite_data(p, dossier)
         if prestation.type == PrestationType.ENFANT_HANDICAP.value:
             prestation.calcul_data = parse_data_for_enfant_handicap_data(p)
+        if prestation.type == PrestationType.SEJOUR_LOISIR_SANS_HEBERGEMENT.value:
+            prestation.calcul_data = parse_data_for_sejour_loisir_sans_hebergement_data(p, dossier)
         result.append(prestation)
     return result
 
@@ -279,3 +286,34 @@ def parse_data_for_enfant_handicap_data(raw_prestation: Any) -> Any:
 def parse_date(date_str: str) -> datetime:
     setlocale(LC_ALL, "fr_FR.utf8" )
     return datetime.strptime(date_str, "%d %B %Y")
+
+
+def parse_data_for_sejour_loisir_sans_hebergement_data(raw_prestation: Any, raw_dn_dossier: Any) -> Any:
+    """
+    menage: Menage,
+    date_naissance: date,
+    date_debut_sejour: date,
+    duree_sejour: float,
+    montant_debourse: Centimes,
+    centre_agree: bool
+    """
+    menage = Menage(
+        beneficiaire_porteur_handicap=to_bool(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_ENFANT_PORTEUR_HANDICAP).value),
+        garde_alternee=to_bool(get_champ_by_label(raw_dn_dossier["champs"], ChampLabel.LABEL_ENFANT_GARDE_ALTERNEE).value),
+        parent_isole=to_bool(get_champ_by_label(raw_dn_dossier["champs"], ChampLabel.LABEL_PARENT_ISOLE).value),
+        outre_mer=to_bool(get_champ_by_label(raw_dn_dossier["champs"], ChampLabel.LABEL_OUTRE_MER).value),
+        membres=[FoyerFiscal(
+            revenu=Centimes.from_euros_int(int(get_champ_by_label(raw_dn_dossier["champs"], ChampLabel.LABEL_REVENU_FISCAL).value)),
+            personnes=int(get_champ_by_label(raw_dn_dossier["champs"], ChampLabel.LABEL_AVIS_IMPOTS_DEPENDANTS).value or "0")
+        )]
+    )
+
+    parsed = {
+        "menage": menage,
+        "date_naissance": parse_date(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_NAISSANCE_ENFANT).value),
+        "date_debut_sejour": parse_date(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_DATE_DEBUT_SEJOUR).value),
+        "duree_sejour": float(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_DUREE_SEJOUR).value),
+        "montant_debourse": Centimes.from_euros_int(int(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_MONTANT_DEBOURSE_SEJOUR).value)),
+        "centre_agree": to_bool(get_champ_by_label(raw_prestation["champs"], ChampLabel.LABEL_CENTRE_AGREE).value),
+    }
+    return parsed

@@ -17,5 +17,8 @@ fileignoreconfig:
   checksum: b3b32c431cec346889e40e87aa91f4d6e81801e2c2f771b65cce241e624920dd
 - filename: frontend/src/assets/js/grist-plugin-api.js
   checksum: a2a6a9bceeeba94324871b59b2baa2bf1cd4a265bb476c6e78a5f5a47ceb9ad9
+- filename: docs/package-lock.json
+  checksum: 9ef0be0bfa5b478e62c9450fddb2e122194e610c36cff0fe1deb5c11625c338c
+
 
 version: "1.0"

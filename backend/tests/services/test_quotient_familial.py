@@ -15,4 +15,4 @@ def test_get_quotient_familial():
     )
 
     assert str(resultat.value) == '493.94€'
-    assert resultat.explanation == {'calcul': '32600.0€/ (12 x (5.0 + 0.5))', 'critères_applicables': "['Handicap : 0.5']"}
+    assert resultat.explanation == {'calcul': '32600.00€/ (12 x (5.0 + 0.5))', 'critères_applicables': "['Handicap : 0.5']"}

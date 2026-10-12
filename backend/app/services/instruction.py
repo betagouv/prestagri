@@ -3,6 +3,7 @@ from app.services.demarche_numerique import get_dn_dossier, create_dn_annotation
 from app.model import DNDossier, Annotation, Prestation, Centimes, Response, PrestationType
 from app.services.aide_scolarite import get_aide_scolarite
 from app.services.prestations.handicap import get_aide_handicap_moins_20ans
+from app.services.prestations.sejour import get_sejour_loisir_sans_hebergement
 
 
 def prefill_dossier_annotations(dossier_number: str) -> Any:
@@ -32,9 +33,11 @@ def fill_annotations(dossier_id: str, prestations:List[Prestation], annotations:
             response = compute_aide_scolarite(prestation)
         if prestation.type == PrestationType.ENFANT_HANDICAP.value:
             response = compute_aide_handicap_moins_20ans(prestation)
+        if prestation.type == PrestationType.SEJOUR_LOISIR_SANS_HEBERGEMENT.value:
+            response = compute_aide_hebergement_sans_sejour(prestation)
 
         fill_dn_short_text(dossier_id, annotation.simulation_QF.id, str(response.explanation["quotient_familial"]))
-        fill_dn_short_text(dossier_id, annotation.simulation_montant.id, str(float(response.value)))
+        fill_dn_short_text(dossier_id, annotation.simulation_montant.id, str(response.value))
         fill_dn_long_text(dossier_id, annotation.simulation_explication.id, response.formatted_explanation)
 
     return associated_annotations
@@ -61,6 +64,18 @@ def compute_aide_handicap_moins_20ans(prestation: Prestation) -> Response[Centim
         pourcentage_hors_internat=100-data["pourcentage_en_internat"],
     )
     result.explanation["quotient_familial"] = 0
+    return result
+
+def compute_aide_hebergement_sans_sejour(prestation: Prestation) -> Response[Centimes]:
+    data = prestation.calcul_data
+    result = get_sejour_loisir_sans_hebergement(
+        menage=data["menage"],
+        date_naissance=data["date_naissance"],
+        date_debut_sejour=data["date_debut_sejour"],
+        duree_sejour=data["duree_sejour"],
+        montant_debourse=data["montant_debourse"],
+        centre_agree=data["centre_agree"]
+    )
     return result
 
 #TODO To improved - rushed before demo test

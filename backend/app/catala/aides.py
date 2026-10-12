@@ -3,9 +3,10 @@ from datetime import date
 from app.catala.generated.Quotient_familial import CalculQuotientFamilialIn, calcul_quotient_familial
 from app.catala.generated.Handicap_moins_20_ans import CalculAideHandicapMoins20AnsIn, calcul_aide_handicap_moins20_ans
 from app.catala.generated.Aide_scolarite import CalculQuotientFamilialAideScolariteIn, calcul_quotient_familial_aide_scolarite, CalculPointsAideScolariteIn, calcul_points_aide_scolarite, calcul_aide_scolarite, CalculAideScolariteIn, Integer
+from app.catala.generated.Sejour_loisir_sans_hebergement import CalculSejourLoisirSansHebergementIn, calcul_sejour_loisir_sans_hebergement
 from app.catala.generated.catala_runtime import Option
 from app.model import Menage, FoyerFiscal, Trajet, Response, Centimes
-from app.catala.utils import to_menage_cat, to_personne_cat_list, to_money_cat, to_trajet_cat, cat_enum_to_string, to_date_cat, from_date_cat, from_versement_cat
+from app.catala.utils import to_menage_cat, to_personne_cat_list, to_money_cat, to_trajet_cat, cat_enum_to_string, to_date_cat, from_date_cat, from_versement_cat, to_decimal_cat, to_bool_cat
 
 def get_catala_quotient_familial(menage : Menage) -> Response[Centimes]:
     menage_cat = to_menage_cat(menage)
@@ -79,5 +80,27 @@ def get_catala_aide_handicap_moins_20ans(annee_demandee: int, date_naissance: da
         explanation= {
             "versements": [from_versement_cat(v) for v in result.versements],
             "alerte_derniere_annee": bool(result.alerte_derniere_annee.value)
+        }
+    )
+
+def get_catala_sejour_loisir_sans_hebergement(date_naissance: date, date_debut_sejour: date, duree_sejour: float, montant_debourse: Centimes, quotient_familial: Centimes, centre_agree: bool) -> Response[Centimes]:
+    result = calcul_sejour_loisir_sans_hebergement(
+        CalculSejourLoisirSansHebergementIn(
+            date_naissance_in=to_date_cat(date_naissance),
+            date_debut_sejour_in=to_date_cat(date_debut_sejour),
+            duree_sejour_in=to_decimal_cat(duree_sejour),
+            montant_debourse_in=to_money_cat(montant_debourse),
+            quotient_familial_in=to_money_cat(quotient_familial),
+            centre_agree_in=to_bool_cat(centre_agree)
+        )
+    )
+    value = Centimes(valeur=result.aide)
+    return Response(
+        value=value,
+        explanation={
+            "taux_jour": str(Centimes(valeur=result.taux_jour)),
+            "taux_demi_jour": str(Centimes(valeur=result.taux_demi_jour)),
+            "duree_sejour" : str(duree_sejour),
+            "aide": str(value)
         }
     )

@@ -11,7 +11,7 @@ def test_classic():
         pourcentage_hors_internat= 100
     )
 
-    assert str(resultat.value) == '183.0€'
+    assert str(resultat.value) == '183.00€'
     assert resultat.explanation == {
         "versements": [
             Versement(date=date(2026, 6, 1), montant=Centimes(valeur=54900)),
@@ -31,7 +31,7 @@ def test_trop_age():
         pourcentage_hors_internat= 100
     )
 
-    assert str(resultat.value) == '0.0€'
+    assert str(resultat.value) == '0.00€'
     assert resultat.explanation == {
         "versements": [],
         "alerte_derniere_annee": False
@@ -46,7 +46,7 @@ def test_20_this_year():
         pourcentage_hors_internat= 100
     )
 
-    assert str(resultat.value) == '183.0€'
+    assert str(resultat.value) == '183.00€'
     assert resultat.explanation == {
         "versements": [
             Versement(date=date(2026, 6, 1), montant=Centimes(valeur=54900)),
@@ -65,7 +65,7 @@ def test_internat():
         pourcentage_hors_internat= 70
     )
 
-    assert str(resultat.value) == '128.1€'
+    assert str(resultat.value) == '128.10€'
     assert resultat.explanation == {
         "versements": [
             Versement(date=date(2026, 6, 1), montant=Centimes(valeur=38430)),
@@ -85,7 +85,7 @@ def test_aeeh_ending():
         pourcentage_hors_internat=70
     )
 
-    assert str(resultat.value) == '128.1€'
+    assert str(resultat.value) == '128.10€'
     assert resultat.explanation == {
         "versements": [
             Versement(date=date(2026, 6, 1), montant=Centimes(valeur=38430)),
@@ -104,7 +104,7 @@ def test_handicap_inneligible():
         pourcentage_hors_internat=70
     )
 
-    assert str(resultat.value) == '0.0€'
+    assert str(resultat.value) == '0.00€'
     assert resultat.explanation == {
         "versements": [],
         "alerte_derniere_annee": False

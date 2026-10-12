@@ -29,3 +29,5 @@ backend/tests/services/__pycache__/
 /local_note.md
 
 frontend/dist/
+
+*.pyc

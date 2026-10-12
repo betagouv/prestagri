@@ -1,5 +1,5 @@
 from datetime import date
-from .generated.catala_runtime import Money as Money_cat, Integer, CatalaEnum, Date as Date_cat
+from .generated.catala_runtime import Money as Money_cat, Integer, CatalaEnum, Date as Date_cat, Decimal as Decimal_cat, Bool as Bool_cat
 from .generated.Foyer_fiscal import FoyerFiscal as Foyer_fiscal_cat
 from .generated.Trajet import Trajet as Trajet_cat
 from .generated.Menage import Menage as Menage_cat
@@ -52,3 +52,9 @@ def from_versement_cat(versement_cat: Versement_cat) -> Versement:
         montant=from_money_cat(versement_cat.montant),
         date=from_date_cat(versement_cat.date_versement)
     )
+
+def to_decimal_cat(value: float | int) -> Decimal_cat:
+    return Decimal_cat(value)
+
+def to_bool_cat(value: bool) -> Bool_cat:
+    return Bool_cat(value)

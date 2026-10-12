@@ -9,13 +9,14 @@ from app.model import Menage, FoyerFiscal, Response, Centimes, Trajet
 from app.services.quotient_familial import get_quotient_familial
 from app.services.aide_scolarite import get_aide_scolarite
 from app.services.prestations.handicap import get_aide_handicap_moins_20ans
+from app.services.prestations.sejour import get_sejour_loisir_sans_hebergement
 
 router = APIRouter()
 
 @router.get("/quotient_familial")
 def read_quotient_familial(
-    menage_agent_revenu: int,
-    menage_agent_membres: int,
+    foyer_fiscal_agent_revenu: int,
+    foyer_fiscal_agent_membres: int,
     foyer_fiscal_conjoint_revenu: int | None = None,
     foyer_fiscal_conjoint_membres: int | None = None,
     foyer_fiscal_etudiant_revenu: int | None = None,
@@ -26,7 +27,7 @@ def read_quotient_familial(
     outre_mer: bool = False
     ) -> Response :
     try :
-        menage = Menage.create_menage(menage_agent_revenu, menage_agent_membres,
+        menage = Menage.create_menage(foyer_fiscal_agent_revenu, foyer_fiscal_agent_membres,
             foyer_fiscal_conjoint_revenu, foyer_fiscal_conjoint_membres,
             foyer_fiscal_etudiant_revenu, foyer_fiscal_etudiant_membres,
             beneficiaire_porteur_handicap, garde_alternee, parent_isole, outre_mer)
@@ -40,8 +41,8 @@ def read_quotient_familial(
 
 @router.get("/aide_scolarite/adresse")
 def read_quotient_familial_aide_scolarite(
-    menage_agent_revenu: int,
-    menage_agent_membres: int,
+    foyer_fiscal_agent_revenu: int,
+    foyer_fiscal_agent_membres: int,
     adresse_agent: str,
     adresse_etablissement: str,
     foyer_fiscal_conjoint_revenu: int | None = None,
@@ -57,7 +58,7 @@ def read_quotient_familial_aide_scolarite(
     etudiant_post_bac: bool = False,
     ) -> Response:
     try:
-        menage = Menage.create_menage(menage_agent_revenu, menage_agent_membres,
+        menage = Menage.create_menage(foyer_fiscal_agent_revenu, foyer_fiscal_agent_membres,
                                       foyer_fiscal_conjoint_revenu, foyer_fiscal_conjoint_membres,
                                       None, None,
                                       beneficiaire_porteur_handicap, garde_alternee, parent_isole, outre_mer)
@@ -75,8 +76,8 @@ def read_quotient_familial_aide_scolarite(
 
 @router.get("/aide_scolarite/trajet")
 def read_quotient_familial_aide_scolarite(
-    menage_agent_revenu: int,
-    menage_agent_membres: int,
+    foyer_fiscal_agent_revenu: int,
+    foyer_fiscal_agent_membres: int,
     trajet_agent_km: int,
     trajet_agent_min: int,
     foyer_fiscal_conjoint_revenu: int | None = None,
@@ -93,7 +94,7 @@ def read_quotient_familial_aide_scolarite(
     etudiant_post_bac: bool = False,
     ) -> Response:
     try:
-        menage = Menage.create_menage(menage_agent_revenu, menage_agent_membres,
+        menage = Menage.create_menage(foyer_fiscal_agent_revenu, foyer_fiscal_agent_membres,
                                       foyer_fiscal_conjoint_revenu, foyer_fiscal_conjoint_membres,
                                       None, None,
                                       beneficiaire_porteur_handicap, garde_alternee, parent_isole, outre_mer)
@@ -130,6 +131,44 @@ async def trigger_error():
     logger.info('This will be sent to Sentry')
     try:
         division_by_zero = 1 / 0
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
+        logger.exception(e)
+        return Response(value="Une erreur est survenue", explanation=properties.error_contact)
+
+
+@router.get("/sejour_loisir_sans_hebergement")
+def read_sejour_loisir_sans_hebergement(
+    foyer_fiscal_agent_revenu: int,
+    foyer_fiscal_agent_membres: int,
+    date_naissance: date,
+    date_debut_sejour: date,
+    duree_sejour: float,
+    montant_debourse: int,
+    centre_agree: bool = True,
+    foyer_fiscal_conjoint_revenu: int | None = None,
+    foyer_fiscal_conjoint_membres: int | None = None,
+    beneficiaire_porteur_handicap: bool = False,
+    garde_alternee: bool = False,
+    parent_isole: bool = False,
+    outre_mer: bool = False
+) -> Response:
+    try:
+        menage = Menage.create_menage(
+            foyer_fiscal_agent_revenu, foyer_fiscal_agent_membres,
+            foyer_fiscal_conjoint_revenu, foyer_fiscal_conjoint_membres,
+            None, None,
+            beneficiaire_porteur_handicap, garde_alternee, parent_isole, outre_mer
+        )
+        response = get_sejour_loisir_sans_hebergement(
+            menage=menage,
+            date_naissance=date_naissance,
+            date_debut_sejour=date_debut_sejour,
+            duree_sejour=duree_sejour,
+            montant_debourse=Centimes.from_euros_int(montant_debourse),
+            centre_agree=centre_agree
+        )
+        return Response(value=str(response.value), explanation=response.explanation, formatted_explanation=response.formatted_explanation)
     except Exception as e:
         sentry_sdk.capture_exception(e)
         logger.exception(e)

@@ -5,7 +5,7 @@ class Centimes(BaseModel):
     valeur: int
 
     def __str__(self) -> str :
-        return str(float(self)) + "€"
+        return f"{float(self):.2f}€"
 
     def __float__(self) -> float:
         return self.valeur/100
