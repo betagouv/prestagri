@@ -272,8 +272,8 @@ import DsfrLayout from "../layouts/dsfrLayout.astro"
         const params = new URLSearchParams();
 
         // Household parameters
-        params.append("menage_agent_revenu", (document.getElementById('agent_revenu') as HTMLInputElement).value);
-        params.append("menage_agent_membres", (document.getElementById('agent_personnes') as HTMLInputElement).value);
+        params.append("foyer_fiscal_agent_revenu", (document.getElementById('agent_revenu') as HTMLInputElement).value);
+        params.append("foyer_fiscal_agent_membres", (document.getElementById('agent_personnes') as HTMLInputElement).value);
         params.append("foyer_fiscal_conjoint_revenu", (document.getElementById('conjoint_revenu') as HTMLInputElement).value || "0");
         params.append("foyer_fiscal_conjoint_membres", (document.getElementById('conjoint_personnes') as HTMLInputElement).value || "0");
 
@@ -290,7 +290,7 @@ import DsfrLayout from "../layouts/dsfrLayout.astro"
         params.append("montant_debourse", (document.getElementById('montant_debourse') as HTMLInputElement).value);
         params.append("centre_agree", String((document.getElementById('centre_agree') as HTMLInputElement).checked));
 
-        const url = `http://localhost:8000/sejour_loisir_sans_hebergement?${params.toString()}`;
+        const url = `https://api.prest-agri.beta.gouv.fr/sejour_loisir_sans_hebergement?${params.toString()}`;
 
         console.log("Fetching:", url);
 
@@ -311,7 +311,7 @@ import DsfrLayout from "../layouts/dsfrLayout.astro"
                 if (answerElement && valueElement && explanationElement) {
                     answerElement.style.display = "block";
                     valueElement.textContent = `L'aide pour le séjour loisir sans hébergement est de ${data.value}`;
-                    explanationElement.textContent = data.explanation;
+                    explanationElement.textContent = data.formatted_explanation;
                 }
             })
             .catch((error) => {
