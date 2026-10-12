@@ -43,11 +43,11 @@ def get_prestations(dn_dossier: DNDossier) -> List[BlurredPrestation]:
                 departement=blur_address(dn_dossier.adresse),
                 decennie=blur_birthdate(dn_dossier.date_naissance),
                 type= prestation.type,
-                revenu_fiscal= blur_money_by_rounding(float(dn_dossier.revenu_fiscal_reference), 1000) ,
-                montant_simule=annotation.simulation_montant.value,
-                montant_retenu=annotation.montant_retenu.value,
-                qf_simule=blur_money_by_rounding(float(annotation.simulation_QF.value or 0 ), 50),
-                qf_retenu=blur_money_by_rounding(float(annotation.qf_retenu.value or 0), 50)
+                revenu_fiscal= blur_money_by_rounding(dn_dossier.revenu_fiscal_reference, 1000) ,
+                montant_simule=annotation.simulation_montant.value.replace("€", ""),
+                montant_retenu=annotation.montant_retenu.value.replace("€", ""),
+                qf_simule=blur_money_by_rounding(annotation.simulation_QF.value or "0", 50),
+                qf_retenu=blur_money_by_rounding(annotation.qf_retenu.value or "0", 50)
             )
         )
     return blurred

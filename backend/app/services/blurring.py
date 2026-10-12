@@ -38,5 +38,6 @@ def blur_date_as_duration(start: datetime | None, end: datetime | None, state: D
     else:
         return (end - start).days
 
-def blur_money_by_rounding(amount: float, base: int) -> int :
-    return base * round(amount/base)
+def blur_money_by_rounding(amount: str, base: int) -> int :
+    float_amount = float(amount.replace("€", ""))
+    return base * round(float_amount/base)
