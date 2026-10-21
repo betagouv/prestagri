@@ -1,0 +1,244 @@
+> Usage de Centre_de_vacances_avec_hebergement
+
+# Cas N°1 : séjour 3.5 jours classiques
+
+```catala
+#[test]
+déclaration champ d'application TestCentreDeVacancesAvecHebergement_classique:
+  résultat calcul contenu Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement
+
+champ d'application TestCentreDeVacancesAvecHebergement_classique:
+  définition calcul égal à
+    résultat de Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 3
+      -- durée_déjà_prise_en_charge: 20
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- centre_agréé: vrai
+    }
+  assertion (calcul.durée_éligible = 3)
+  assertion (calcul.aide = 78,60€)
+```
+
+# Cas N° 2: séjour enfant trop agé
+
+```catala
+#[test]
+déclaration champ d'application TestCentreDeVacancesAvecHebergement_trop_agé:
+  résultat calcul contenu Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement
+
+champ d'application TestCentreDeVacancesAvecHebergement_trop_agé:
+  définition calcul égal à
+    résultat de Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement avec {
+      -- date_naissance : |1992-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 3
+      -- durée_déjà_prise_en_charge: 20
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- centre_agréé: vrai
+    }
+  assertion (calcul.durée_éligible = 3)
+  assertion (calcul.aide = 0€)
+```
+
+
+# Cas N° 3: séjour centre non agréé
+
+```catala
+#[test]
+déclaration champ d'application TestCentreDeVacancesAvecHebergement_non_agréé:
+  résultat calcul contenu Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement
+
+champ d'application TestCentreDeVacancesAvecHebergement_non_agréé:
+  définition calcul égal à
+    résultat de Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 3
+      -- durée_déjà_prise_en_charge: 20
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- centre_agréé: faux
+    }
+  assertion (calcul.durée_éligible = 3)
+  assertion (calcul.aide = 0€)
+```
+
+# Cas N° 4 : séjour moins cher que l'aide
+
+```catala
+#[test]
+déclaration champ d'application TestCentreDeVacancesAvecHebergement_moins_cher:
+  résultat calcul contenu Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement
+
+champ d'application TestCentreDeVacancesAvecHebergement_moins_cher:
+  définition calcul égal à
+    résultat de Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 3
+      -- durée_déjà_prise_en_charge: 20
+      -- montant_déboursé: 70 €
+      -- quotient_familial: 600 €
+      -- centre_agréé: vrai
+    }
+  assertion (calcul.durée_éligible = 3)
+  assertion (calcul.aide = 70€)
+```
+
+# Cas N°5 : famille aisée
+
+```catala
+#[test]
+déclaration champ d'application TestCentreDeVacancesAvecHebergement_famille_aisée:
+  résultat calcul contenu Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement
+
+champ d'application TestCentreDeVacancesAvecHebergement_famille_aisée:
+  définition calcul égal à
+    résultat de Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 3
+      -- durée_déjà_prise_en_charge: 20
+      -- montant_déboursé: 70 €
+      -- quotient_familial: 2000 €
+      -- centre_agréé: vrai
+    }
+  assertion (calcul.durée_éligible = 3)
+  assertion (calcul.aide = 0€)
+```
+
+# Cas N°6 : aide déjà utilisée
+
+```catala
+#[test]
+déclaration champ d'application TestCentreDeVacancesAvecHebergement_aide_utilisée:
+  résultat calcul contenu Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement
+
+champ d'application TestCentreDeVacancesAvecHebergement_aide_utilisée:
+  définition calcul égal à
+    résultat de Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 3
+      -- durée_déjà_prise_en_charge: 44
+      -- montant_déboursé: 70 €
+      -- quotient_familial: 600 €
+      -- centre_agréé: vrai
+    }
+  assertion (calcul.durée_éligible = 1)
+  assertion (calcul.aide = 26,20€)
+```
+
+# Cas N°7 : aide sur-utilisée
+
+```catala
+#[test]
+déclaration champ d'application TestCentreDeVacancesAvecHebergement_aide_surutilisée:
+  résultat calcul contenu Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement
+
+champ d'application TestCentreDeVacancesAvecHebergement_aide_surutilisée:
+  définition calcul égal à
+    résultat de Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 3
+      -- durée_déjà_prise_en_charge: 47
+      -- montant_déboursé: 70 €
+      -- quotient_familial: 600 €
+      -- centre_agréé: vrai
+    }
+  assertion (calcul.durée_éligible = 0)
+  assertion (calcul.aide = 0€)
+```
+
+# Cas N°8 : enfant trop jeune
+
+```catala
+#[test]
+déclaration champ d'application TestCentreDeVacancesAvecHebergement_enfant_trop_jeune:
+  résultat calcul contenu Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement
+
+champ d'application TestCentreDeVacancesAvecHebergement_enfant_trop_jeune:
+  définition calcul égal à
+    résultat de Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement avec {
+      -- date_naissance : |2025-01-01|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 5
+      -- durée_déjà_prise_en_charge: 20
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- centre_agréé: vrai
+    }
+  assertion (calcul.durée_éligible = 5)
+  assertion (calcul.aide = 0€)
+```
+
+# Cas N°9 : durée maximale éligible (45 jours)
+
+```catala
+#[test]
+déclaration champ d'application TestCentreDeVacancesAvecHebergement_durée_max:
+  résultat calcul contenu Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement
+
+champ d'application TestCentreDeVacancesAvecHebergement_durée_max:
+  définition calcul égal à
+    résultat de Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 50
+      -- durée_déjà_prise_en_charge: 0
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- centre_agréé: vrai
+    }
+  assertion (calcul.durée_éligible = 45)
+  assertion (calcul.aide = 1179€)
+```
+
+# Cas N°10 : enfant a exactement 18 ans au début du séjour
+
+```catala
+#[test]
+déclaration champ d'application TestCentreDeVacancesAvecHebergement_enfant_18_ans:
+  résultat calcul contenu Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement
+
+champ d'application TestCentreDeVacancesAvecHebergement_enfant_18_ans:
+  définition calcul égal à
+    résultat de Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement avec {
+      -- date_naissance : |2008-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 5
+      -- durée_déjà_prise_en_charge: 20
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- centre_agréé: vrai
+    }
+  assertion (calcul.durée_éligible = 5)
+  assertion (calcul.aide = 0€)
+```
+
+# Cas N°11 : enfant a exactement 4 ans au début du séjour
+
+```catala
+#[test]
+déclaration champ d'application TestCentreDeVacancesAvecHebergement_enfant_4_ans:
+  résultat calcul contenu Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement
+
+champ d'application TestCentreDeVacancesAvecHebergement_enfant_4_ans:
+  définition calcul égal à
+    résultat de Centre_de_vacances_avec_hebergement.CalculCentreDeVacancesAvecHebergement avec {
+      -- date_naissance : |2022-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 5
+      -- durée_déjà_prise_en_charge: 20
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- centre_agréé: vrai
+    }
+  assertion (calcul.durée_éligible = 5)
+  assertion (calcul.aide = 0€)
+```

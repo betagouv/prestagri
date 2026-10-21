@@ -13,6 +13,6 @@ target_dir   = "_target"   # Définit où sortir les fichiers finaux des cibles.
 
 [[target]]
 name     = "prestagri_catala"
-modules  = [ "Quotient_familial", "Aide_scolarite", "Handicap_moins_20_ans", "Sejour_loisir_sans_hebergement"]
+modules  = [ "Quotient_familial", "Aide_scolarite", "Handicap_moins_20_ans", "Sejour_loisir_sans_hebergement", "Centre_de_vacances_avec_hebergement"]
 tests    = [ "tests/commun", "tests/aide_scolarite", "tests/enfance_handicapee", "tests/sejour" ]
 backends = [ "python" ]

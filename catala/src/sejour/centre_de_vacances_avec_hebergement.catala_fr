@@ -1,0 +1,154 @@
+> Module Centre_de_vacances_avec_hebergement
+
+> Usage de Quotient_familial
+> Usage de Menage
+> Usage de Foyer_fiscal
+
+# CENTRE DE VACANCES AVEC HÉBERGEMENT
+
+```catala-metadata
+déclaration champ d'application CalculCentreDeVacancesAvecHebergement:
+  entrée date_naissance contenu date
+  entrée date_debut_sejour contenu date
+  entrée durée_séjour contenu entier
+  entrée durée_déjà_prise_en_charge contenu entier
+  entrée montant_déboursé contenu argent
+  entrée quotient_familial contenu argent
+  entrée centre_agréé contenu booléen
+  résultat durée_éligible contenu entier
+  résultat taux_jour contenu argent
+  résultat aide contenu argent
+   état défaut
+   état minoré
+```
+
+## Objet :
+
+Prestation destinée à prendre en charge une partie des frais engagés par les agents pour leurs enfants ayant séjourné à
+l'occasion de leurs vacances scolaires, de leurs congés professionnels ou de leurs loisirs, en centres de vacances avec
+hébergement, (colonies de vacances, centres de vacances maternels, centres de vacances collectifs pour adolescents,
+centres sportifs de vacances, camps d'organisation de jeunesse, semaine aérée, mini-colonies...), établissements permanents
+ou temporaires financés par les administrations de l'État, les collectivités publiques ou les organismes de sécurité sociale et
+gérés par le secteur associatif ou mutualiste.
+
+### Sont exclus du bénéfice de cette aide, les séjours :
+- proposés par des entreprises (EURL, SA, SARL) effectués par l'intermédiaire de loueurs ou directement auprès d'un particulier
+(comme « Pierre et Vacances »),
+- en hôtel, en campings (municipaux ou privés), les randonnées en roulotte, ainsi que les voyages en famille à l'étranger ;
+- organisés et gérés directement par les comités d’entreprises (ex. EDF, RATP, SNCF, Air France.…) ;
+- de type « Center Parcs » sont également exclus, ce groupe étant constitué de sociétés commerciales
+
+## Montant au 1er janvier 2026 :
+QF= revenu fiscal de référence
+12 x nb de personnes vivant au foyer (a)
+(a) : +1 pour un parent isolé
++ 0,5 selon cas particulier décrit à la page 5.
+
+Information destinée à l’administration / aux services :
+N° compte PCE à utiliser dans Chorus :
+647121000
+Prestations facultatives d'action sociale :
+prestations culturelles sportives et de loisirs
+
+|QF |   Quotient familial mensuel (QF)  |  Taux par jour  |
+|1  | < 621 €                           | 26,20 €         |
+|2  | 621 à 780 €                       | 23,65 €          |
+|3  | 781 à 930 €                       | 21,25 €          |
+|4  | 931 à 1090 €                      | 15,75 €          |
+|5  | 1091 à 1250 €                     | 10,85 €          |
+|6  | 1251 à 1400 €                     | 8,15 €          |
+|7  | > 1400 €                          | NÉANT           |
+
+
+
+```catala
+champ d'application CalculCentreDeVacancesAvecHebergement:
+  définition taux_jour égal à
+    si quotient_familial < 621 €
+      alors  26,20 €
+    sinon si quotient_familial < 781  €
+      alors 23,65 €
+    sinon si quotient_familial < 931 €
+      alors 21,25 €
+    sinon si quotient_familial < 1091 €
+      alors 15,75 €
+    sinon si quotient_familial < 1251 €
+      alors 10,85 €
+        sinon si quotient_familial < 1401 €
+      alors 8,15 €
+    sinon 0 €
+  définition aide état défaut égal à durée_éligible*taux_jour
+
+```
+
+## Bénéficiaires (outre ceux énumérés aux dispositions générales) :
+- Agents MAASA admis à la retraite ayant enfant(s) à charge âgé(s) de moins de 18 ans au 1er jour du séjour ;
+- Tuteurs d'orphelins d'agents titulaires ou d'agents non titulaires de l'État.
+
+## Conditions d'attribution :
+- Les enfants, à charge, sont âgés de plus de 4 ans et de moins de 18 ans au 1er jour du séjour ;
+
+```catala
+champ d'application CalculCentreDeVacancesAvecHebergement:
+
+  étiquette enfant_trop_agé exception aide_par_defaut définition aide état minoré
+    sous condition date_naissance + 18 an <= date_debut_sejour
+    conséquence égal à 0 €
+  étiquette enfant_trop_jeune exception enfant_trop_agé définition aide état minoré
+    sous condition date_naissance + 4 an >= date_debut_sejour
+    conséquence égal à 0 €
+
+```
+
+- La prestation est versée dans la limite de 45 jours par année civile ;
+```catala
+champ d'application CalculCentreDeVacancesAvecHebergement:
+  définition durée_éligible égal à
+    soit jours_restants égal à Entier.max de 0, (45 - durée_déjà_prise_en_charge) dans
+  Entier.min de durée_séjour, jours_restants
+```
+- Le lieu de séjour peut être situé en métropole, dans les départements, territoires et collectivités d'outre-mer ou à l'étranger ;
+
+```catala
+## partout donc ?
+```
+
+- Le centre de vacances doit être titulaire d'un agrément académique ou un label départemental* du lieu du siège social de l'organisateur.
+```catala
+champ d'application CalculCentreDeVacancesAvecHebergement:
+
+  étiquette centre_non_agréé exception enfant_trop_jeune définition aide état minoré
+  sous condition non centre_agréé
+  conséquence égal à 0 €
+
+```
+
+* agréments ou labels émis par les ministères chargés de l'éducation nationale et/ou du tourisme
+
+## Modalités de versement :
+La somme versée, ajoutée aux divers avantages perçus d'autres organismes sans lien avec le MAASA (l'employeur du-de la
+conjoint-e par exemple), ne peut être supérieure au coût réel dépensé par l'agent au titre du séjour.
+
+```catala
+champ d'application CalculCentreDeVacancesAvecHebergement:
+  étiquette aide_par_defaut définition aide état minoré égal à Argent.min de montant_déboursé, aide
+```
+
+Pièces justificatives à joindre à chaque demande
+(accompagnées du "Formulaire Demande", en Annexes, rempli, daté et signé)
+- L'Annexe F2 remplie portant la signature du (de la)
+responsable + le cachet de l'établissement* précisant la durée
+du séjour et le prix journalier.
+- Copie de la (des) facture (s) acquittée (s)
+- Copie du dernier avis d'imposition (recto ET verso)
+- Si l'agent est « parent isolé »** : joindre un justificatif de la
+CAF ou à défaut, une attestation sur l’honneur manuscrite.
+- Copie du jugement en cas de divorce
+- Attestation de l’employeur du conjoint (services aides
+sociales ou RH) certifiant le non versement de toute aide
+comparable
+- Copie intégrale du livret de famille tenu à jour
+- Copie de l’arrêté de mise à la retraite s’il y a lieu
+- RIB du demandeur.
+
+**NB : votre situation de « parent isolé » doit figurer sur l’avis d’imposition fourni (Lettre «
