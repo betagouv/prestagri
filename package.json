@@ -1,0 +1,9 @@
+{
+  "name": "prestagri",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "serve-combined": "node scripts/serve-combined.js",
+    "build-combined": "node scripts/build-combined.js"
+  }
+}

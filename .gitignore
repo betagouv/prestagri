@@ -31,3 +31,5 @@ backend/tests/services/__pycache__/
 frontend/dist/
 
 *.pyc
+
+.deploy-local/
