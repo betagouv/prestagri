@@ -1,0 +1,429 @@
+> Usage de Sejour_educatif
+> Usage de Presta_Exception
+
+# Cas N°1 : séjour éducatif classique
+
+```catala
+#[test]
+déclaration champ d'application TestSejourEducatif_classique:
+  résultat calcul contenu Sejour_educatif.CalculSéjourÉducatif
+
+champ d'application TestSejourEducatif_classique:
+  définition calcul égal à
+    résultat de Sejour_educatif.CalculSéjourÉducatif avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- au_moins_partiellement_en_période_scolaire: vrai
+      -- voyages_déjà_pris_en_charge_année_civile: 0
+      -- voyages_déjà_pris_en_charge_année_scolaire: 0
+      -- nb_jours_déjà_pris_en_charge_année_civile: 0
+      -- enfant_scolarisé: vrai
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- classe_agréée: vrai
+    }
+  assertion (calcul.durée_éligible = 10)
+  assertion (calcul.taux_jour = 26,15€)
+  assertion (calcul.aide = 261,50€)
+```
+
+# Cas N°2 : enfant trop âgé
+
+```catala
+#[test]
+déclaration champ d'application TestSejourEducatif_enfant_trop_agé:
+  résultat calcul contenu Sejour_educatif.CalculSéjourÉducatif
+
+champ d'application TestSejourEducatif_enfant_trop_agé:
+  définition calcul égal à
+    résultat de Sejour_educatif.CalculSéjourÉducatif avec {
+      -- date_naissance : |1992-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- au_moins_partiellement_en_période_scolaire: vrai
+      -- voyages_déjà_pris_en_charge_année_civile: 0
+      -- voyages_déjà_pris_en_charge_année_scolaire: 0
+      -- nb_jours_déjà_pris_en_charge_année_civile: 0
+      -- enfant_scolarisé: vrai
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- classe_agréée: vrai
+    }
+  assertion (calcul.durée_éligible = 10)
+  assertion (calcul.aide = 0€)
+  assertion (calcul.inéligibilité = [Enfant_trop_agé contenu vrai])
+```
+
+# Cas N°3 : enfant non scolarisé (16-18 ans)
+
+```catala
+#[test]
+déclaration champ d'application TestSejourEducatif_enfant_non_scolarisé:
+  résultat calcul contenu Sejour_educatif.CalculSéjourÉducatif
+
+champ d'application TestSejourEducatif_enfant_non_scolarisé:
+  définition calcul égal à
+    résultat de Sejour_educatif.CalculSéjourÉducatif avec {
+      -- date_naissance : |2010-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- au_moins_partiellement_en_période_scolaire: vrai
+      -- voyages_déjà_pris_en_charge_année_civile: 0
+      -- voyages_déjà_pris_en_charge_année_scolaire: 0
+      -- nb_jours_déjà_pris_en_charge_année_civile: 0
+      -- enfant_scolarisé: faux
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- classe_agréée: vrai
+    }
+  assertion (calcul.durée_éligible = 10)
+  assertion (calcul.aide = 0€)
+  assertion (calcul.inéligibilité = [Enfant_non_scolarisé contenu vrai])
+```
+
+# Cas N°4 : séjour hors période scolaire
+
+```catala
+#[test]
+déclaration champ d'application TestSejourEducatif_hors_période_scolaire:
+  résultat calcul contenu Sejour_educatif.CalculSéjourÉducatif
+
+champ d'application TestSejourEducatif_hors_période_scolaire:
+  définition calcul égal à
+    résultat de Sejour_educatif.CalculSéjourÉducatif avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- au_moins_partiellement_en_période_scolaire: faux
+      -- voyages_déjà_pris_en_charge_année_civile: 0
+      -- voyages_déjà_pris_en_charge_année_scolaire: 0
+      -- nb_jours_déjà_pris_en_charge_année_civile: 0
+      -- enfant_scolarisé: vrai
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- classe_agréée: vrai
+    }
+  assertion (calcul.durée_éligible = 10)
+  assertion (calcul.aide = 0€)
+  assertion (calcul.inéligibilité = [Séjour_hors_période_scolaire contenu vrai;])
+```
+
+# Cas N°5 : séjour trop court
+
+```catala
+#[test]
+déclaration champ d'application TestSejourEducatif_trop_court:
+  résultat calcul contenu Sejour_educatif.CalculSéjourÉducatif
+
+champ d'application TestSejourEducatif_trop_court:
+  définition calcul égal à
+    résultat de Sejour_educatif.CalculSéjourÉducatif avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 3
+      -- au_moins_partiellement_en_période_scolaire: vrai
+      -- voyages_déjà_pris_en_charge_année_civile: 0
+      -- voyages_déjà_pris_en_charge_année_scolaire: 0
+      -- nb_jours_déjà_pris_en_charge_année_civile: 0
+      -- enfant_scolarisé: vrai
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- classe_agréée: vrai
+    }
+  assertion (calcul.durée_éligible = 3)
+  assertion (calcul.aide = 0€)
+  assertion (calcul.inéligibilité = [Séjour_trop_court contenu vrai])
+```
+
+# Cas N°6 : classe non agréée
+
+```catala
+#[test]
+déclaration champ d'application TestSejourEducatif_classe_non_agréée:
+  résultat calcul contenu Sejour_educatif.CalculSéjourÉducatif
+
+champ d'application TestSejourEducatif_classe_non_agréée:
+  définition calcul égal à
+    résultat de Sejour_educatif.CalculSéjourÉducatif avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- au_moins_partiellement_en_période_scolaire: vrai
+      -- voyages_déjà_pris_en_charge_année_civile: 0
+      -- voyages_déjà_pris_en_charge_année_scolaire: 0
+      -- nb_jours_déjà_pris_en_charge_année_civile: 0
+      -- enfant_scolarisé: vrai
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- classe_agréée: faux
+    }
+  assertion (calcul.durée_éligible = 10)
+  assertion (calcul.aide = 0€)
+  assertion (calcul.inéligibilité = [Classe_non_agréée contenu vrai])
+```
+
+# Cas N°7 : maximum voyages par année scolaire atteint
+
+```catala
+#[test]
+déclaration champ d'application TestSejourEducatif_max_année_scolaire:
+  résultat calcul contenu Sejour_educatif.CalculSéjourÉducatif
+
+champ d'application TestSejourEducatif_max_année_scolaire:
+  définition calcul égal à
+    résultat de Sejour_educatif.CalculSéjourÉducatif avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- au_moins_partiellement_en_période_scolaire: vrai
+      -- voyages_déjà_pris_en_charge_année_civile: 0
+      -- voyages_déjà_pris_en_charge_année_scolaire: 1
+      -- nb_jours_déjà_pris_en_charge_année_civile: 0
+      -- enfant_scolarisé: vrai
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- classe_agréée: vrai
+    }
+  assertion (calcul.durée_éligible = 10)
+  assertion (calcul.aide = 0€)
+  assertion (calcul.inéligibilité = [Maximum_voyages_par_année_scolaire_atteint contenu vrai])
+```
+
+# Cas N°8 : maximum voyages par année civile atteint
+
+```catala
+#[test]
+déclaration champ d'application TestSejourEducatif_max_année_civile:
+  résultat calcul contenu Sejour_educatif.CalculSéjourÉducatif
+
+champ d'application TestSejourEducatif_max_année_civile:
+  définition calcul égal à
+    résultat de Sejour_educatif.CalculSéjourÉducatif avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- au_moins_partiellement_en_période_scolaire: vrai
+      -- voyages_déjà_pris_en_charge_année_civile: 2
+      -- voyages_déjà_pris_en_charge_année_scolaire: 0
+      -- nb_jours_déjà_pris_en_charge_année_civile: 0
+      -- enfant_scolarisé: vrai
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- classe_agréée: vrai
+    }
+  assertion (calcul.durée_éligible = 10)
+  assertion (calcul.aide = 0€)
+  assertion (calcul.inéligibilité = [Maximum_voyages_par_année_civile_atteint contenu vrai])
+```
+
+# Cas N°9 : montant déboursé inférieur à l'aide calculée
+
+```catala
+#[test]
+déclaration champ d'application TestSejourEducatif_montant_inférieur:
+  résultat calcul contenu Sejour_educatif.CalculSéjourÉducatif
+
+champ d'application TestSejourEducatif_montant_inférieur:
+  définition calcul égal à
+    résultat de Sejour_educatif.CalculSéjourÉducatif avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- au_moins_partiellement_en_période_scolaire: vrai
+      -- voyages_déjà_pris_en_charge_année_civile: 0
+      -- voyages_déjà_pris_en_charge_année_scolaire: 0
+      -- nb_jours_déjà_pris_en_charge_année_civile: 0
+      -- enfant_scolarisé: vrai
+      -- montant_déboursé: 100 €
+      -- quotient_familial: 600 €
+      -- classe_agréée: vrai
+    }
+  assertion (calcul.durée_éligible = 10)
+  assertion (calcul.aide = 100€)
+```
+
+# Cas N°10 : famille aisée (QF > 1400€)
+
+```catala
+#[test]
+déclaration champ d'application TestSejourEducatif_famille_aisée:
+  résultat calcul contenu Sejour_educatif.CalculSéjourÉducatif
+
+champ d'application TestSejourEducatif_famille_aisée:
+  définition calcul égal à
+    résultat de Sejour_educatif.CalculSéjourÉducatif avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- au_moins_partiellement_en_période_scolaire: vrai
+      -- voyages_déjà_pris_en_charge_année_civile: 0
+      -- voyages_déjà_pris_en_charge_année_scolaire: 0
+      -- nb_jours_déjà_pris_en_charge_année_civile: 0
+      -- enfant_scolarisé: vrai
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 2000 €
+      -- classe_agréée: vrai
+    }
+  assertion (calcul.durée_éligible = 10)
+  assertion (calcul.taux_jour = 0€)
+  assertion (calcul.aide = 0€)
+```
+
+# Cas N°11 : durée éligible limitée par le plafond annuel civil (21 jours)
+
+```catala
+#[test]
+déclaration champ d'application TestSejourEducatif_durée_limité_année_civile:
+  résultat calcul contenu Sejour_educatif.CalculSéjourÉducatif
+
+champ d'application TestSejourEducatif_durée_limité_année_civile:
+  définition calcul égal à
+    résultat de Sejour_educatif.CalculSéjourÉducatif avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 30
+      -- au_moins_partiellement_en_période_scolaire: vrai
+      -- voyages_déjà_pris_en_charge_année_civile: 0
+      -- voyages_déjà_pris_en_charge_année_scolaire: 0
+      -- nb_jours_déjà_pris_en_charge_année_civile: 10
+      -- enfant_scolarisé: vrai
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- classe_agréée: vrai
+    }
+  assertion (calcul.durée_éligible = 11)
+  assertion (calcul.aide = 287,65€)
+```
+
+# Cas N°12 : durée éligible limitée par la durée du séjour (21 jours max)
+
+```catala
+#[test]
+déclaration champ d'application TestSejourEducatif_durée_max_21_jours:
+  résultat calcul contenu Sejour_educatif.CalculSéjourÉducatif
+
+champ d'application TestSejourEducatif_durée_max_21_jours:
+  définition calcul égal à
+    résultat de Sejour_educatif.CalculSéjourÉducatif avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 30
+      -- au_moins_partiellement_en_période_scolaire: vrai
+      -- voyages_déjà_pris_en_charge_année_civile: 0
+      -- voyages_déjà_pris_en_charge_année_scolaire: 0
+      -- nb_jours_déjà_pris_en_charge_année_civile: 0
+      -- enfant_scolarisé: vrai
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- classe_agréée: vrai
+    }
+  assertion (calcul.durée_éligible = 21)
+  assertion (calcul.aide = 549,15€)
+```
+
+# Cas N°13 : enfant a exactement 18 ans au début du séjour
+
+```catala
+#[test]
+déclaration champ d'application TestSejourEducatif_enfant_18_ans:
+  résultat calcul contenu Sejour_educatif.CalculSéjourÉducatif
+
+champ d'application TestSejourEducatif_enfant_18_ans:
+  définition calcul égal à
+    résultat de Sejour_educatif.CalculSéjourÉducatif avec {
+      -- date_naissance : |2008-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- au_moins_partiellement_en_période_scolaire: vrai
+      -- voyages_déjà_pris_en_charge_année_civile: 0
+      -- voyages_déjà_pris_en_charge_année_scolaire: 0
+      -- nb_jours_déjà_pris_en_charge_année_civile: 0
+      -- enfant_scolarisé: vrai
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- classe_agréée: vrai
+    }
+  assertion (calcul.durée_éligible = 10)
+  assertion (calcul.aide = 0€)
+  assertion (calcul.inéligibilité = [Enfant_trop_agé contenu vrai])
+```
+
+# Cas N°14 : test des différents taux selon le quotient familial
+
+```catala
+#[test]
+déclaration champ d'application TestSejourEducatif_taux_qf_621_780:
+  résultat calcul contenu Sejour_educatif.CalculSéjourÉducatif
+
+champ d'application TestSejourEducatif_taux_qf_621_780:
+  définition calcul égal à
+    résultat de Sejour_educatif.CalculSéjourÉducatif avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 5
+      -- au_moins_partiellement_en_période_scolaire: vrai
+      -- voyages_déjà_pris_en_charge_année_civile: 0
+      -- voyages_déjà_pris_en_charge_année_scolaire: 0
+      -- nb_jours_déjà_pris_en_charge_année_civile: 0
+      -- enfant_scolarisé: vrai
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 700 €
+      -- classe_agréée: vrai
+    }
+  assertion (calcul.taux_jour = 23,65€)
+  assertion (calcul.aide = 118,25€)
+```
+
+# Cas N°15 : test des différents taux selon le quotient familial (781-930)
+
+```catala
+#[test]
+déclaration champ d'application TestSejourEducatif_taux_qf_781_930:
+  résultat calcul contenu Sejour_educatif.CalculSéjourÉducatif
+
+champ d'application TestSejourEducatif_taux_qf_781_930:
+  définition calcul égal à
+    résultat de Sejour_educatif.CalculSéjourÉducatif avec {
+      -- date_naissance : |2020-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 5
+      -- au_moins_partiellement_en_période_scolaire: vrai
+      -- voyages_déjà_pris_en_charge_année_civile: 0
+      -- voyages_déjà_pris_en_charge_année_scolaire: 0
+      -- nb_jours_déjà_pris_en_charge_année_civile: 0
+      -- enfant_scolarisé: vrai
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 850 €
+      -- classe_agréée: vrai
+    }
+  assertion (calcul.taux_jour = 21,20€)
+  assertion (calcul.aide = 106€)
+```
+
+# Cas N°16 : exceptions multiples
+
+```catala
+#[test]
+déclaration champ d'application TestSejourEducatif_exceptions_multiples:
+  résultat calcul contenu Sejour_educatif.CalculSéjourÉducatif
+
+champ d'application TestSejourEducatif_exceptions_multiples:
+  définition calcul égal à
+    résultat de Sejour_educatif.CalculSéjourÉducatif avec {
+      -- date_naissance : |1992-02-20|
+      -- date_debut_sejour : |2026-02-20|
+      -- durée_séjour: 3
+      -- au_moins_partiellement_en_période_scolaire: faux
+      -- voyages_déjà_pris_en_charge_année_civile: 2
+      -- voyages_déjà_pris_en_charge_année_scolaire: 1
+      -- nb_jours_déjà_pris_en_charge_année_civile: 0
+      -- enfant_scolarisé: faux
+      -- montant_déboursé: 2000 €
+      -- quotient_familial: 600 €
+      -- classe_agréée: faux
+    }
+  assertion (calcul.durée_éligible = 3)
+  assertion (calcul.aide = 0€)
+  assertion (calcul.inéligibilité = [Enfant_trop_agé contenu vrai; Enfant_non_scolarisé contenu vrai;  Séjour_trop_court contenu vrai; Séjour_hors_période_scolaire contenu vrai; Classe_non_agréée contenu vrai; Maximum_voyages_par_année_scolaire_atteint contenu vrai ; Maximum_voyages_par_année_civile_atteint contenu vrai])
+```

@@ -1,8 +1,5 @@
 > Module Centre_de_vacances_avec_hebergement
-
-> Usage de Quotient_familial
-> Usage de Menage
-> Usage de Foyer_fiscal
+> Usage de Presta_Exception
 
 # CENTRE DE VACANCES AVEC HÉBERGEMENT
 
@@ -15,6 +12,12 @@ déclaration champ d'application CalculCentreDeVacancesAvecHebergement:
   entrée montant_déboursé contenu argent
   entrée quotient_familial contenu argent
   entrée centre_agréé contenu booléen
+  résultat inéligibilité contenu liste de Presta_Exception
+     état base
+     état famille_aisée
+     état enfant_trop_agé
+     état enfant_trop_jeune
+     état centre_non_agréé
   résultat durée_éligible contenu entier
   résultat taux_jour contenu argent
   résultat aide contenu argent
@@ -45,10 +48,8 @@ QF= revenu fiscal de référence
 + 0,5 selon cas particulier décrit à la page 5.
 
 Information destinée à l’administration / aux services :
-N° compte PCE à utiliser dans Chorus :
-647121000
-Prestations facultatives d'action sociale :
-prestations culturelles sportives et de loisirs
+N° compte PCE à utiliser dans Chorus : 647121000
+Prestations facultatives d'action sociale : prestations culturelles sportives et de loisirs
 
 |QF |   Quotient familial mensuel (QF)  |  Taux par jour  |
 |1  | < 621 €                           | 26,20 €         |
@@ -77,8 +78,16 @@ champ d'application CalculCentreDeVacancesAvecHebergement:
         sinon si quotient_familial < 1401 €
       alors 8,15 €
     sinon 0 €
-  définition aide état défaut égal à durée_éligible*taux_jour
-
+  définition inéligibilité état base égal à []
+  définition inéligibilité état famille_aisée égal à
+    si quotient_familial > 1400 €
+    alors inéligibilité ++ [Famille_aisée contenu vrai] sinon inéligibilité
+  définition aide état défaut
+    sous condition (nombre de inéligibilité) > 0
+    conséquence égal à 0 €
+  définition aide état défaut
+    sous condition (nombre de inéligibilité) = 0
+    conséquence égal à durée_éligible*taux_jour
 ```
 
 ## Bénéficiaires (outre ceux énumérés aux dispositions générales) :
@@ -90,14 +99,17 @@ champ d'application CalculCentreDeVacancesAvecHebergement:
 
 ```catala
 champ d'application CalculCentreDeVacancesAvecHebergement:
+  définition inéligibilité état enfant_trop_agé
+    égal à
+      si date_naissance + 18 an <= date_debut_sejour
+      alors inéligibilité ++ [Enfant_trop_agé contenu vrai]
+      sinon inéligibilité
 
-  étiquette enfant_trop_agé exception aide_par_defaut définition aide état minoré
-    sous condition date_naissance + 18 an <= date_debut_sejour
-    conséquence égal à 0 €
-  étiquette enfant_trop_jeune exception enfant_trop_agé définition aide état minoré
-    sous condition date_naissance + 4 an >= date_debut_sejour
-    conséquence égal à 0 €
-
+  définition inéligibilité état enfant_trop_jeune
+    égal à
+      si date_naissance + 4 an >= date_debut_sejour
+      alors inéligibilité ++ [Enfant_trop_jeune contenu vrai]
+      sinon inéligibilité
 ```
 
 - La prestation est versée dans la limite de 45 jours par année civile ;
@@ -116,11 +128,11 @@ champ d'application CalculCentreDeVacancesAvecHebergement:
 - Le centre de vacances doit être titulaire d'un agrément académique ou un label départemental* du lieu du siège social de l'organisateur.
 ```catala
 champ d'application CalculCentreDeVacancesAvecHebergement:
-
-  étiquette centre_non_agréé exception enfant_trop_jeune définition aide état minoré
-  sous condition non centre_agréé
-  conséquence égal à 0 €
-
+  définition inéligibilité état centre_non_agréé
+    égal à
+      si non centre_agréé
+      alors inéligibilité ++ [Centre_non_agréé contenu vrai]
+      sinon inéligibilité
 ```
 
 * agréments ou labels émis par les ministères chargés de l'éducation nationale et/ou du tourisme

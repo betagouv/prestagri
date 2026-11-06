@@ -1,0 +1,15 @@
+> Module Presta_Exception
+
+```catala-metadata
+déclaration énumération Presta_Exception:
+  -- Enfant_trop_jeune contenu booléen
+  -- Enfant_trop_agé contenu booléen
+  -- Enfant_non_scolarisé contenu booléen
+  -- Séjour_trop_court contenu booléen
+  -- Séjour_hors_période_scolaire contenu booléen
+  -- Maximum_voyages_par_année_scolaire_atteint contenu booléen
+  -- Maximum_voyages_par_année_civile_atteint contenu booléen
+  -- Classe_non_agréée contenu booléen
+  -- Centre_non_agréé contenu booléen
+  -- Famille_aisée contenu booléen
+```

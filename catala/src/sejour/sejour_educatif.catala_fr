@@ -1,0 +1,185 @@
+> Module Sejour_educatif
+> Usage de Presta_Exception
+
+# SÉJOURS DANS LE CADRE DU SYSTÈME ÉDUCATIF
+
+
+```catala-metadata
+déclaration champ d'application CalculSéjourÉducatif:
+  entrée date_naissance contenu date
+  entrée date_debut_sejour contenu date
+  entrée durée_séjour contenu entier
+  entrée au_moins_partiellement_en_période_scolaire contenu booléen
+  entrée voyages_déjà_pris_en_charge_année_civile contenu entier
+  entrée voyages_déjà_pris_en_charge_année_scolaire contenu entier
+  entrée nb_jours_déjà_pris_en_charge_année_civile contenu entier
+  entrée enfant_scolarisé contenu booléen
+  entrée montant_déboursé contenu argent
+  entrée quotient_familial contenu argent
+  entrée classe_agréée contenu booléen
+  interne date_debut_année_scolaire contenu date
+  résultat inéligibilité contenu liste de Presta_Exception
+     état base
+     état famille_aisée
+     état enfant_trop_agé
+     état enfant_non_scolarisé
+     état séjour_trop_court
+     état hors_periode_scolaire
+     état classe_non_agréée
+     état maximum_année_scolaire
+     état maximum_année_civile
+  résultat durée_éligible contenu entier
+  résultat taux_jour contenu argent
+  résultat aide contenu argent
+   état défaut
+   état minoré
+```
+
+## Objet :
+
+Prestation destinée à prendre en charge une partie des frais engagés par les agents pour leurs enfants ayant participé à un
+séjour dans le cadre du système éducatif * (classes culturelles transplantées, classes de découverte, de l'environnement, de
+patrimoine ou séjours effectués lors d'échanges pédagogiques).
+Ces séjours s'adressent aux élèves de l'enseignement pré-élémentaire, élémentaire ou de l'éducation spécialisée ainsi qu'aux
+élèves du secondaire. Le séjour concerne une classe ou des groupes de niveau homogène, les disciplines fondamentales
+continuant à être enseignées.
+* agréments ou labels émis par les ministères chargés de l'éducation nationale et/ou du tourisme.
+
+## Montant au 1er janvier 2026 :
+QF= revenu fiscal de référence
+12 x nb de personnes vivant au foyer (a)
+(a) : +1 pour un parent isolé
++ 0,5 selon cas particulier décrit à la page 5.
+
+Information destinée à l’administration / aux services :
+N° compte PCE à utiliser dans Chorus :647121000
+Prestations facultatives d'action sociale : prestations culturelles sportives et de loisirs
+
+|QF |   Quotient familial mensuel (QF)  |  Taux par jour  |
+|1  | < 621 €                           | 26,15 €         |
+|2  | 621 à 780 €                       | 23,65 €          |
+|3  | 781 à 930 €                       | 21,20 €          |
+|4  | 931 à 1090 €                      | 15,75 €          |
+|5  | 1091 à 1250 €                     | 10,85 €          |
+|6  | 1251 à 1400 €                     | 8,15 €          |
+|7  | > 1400 €                          | NÉANT
+
+
+Forfait pour séjours de 21 jours ou plus :  21 x montant par jour (ci-dessus)
+
+```catala
+champ d'application CalculSéjourÉducatif:
+  définition inéligibilité état base égal à []
+  définition taux_jour égal à
+    si quotient_familial < 621 €
+      alors  26,15 €
+    sinon si quotient_familial < 781  €
+      alors 23,65 €
+    sinon si quotient_familial < 931 €
+      alors 21,20 €
+    sinon si quotient_familial < 1091 €
+      alors 15,75 €
+    sinon si quotient_familial < 1251 €
+      alors 10,85 €
+        sinon si quotient_familial < 1401 €
+      alors 8,15 €
+    sinon 0 €
+
+  définition inéligibilité état famille_aisée égal à
+    si quotient_familial > 1400 €
+    alors inéligibilité ++ [Famille_aisée contenu vrai] sinon inéligibilité
+
+  définition aide état défaut
+    sous condition (nombre de inéligibilité) > 0
+    conséquence égal à 0 €
+  définition aide état défaut
+    sous condition (nombre de inéligibilité) = 0
+    conséquence égal à durée_éligible*taux_jour
+
+  définition date_debut_année_scolaire égal à
+    soit année égal à Date.accès_année de date_debut_sejour dans
+    Date.depuis_année_mois_jour de année, 9, 1
+```
+
+
+## Bénéficiaires (outre ceux énumérés aux dispositions générales) :
+- Agents MAASA admis à la retraite ayant enfant(s) à charge âgé(s) de moins de 18 ans ;
+- Tuteurs d'orphelins d'agents titulaires ou d'agents non titulaires de l'État.
+
+## Conditions d'attribution :
+- L'enfant, à charge, doit être âgé au début de l'année scolaire de moins de 18 ans ;
+
+```catala
+champ d'application CalculSéjourÉducatif:
+  définition inéligibilité état enfant_trop_agé
+    égal à
+      si date_naissance + 18 an <= date_debut_année_scolaire
+      alors inéligibilité ++ [Enfant_trop_agé contenu vrai]
+      sinon inéligibilité
+```
+
+- La présentation d'un certificat de scolarité pour les enfants à charge âgés de 16 à 18 ans ;
+```catala
+champ d'application CalculSéjourÉducatif:
+  définition inéligibilité état enfant_non_scolarisé
+    égal à
+      si non enfant_scolarisé et date_naissance + 16 an <= date_debut_année_scolaire
+      alors inéligibilité ++ [Enfant_non_scolarisé contenu vrai]
+      sinon inéligibilité
+
+```
+- Les séjours doivent avoir lieu, pour tout ou partie, en période scolaire et être d'une durée de 5 jours au moins ;
+```catala
+champ d'application CalculSéjourÉducatif:
+  définition inéligibilité état hors_periode_scolaire
+    égal à
+      si non au_moins_partiellement_en_période_scolaire
+      alors inéligibilité ++ [Séjour_hors_période_scolaire contenu vrai]
+      sinon inéligibilité
+  définition inéligibilité état séjour_trop_court
+    égal à
+      si durée_séjour < 5
+      alors inéligibilité ++ [Séjour_trop_court contenu vrai]
+      sinon inéligibilité
+```
+
+- La prestation est versée dans la limite de 21 jours et pour 1 séjour par année scolaire ou pour 2 séjours maximum par année civile ;
+
+```catala
+champ d'application CalculSéjourÉducatif:
+  définition durée_éligible égal à
+    soit jours_restants égal à Entier.max de 0, 21 - nb_jours_déjà_pris_en_charge_année_civile dans
+    Entier.min de durée_séjour, jours_restants
+
+  définition inéligibilité état maximum_année_scolaire
+    égal à
+      si voyages_déjà_pris_en_charge_année_scolaire >= 1
+      alors inéligibilité ++ [Maximum_voyages_par_année_scolaire_atteint contenu vrai]
+      sinon inéligibilité
+  définition inéligibilité état maximum_année_civile
+    égal à
+      si voyages_déjà_pris_en_charge_année_civile >= 2
+      alors inéligibilité ++ [Maximum_voyages_par_année_civile_atteint contenu vrai]
+      sinon inéligibilité
+```
+
+- Le séjour peut s'effectuer en France ou à l'étranger ;
+- L’agrément de la classe.
+```catala
+champ d'application CalculSéjourÉducatif:
+  définition inéligibilité état classe_non_agréée
+    égal à
+      si non classe_agréée
+      alors inéligibilité ++ [Classe_non_agréée contenu vrai]
+      sinon inéligibilité
+```
+
+
+## Modalités de versement :
+La somme octroyée, ajoutée aux divers avantages perçus d'autres organismes sans lien avec le MAASA (l'employeur du-de
+la conjoint-e par exemple), ne peut être supérieure au coût réel dépensé par l'agent au titre du séjour.
+
+```catala
+champ d'application CalculSéjourÉducatif:
+  étiquette aide_par_defaut définition aide état minoré égal à Argent.min de montant_déboursé, aide
+```

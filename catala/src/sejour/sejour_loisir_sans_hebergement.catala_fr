@@ -1,8 +1,5 @@
 > Module Sejour_loisir_sans_hebergement
-
-> Usage de Quotient_familial
-> Usage de Menage
-> Usage de Foyer_fiscal
+> Usage de Presta_Exception
 
 # SÉJOUR EN CENTRES DE LOISIRS SANS HÉBERGEMENT
 
@@ -15,6 +12,11 @@ déclaration champ d'application CalculSejourLoisirSansHebergement:
   entrée montant_déboursé contenu argent
   entrée quotient_familial contenu argent
   entrée centre_agréé contenu booléen
+  résultat inéligibilité contenu liste de Presta_Exception
+     état base
+     état famille_aisée
+     état enfant_trop_agé
+     état centre_non_agréé
   résultat taux_jour contenu argent
   résultat taux_demi_jour contenu argent
   résultat aide contenu argent
@@ -79,7 +81,19 @@ champ d'application CalculSejourLoisirSansHebergement:
         sinon si quotient_familial < 1401 €
       alors 3,25 €
     sinon 0 €
-  définition aide état défaut égal à
+  définition inéligibilité état base égal à []
+
+  définition inéligibilité état famille_aisée égal à
+    si quotient_familial > 1400 €
+    alors inéligibilité ++ [Famille_aisée contenu vrai] sinon inéligibilité
+
+  définition aide état défaut
+    sous condition (nombre de inéligibilité) > 0
+    conséquence égal à 0 €
+
+  définition aide état défaut
+    sous condition (nombre de inéligibilité) = 0
+    conséquence égal à
     soit durée_jour égal à Décimal.troncature de durée_séjour dans
     soit nb_demi_journée égal à si durée_séjour - durée_jour > 0,0 alors 1,0 sinon 0,0 dans
   durée_jour*taux_jour + nb_demi_journée*taux_demi_jour
@@ -96,9 +110,11 @@ champ d'application CalculSejourLoisirSansHebergement:
 ```catala
 champ d'application CalculSejourLoisirSansHebergement:
 
-  étiquette enfant_trop_agé exception aide_par_defaut définition aide état minoré
-  sous condition date_naissance + 18 an < date_debut_sejour
-  conséquence égal à 0 €
+  définition inéligibilité état enfant_trop_agé
+    égal à
+      si date_naissance + 18 an <= date_debut_sejour
+      alors inéligibilité ++ [Enfant_trop_agé contenu vrai]
+      sinon inéligibilité
 
 ```
 
@@ -108,9 +124,11 @@ l'organisateur du séjour ;
 ```catala
 champ d'application CalculSejourLoisirSansHebergement:
 
-  étiquette centre_non_agréé exception enfant_trop_agé définition aide état minoré
-  sous condition non centre_agréé
-  conséquence égal à 0 €
+  définition inéligibilité état centre_non_agréé
+    égal à
+      si non centre_agréé
+      alors inéligibilité ++ [Centre_non_agréé contenu vrai]
+      sinon inéligibilité
 
 ```
 
