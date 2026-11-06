@@ -1,0 +1,1 @@
+import"https://docs.getgrist.com/grist-plugin-api.js";
