@@ -148,7 +148,7 @@ champ d'application CalculSéjourÉducatif:
 ```catala
 champ d'application CalculSéjourÉducatif:
   définition durée_éligible égal à
-    soit jours_restants égal à Entier.max de 0, 21 - nb_jours_déjà_pris_en_charge_année_civile dans
+    soit jours_restants égal à Entier.max de 0, (21 - nb_jours_déjà_pris_en_charge_année_civile) dans
     Entier.min de durée_séjour, jours_restants
 
   définition inéligibilité état maximum_année_scolaire
