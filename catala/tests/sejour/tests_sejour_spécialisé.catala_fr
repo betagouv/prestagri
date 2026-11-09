@@ -1,0 +1,313 @@
+> Usage de Sejour_specialisé
+> Usage de Presta_Exception
+> Usage de Versement
+
+# Cas N°1 : séjour spécialisé classique
+
+```catala
+#[test]
+déclaration champ d'application TestSejourSpecialisé_classique:
+  résultat calcul contenu Sejour_specialisé.CalculSéjourSpécialisé
+
+champ d'application TestSejourSpecialisé_classique:
+  définition calcul égal à
+    résultat de Sejour_specialisé.CalculSéjourSpécialisé avec {
+      -- date_fin_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- durée_déjà_prise_en_charge: 0
+      -- montant_pris_en_charge_par_autre_organisme: 0 €
+      -- montant_déboursé: 2000 €
+    }
+  assertion (calcul.durée_éligible = 10)
+  assertion (calcul.taux_jour = 23,96€)
+  assertion (calcul.aide = 239,60€)
+  assertion (calcul.allocation_différentielle_possible = faux)
+  assertion (calcul.versement_pas_avant.date_versement = |2026-02-21|)
+  assertion (calcul.versement_pas_avant.montant = 239,60€)
+```
+
+# Cas N°2 : séjour avec prise en charge partielle par un autre organisme
+
+```catala
+#[test]
+déclaration champ d'application TestSejourSpecialisé_prise_en_charge_partielle:
+  résultat calcul contenu Sejour_specialisé.CalculSéjourSpécialisé
+
+champ d'application TestSejourSpecialisé_prise_en_charge_partielle:
+  définition calcul égal à
+    résultat de Sejour_specialisé.CalculSéjourSpécialisé avec {
+      -- date_fin_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- durée_déjà_prise_en_charge: 0
+      -- montant_pris_en_charge_par_autre_organisme: 1900 €
+      -- montant_déboursé: 2000 €
+    }
+  assertion (calcul.durée_éligible = 10)
+  assertion (calcul.taux_jour = 23,96€)
+  assertion (calcul.aide = 100,00€)
+  assertion (calcul.allocation_différentielle_possible = vrai)
+  assertion (calcul.versement_pas_avant.date_versement = |2026-02-21|)
+  assertion (calcul.versement_pas_avant.montant = 100,00€)
+```
+
+# Cas N°3 : séjour entièrement pris en charge par un autre organisme
+
+```catala
+#[test]
+déclaration champ d'application TestSejourSpecialisé_prise_en_charge_totale:
+  résultat calcul contenu Sejour_specialisé.CalculSéjourSpécialisé
+
+champ d'application TestSejourSpecialisé_prise_en_charge_totale:
+  définition calcul égal à
+    résultat de Sejour_specialisé.CalculSéjourSpécialisé avec {
+      -- date_fin_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- durée_déjà_prise_en_charge: 0
+      -- montant_pris_en_charge_par_autre_organisme: 2000 €
+      -- montant_déboursé: 2000 €
+    }
+  assertion (calcul.durée_éligible = 10)
+  assertion (calcul.taux_jour = 23,96€)
+  assertion (calcul.aide = 0€)
+  assertion (calcul.inéligibilité = [Autre_organisme_financeur contenu vrai])
+  assertion (calcul.allocation_différentielle_possible = vrai)
+  assertion (calcul.versement_pas_avant.date_versement = |2026-02-21|)
+  assertion (calcul.versement_pas_avant.montant = 0€)
+```
+
+# Cas N°4 : durée éligible limitée par le plafond annuel (45 jours)
+
+```catala
+#[test]
+déclaration champ d'application TestSejourSpecialisé_durée_limité_année:
+  résultat calcul contenu Sejour_specialisé.CalculSéjourSpécialisé
+
+champ d'application TestSejourSpecialisé_durée_limité_année:
+  définition calcul égal à
+    résultat de Sejour_specialisé.CalculSéjourSpécialisé avec {
+      -- date_fin_sejour : |2026-02-20|
+      -- durée_séjour: 30
+      -- durée_déjà_prise_en_charge: 20
+      -- montant_pris_en_charge_par_autre_organisme: 0 €
+      -- montant_déboursé: 2000 €
+    }
+  assertion (calcul.durée_éligible = 25)
+  assertion (calcul.taux_jour = 23,96€)
+  assertion (calcul.aide = 599,00€)
+  assertion (calcul.versement_pas_avant.date_versement = |2026-02-21|)
+  assertion (calcul.versement_pas_avant.montant = 599,00€)
+```
+
+# Cas N°5 : durée éligible limitée par la durée du séjour (45 jours max)
+
+```catala
+#[test]
+déclaration champ d'application TestSejourSpecialisé_durée_max_45_jours:
+  résultat calcul contenu Sejour_specialisé.CalculSéjourSpécialisé
+
+champ d'application TestSejourSpecialisé_durée_max_45_jours:
+  définition calcul égal à
+    résultat de Sejour_specialisé.CalculSéjourSpécialisé avec {
+      -- date_fin_sejour : |2026-02-20|
+      -- durée_séjour: 60
+      -- durée_déjà_prise_en_charge: 0
+      -- montant_pris_en_charge_par_autre_organisme: 0 €
+      -- montant_déboursé: 3000 €
+    }
+  assertion (calcul.durée_éligible = 45)
+  assertion (calcul.taux_jour = 23,96€)
+  assertion (calcul.aide = 1078,20€)
+  assertion (calcul.versement_pas_avant.date_versement = |2026-02-21|)
+  assertion (calcul.versement_pas_avant.montant = 1078,20€)
+```
+
+# Cas N°6 : durée éligible nulle (trop de jours déjà pris en charge)
+
+```catala
+#[test]
+déclaration champ d'application TestSejourSpecialisé_durée_éligible_nulle:
+  résultat calcul contenu Sejour_specialisé.CalculSéjourSpécialisé
+
+champ d'application TestSejourSpecialisé_durée_éligible_nulle:
+  définition calcul égal à
+    résultat de Sejour_specialisé.CalculSéjourSpécialisé avec {
+      -- date_fin_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- durée_déjà_prise_en_charge: 50
+      -- montant_pris_en_charge_par_autre_organisme: 0 €
+      -- montant_déboursé: 2000 €
+    }
+  assertion (calcul.durée_éligible = 0)
+  assertion (calcul.taux_jour = 23,96€)
+  assertion (calcul.aide = 0€)
+  assertion (calcul.versement_pas_avant.date_versement = |2026-02-21|)
+  assertion (calcul.versement_pas_avant.montant = 0€)
+```
+
+# Cas N°7 : montant déboursé inférieur à l'aide calculée
+
+```catala
+#[test]
+déclaration champ d'application TestSejourSpecialisé_montant_inférieur:
+  résultat calcul contenu Sejour_specialisé.CalculSéjourSpécialisé
+
+champ d'application TestSejourSpecialisé_montant_inférieur:
+  définition calcul égal à
+    résultat de Sejour_specialisé.CalculSéjourSpécialisé avec {
+      -- date_fin_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- durée_déjà_prise_en_charge: 0
+      -- montant_pris_en_charge_par_autre_organisme: 0 €
+      -- montant_déboursé: 100 €
+    }
+  assertion (calcul.durée_éligible = 10)
+  assertion (calcul.taux_jour = 23,96€)
+  assertion (calcul.aide = 100€)
+  assertion (calcul.versement_pas_avant.date_versement = |2026-02-21|)
+  assertion (calcul.versement_pas_avant.montant = 100€)
+```
+
+# Cas N°8 : allocation différentielle possible (montant pris en charge partiel)
+
+```catala
+#[test]
+déclaration champ d'application TestSejourSpecialisé_allocation_différentielle:
+  résultat calcul contenu Sejour_specialisé.CalculSéjourSpécialisé
+
+champ d'application TestSejourSpecialisé_allocation_différentielle:
+  définition calcul égal à
+    résultat de Sejour_specialisé.CalculSéjourSpécialisé avec {
+      -- date_fin_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- durée_déjà_prise_en_charge: 40
+      -- montant_pris_en_charge_par_autre_organisme: 500 €
+      -- montant_déboursé: 2000 €
+    }
+  assertion (calcul.durée_éligible = 5)
+  assertion (calcul.taux_jour = 23,96€)
+  assertion (calcul.aide = 119,80€)
+  assertion (calcul.allocation_différentielle_possible = vrai)
+  assertion (calcul.versement_pas_avant.date_versement = |2026-02-21|)
+  assertion (calcul.versement_pas_avant.montant = 119,80€)
+```
+
+# Cas N°9 : allocation différentielle non nécessaire (pas de prise en charge externe)
+
+```catala
+#[test]
+déclaration champ d'application TestSejourSpecialisé_pas_allocation_différentielle:
+  résultat calcul contenu Sejour_specialisé.CalculSéjourSpécialisé
+
+champ d'application TestSejourSpecialisé_pas_allocation_différentielle:
+  définition calcul égal à
+    résultat de Sejour_specialisé.CalculSéjourSpécialisé avec {
+      -- date_fin_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- durée_déjà_prise_en_charge: 0
+      -- montant_pris_en_charge_par_autre_organisme: 0 €
+      -- montant_déboursé: 2000 €
+    }
+  assertion (calcul.durée_éligible = 10)
+  assertion (calcul.taux_jour = 23,96€)
+  assertion (calcul.aide = 239,60€)
+  assertion (calcul.allocation_différentielle_possible = faux)
+  assertion (calcul.versement_pas_avant.date_versement = |2026-02-21|)
+  assertion (calcul.versement_pas_avant.montant = 239,60€)
+```
+
+# Cas N°10 : prise en charge partielle avec montant déboursé faible
+
+```catala
+#[test]
+déclaration champ d'application TestSejourSpecialisé_prise_en_charge_partielle_faible_montant:
+  résultat calcul contenu Sejour_specialisé.CalculSéjourSpécialisé
+
+champ d'application TestSejourSpecialisé_prise_en_charge_partielle_faible_montant:
+  définition calcul égal à
+    résultat de Sejour_specialisé.CalculSéjourSpécialisé avec {
+      -- date_fin_sejour : |2026-02-20|
+      -- durée_séjour: 5
+      -- durée_déjà_prise_en_charge: 0
+      -- montant_pris_en_charge_par_autre_organisme: 50 €
+      -- montant_déboursé: 100 €
+    }
+  assertion (calcul.durée_éligible = 5)
+  assertion (calcul.taux_jour = 23,96€)
+  assertion (calcul.aide = 50,00€)
+  assertion (calcul.allocation_différentielle_possible = vrai)
+  assertion (calcul.versement_pas_avant.date_versement = |2026-02-21|)
+  assertion (calcul.versement_pas_avant.montant = 50,00€)
+```
+
+# Cas N°11 : prise en charge partielle dépassant le montant déboursé
+
+```catala
+#[test]
+déclaration champ d'application TestSejourSpecialisé_prise_en_charge_dépassant_montant:
+  résultat calcul contenu Sejour_specialisé.CalculSéjourSpécialisé
+
+champ d'application TestSejourSpecialisé_prise_en_charge_dépassant_montant:
+  définition calcul égal à
+    résultat de Sejour_specialisé.CalculSéjourSpécialisé avec {
+      -- date_fin_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- durée_déjà_prise_en_charge: 0
+      -- montant_pris_en_charge_par_autre_organisme: 2500 €
+      -- montant_déboursé: 2000 €
+    }
+  assertion (calcul.durée_éligible = 10)
+  assertion (calcul.taux_jour = 23,96€)
+  assertion (calcul.aide = 0€)
+  assertion (calcul.inéligibilité = [Autre_organisme_financeur contenu vrai])
+  assertion (calcul.allocation_différentielle_possible = vrai)
+  assertion (calcul.versement_pas_avant.date_versement = |2026-02-21|)
+  assertion (calcul.versement_pas_avant.montant = 0€)
+```
+
+# Cas N°12 : durée déjà prise en charge à la limite (45 jours)
+
+```catala
+#[test]
+déclaration champ d'application TestSejourSpecialisé_durée_limite_45:
+  résultat calcul contenu Sejour_specialisé.CalculSéjourSpécialisé
+
+champ d'application TestSejourSpecialisé_durée_limite_45:
+  définition calcul égal à
+    résultat de Sejour_specialisé.CalculSéjourSpécialisé avec {
+      -- date_fin_sejour : |2026-02-20|
+      -- durée_séjour: 10
+      -- durée_déjà_prise_en_charge: 45
+      -- montant_pris_en_charge_par_autre_organisme: 0 €
+      -- montant_déboursé: 2000 €
+    }
+  assertion (calcul.durée_éligible = 0)
+  assertion (calcul.taux_jour = 23,96€)
+  assertion (calcul.aide = 0€)
+  assertion (calcul.allocation_différentielle_possible = vrai)
+  assertion (calcul.versement_pas_avant.date_versement = |2026-02-21|)
+  assertion (calcul.versement_pas_avant.montant = 0€)
+```
+
+# Cas N°16 : prise en charge partielle avec durée limitée
+
+```catala
+#[test]
+déclaration champ d'application TestSejourSpecialisé_combinaison:
+  résultat calcul contenu Sejour_specialisé.CalculSéjourSpécialisé
+
+champ d'application TestSejourSpecialisé_combinaison:
+  définition calcul égal à
+    résultat de Sejour_specialisé.CalculSéjourSpécialisé avec {
+      -- date_fin_sejour : |2026-02-20|
+      -- durée_séjour: 30
+      -- durée_déjà_prise_en_charge: 20
+      -- montant_pris_en_charge_par_autre_organisme: 300 €
+      -- montant_déboursé: 1500 €
+    }
+  assertion (calcul.durée_éligible = 25)
+  assertion (calcul.taux_jour = 23,96€)
+  assertion (calcul.aide = 599,00€)
+  assertion (calcul.allocation_différentielle_possible = vrai)
+  assertion (calcul.versement_pas_avant.date_versement = |2026-02-21|)
+  assertion (calcul.versement_pas_avant.montant = 599,00€)
+```

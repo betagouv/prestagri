@@ -13,4 +13,5 @@ déclaration énumération Presta_Exception:
   -- Classe_non_agréée contenu booléen
   -- Centre_non_agréé contenu booléen
   -- Famille_aisée contenu booléen
+  -- Autre_organisme_financeur contenu booléen
 ```
